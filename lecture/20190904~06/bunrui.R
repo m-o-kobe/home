@@ -1,19 +1,30 @@
 library(ggplot2)
+library(doBy)
+library(dplyr)
 DF <- read.csv("../../../marinair-pref.csv", header = TRUE, stringsAsFactors = FALSE)
+pop<- read.csv("../../../population.csv", header = TRUE, stringsAsFactors = FALSE)
+pop$kinki<-0
+pop$flight<-0
+pop[24:30,]$kinki<-1
 
-DF$分類<-"その他"
-DF[1063:1211,]$分類<-"関西"
-DF[DF$都道府県=="北海道",]$分類<-"飛行場"
-DF[DF$都道府県=="茨城県",]$分類<-"飛行場"
-DF[DF$都道府県=="東京都",]$分類<-"飛行場"
-DF[DF$都道府県=="長崎県",]$分類<-"飛行場"
-DF[DF$都道府県=="鹿児島県",]$分類<-"飛行場"
-DF[DF$都道府県=="沖縄県",]$分類<-"飛行場"
+pop[pop$Prefecturecode==1,]$flight<-399777
+pop[pop$Prefecturecode==4,]$flight<-154769
+pop[pop$Prefecturecode==8,]$flight<-156537
+pop[pop$Prefecturecode==13,]$flight<-849615
+pop[pop$Prefecturecode==42,]$flight<-219194
+pop[pop$Prefecturecode==46,]$flight<-151524
+pop[pop$Prefecturecode==47,]$flight<-427342
+jinryu<-summaryBy(jinryu~Prefecturecode,data=DF,FUN=(mean))
+names(jinryu)[2]<-"jinryu"
+matome<-inner_join(pop,jinryu)
+matome
 
-g<-ggplot(data=DF,aes(x=経過時間,y=人流指数,color=分類,group=都道府県))+
-scale_y_continuous(limits = c(0, 2000))+
-geom_line()
+lmresult<-lm(jinryu~Population+kinki+flight,data=matome)
+summary(lmresult)
+#g<-ggplot(data=DF,aes(x=経過時間,y=人流指数,color=分類,group=都道府県))+
+#scale_y_continuous(limits = c(0, 2000))+
+#geom_line()
 #geom_bar(stat="identity",position="fill")
-png("../../../rrenshu.png",height=960, width=960, res=144)
-print(g)
-dev.off()
+#png("../../../rrenshu.png",height=960, width=960, res=144)
+#print(g)
+#dev.off()
