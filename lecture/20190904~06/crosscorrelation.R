@@ -1,5 +1,5 @@
-prex<-26
-prey<-27
+prex<-27
+prey<-28
 DF <- read.csv("../../../marinair-pref.csv", header = TRUE, stringsAsFactors = FALSE)
 xdata<-subset(DF,DF$Prefecturecode==prex)
 ydata<-subset(DF,DF$Prefecturecode==prey)
@@ -11,7 +11,7 @@ print(y.ts)
 #scale_y_continuous(limits = c(0, 2000))+
 #geom_line()
 #geom_bar(stat="identity",position="fill")
-png("../../../26_27.png",height=960, width=960, res=144)
+png("../../../27_28.png",height=960, width=960, res=144)
 ccf(x.ts,y.ts)
 
 dev.off()

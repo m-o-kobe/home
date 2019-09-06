@@ -54,16 +54,18 @@ tablecsv(lmresult,matome,out)
 slm<-step(lmresult)
 summary(slm)
 tablecsv(slm,matome,out)
-
-#g<-ggpairs(matome[,-c(1,4,7,8)],aes(alpha=0.5))
-#g<-ggplot(data=DF,aes(x=経過時間,y=人流指数,color=分類,group=都道府県))+
-#scale_y_continuous(limits = c(0, 2000))+
-#geom_line()
+sum<-summary(slm)
+coe <- sum$coefficient
+matome$yosoku<-coe[1]+matome$Population*coe[2]+matome$flight*coe[3]+matome$distance_2*coe[4]+matome$Population*matome$distance_2*coe[5]
+print(matome)
+g<-ggplot(data=matome,aes(x=yosoku,y=jinryu,colour=as.character(kinki)))+
+coord_fixed(ratio = 1)+
+geom_point()
 #geom_bar(stat="identity",position="fill")
-#png("../../../soukan.png",height=960, width=960, res=144)
-#print(g)
-#dev.off()
-png("../../../kaikisindan.png",height=960, width=960, res=144)
-par(mfrow=c(2,2))
-plot(slm)
+png("../../../yosoku.png",height=960, width=960, res=144)
+print(g)
 dev.off()
+#png("../../../kaikisindan.png",height=960, width=960, res=144)
+#par(mfrow=c(2,2))
+#plot(slm)
+#dev.off()
