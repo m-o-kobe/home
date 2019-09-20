@@ -22,14 +22,30 @@ DFm <- merge(DFall, DFpop_long)
 colnames(DFpop_long) <- c('despop', 'destination', 'year')
 
 DFm<-merge(DFm,DFpop_long)
-
+#DFn<-DFm[,c()]
 DFm<-merge(DFm,DFkyori)
+DFm.lm<-lm(formula=migration~oripop+despop+kyori,data=DFm)
+summary(DFm.lm)
+DFjogai<-subset(DFm,DFm$origin!=DFm$destination)
+DFjogai<-subset(DFjogai,DFjogai$gender=="総数")
+DFjogai$kyori_1<-1/DFjogai$kyori
+#DFjogai$kyori_1<-1/(DFjogai$kyori)^2
+
+
+DFjogai.lm<-lm(formula=migration~oripop+despop+kyori_1+oripop:despop+oripop:kyori_1+despop:kyori_1,data=DFjogai)
+step.lm<-step(DFjogai.lm)
+
+sum<-summary(step.lm)
+coe<-sum$coefficient
+
+DFjogai$yosoku<-coe[1]+coe[2]*DFjogai$oripop+coe[3]*DFjogai$despop+coe[4]*DFjogai$kyori_1+coe[5]*DFjogai$oripop*DFjogai$despop+coe[6]*DFjogai$oripop*DFjogai$kyori_1+coe[7]*DFjogai$despop*DFjogai$kyori_1
+g<-ggplot(data=DFjogai,aes(x=yosoku,y=migration,colour=origin))+geom_point()
 
 # 県人口 1000 人あたりの移動率の列を作成
-#DFm$ratepermill = DFm$migration / DFm$population * 1000
+#DFm$ratepermill = DFm$migration / DFm$oripop * 1000
 
 # CSV ファイルとして出力
-write.csv(DFm, 'move-pref-rate.csv', row.names = FALSE, fileEncoding = "UTF-8")
+#write.csv(DFm, 'move-pref-rate.csv', row.names = FALSE, fileEncoding = "UTF-8")
 
 # 少し複雑な条件指定の例
 #DFm[(DFm$year == 2015) & (DFm$origin == '東京都') & (DFm$gender == '総数'), ]

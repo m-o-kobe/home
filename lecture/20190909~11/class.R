@@ -8,6 +8,7 @@ DFkyori <- read.csv('dataset-B/kyori2.csv', stringsAsFactors = FALSE, fileEncodi
 #summary(DFpop)
 # '全国' の列は必要ないので削除したものを作る
 rownames(DFpop) <- DFpop$year
+DF<-subset(DFall,DFall$year=2018)
 DFpop2 <- subset(DFpop, select = -c(year, 全国))
 #DFpop2
 DFpop_long <- stack(DFpop2)
