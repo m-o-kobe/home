@@ -1,6 +1,6 @@
 library(quantreg)
 library(ggplot2)
-#コマンドラインに樹種名、出力ファイル(csv),出力ファイル(画像)
+
 tablecsv<-function(datalm,data,ou){
     N <- nrow(data)
   
@@ -18,7 +18,7 @@ args<-commandArgs(trailingOnly=T)
 sp<-as.character(args[1])
 outcsv<-args[2]
 outpic<-args[3]
-motodata<-read.csv("../nenrin.csv")
+motodata<-read.csv("nenrin1.csv")
 
 
 data<-subset(motodata,spp==sp)
