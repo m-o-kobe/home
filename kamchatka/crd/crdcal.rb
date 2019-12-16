@@ -1,5 +1,5 @@
 #$targetspp="lc"#ここで樹種を変える"pt"or"bp"or"lc"
-plot="int"
+plot="ctr"
 #$cal="grow"#"da"or"grow"
 limlim=9
 
@@ -18,6 +18,12 @@ elsif plot=="int"
 	$ymax=50.0
 	$xmin=0.0
 	$ymin=-50.0
+elsif plot=="test"
+	infile = File.open("../../../kamchatka/test.csv", "r")
+	$xmax=100.0#プロットサイズ
+	$ymax=50.0
+	$xmin=0.0
+	$ymin=0.0
 end
 $xmid=$xmin+($xmax-$xmin)/2
 $ymid=$ymin+($ymax-$ymin)/2
@@ -146,7 +152,7 @@ sel_trees.each do|target|
 							break
 						end
 					else
-						if _dist<=0.0
+						if _dist<=0.01
 							crdcal[lim_dist-1]+=obj.dbh01/0.01
 							break
 						else
@@ -161,10 +167,11 @@ sel_trees.each do|target|
 	for lim_dist in 1..limlim do
 		area_ratio=(sq(lim_dist)*edge_effect(lim_dist, target.edge_x, target.edge_y)-sq(lim_dist-1.0)*edge_effect(lim_dist-1.0, target.edge_x, target.edge_y))/(sq(lim_dist)-sq(lim_dist-1.0))
 		target.set_crd(lim_dist,crdcal[lim_dist-1]/area_ratio)
-		target.sc=target.sc/area_ratio
+		
 	end
 	# target.dgrw=(dgrw(target.dbh04,target.dbh01))
 	# target.death=(death(target.dbh04))
+	target.sc=target.sc/area_ratio
 end
 
 Result=["num","x","y","spp","dbh01","dbh04","hgt","sprout","sc","Crd1"]
@@ -172,8 +179,9 @@ for i in 2..limlim do
 	Result.push("Crd"+i.to_s)
 end
 Result.push("crd")
+#pp(sel_trees)
 require "csv"
-file_out = File.open('../../../kamchatka/crd/crd_'+plot+'_191128.csv','w') #出力ファイル名変えたいならここ
+file_out = File.open('../../../kamchatka/crd/crd_'+plot+'_191209.csv','w') #出力ファイル名変えたいならここ
 file_out.print Result.join(","), "\n"	
 sel_trees.each do |target|
 	file_out.print target.num, ","

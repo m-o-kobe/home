@@ -18,7 +18,7 @@ tablecsv<-function(datalm,data,ou){
 }
 
 
-motodata2<-read.csv("crd/crd_int_191128.csv")
+motodata2<-read.csv("crd/crd_int_191209.csv")
 #motodata<-read.csv("nenrin/nenrin1.csv")
 motodata<-read.csv("nenrin/nenrin3.csv" ,header=T, fileEncoding="UTF-8-BOM")
 
@@ -26,7 +26,7 @@ data1<-merge(motodata,motodata2,by="num")
 data1$past_dbh<-data1$dbh01-data1$fromsoto/5
 data2<-subset(data1,data1$year>=1996)
 
-sp<-"pt"
+sp<-"bp"
 data3<-subset(data2,data2$spp.x==sp)
 data4<-data3[,c(3,17:26,28)]
 data5<-data4[,c(1,2,12)]
@@ -45,19 +45,21 @@ lm2<-step(lm1)
 lm3<-lm(growth~.,data=data5)
 lm4<-step(lm3)
 
-outcsv<-paste("nenrin/growth_bynenrin",sp,"1202.csv",sep="_")
+outcsv<-paste("nenrin/growth_bynenrin",sp,"1209.csv",sep="_")
 tablecsv(lm1,data4,outcsv)
 tablecsv(lm2,data4,outcsv)
 tablecsv(lm3,data4,outcsv)
 tablecsv(lm4,data4,outcsv)
 
+par(mfrow=c(2,2))
+plot(lm4)
 
 plot(data4$past_dbh,data4$growth,main=sp)
 
-data6<-data3
+data6<-data4
 data6$pred<-lm4$residuals
 #plot(data6$pred+mean(data6$growth),data6$growth,main=sp)
-g<-ggplot(data=data6,aes(x=pred+mean(data6$growth),y=growth,colour=as.character(year)))+
+g<-ggplot(data=data6,aes(x=pred+mean(data6$growth),y=growth))+
   geom_point()+ggtitle(sp)
 print(g)
 
@@ -68,6 +70,7 @@ plot(data11$dbh01,data11$dbh/10,xlim=c(0,max(data11$dbh01)),ylim=c(0,max(data11$
 par(new=T) 
 curve((x), 0, max(data11$dbh01),xlim=c(0,max(data11$dbh01)),ylim=c(0,max(data11$dbh)/10))
 summary(data1)
+
 
 
 #anova
