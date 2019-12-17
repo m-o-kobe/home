@@ -58,43 +58,74 @@ names(sum_parent)[ which( names(sum_parent)=="sprout..old." ) ] <- "parent_num1"
 names(sum_parent)[ which( names(sum_parent)=="color" ) ] <- "parent_color"
 
 sum_parent$survival_num<-sum_parent$dbh0.length*sum_parent$da.mean
-sum_parent1<-sum_parent[c(1,2,3,4,5,6,7,11)]
+sum_parent$ba<-sum_parent$ba.mean*sum_parent$ba.length
+sum_parent$survivalba<-0
+sum_parent$survivalba[sum_parent$survival_ba.mean>0.01]<-sum_parent$survival_ba.mean[sum_parent$survival_ba.mean>0.01]/sum_parent$da.mean[sum_parent$survival_ba.mean>0.01]
+  
+sum_parent1<-sum_parent[c(1,2,3,4,7,11,12,13)]
 sum_juvenile$sum_ba<-sum_juvenile$juvenile_ba.mean*sum_juvenile$juvenile_ba.length
-sum_juvenile3<-sum_juvenile[c(1,2,3,4,5,7)]
+sum_juvenile3<-sum_juvenile[c(1,2,3,5,7)]
 
 sum1<-merge(sum_parent1,sum_juvenile3,by=c("parent_num1","parent_color"),all = TRUE)
-sum2<-merge(sum_parent,sum_juvenile,by=c("parent_num1","parent_color"))
-sum3<-subset(sum1,is.na(sum1$dbh0.mean))
+#sum2<-merge(sum_parent,sum_juvenile,by=c("parent_num1","parent_color"))
+#sum3<-subset(sum1,is.na(sum1$dbh0.mean))
 sum4<-subset(sum1,!is.na(sum1$dbh0.mean))
 
 sum41<-sum4[,c(-1,-2)]
 
 colnames(sum41)<-c("parent_dbh",
-                   "parent_survival",
-                   "parent_ba",
-                   "parent_survival_ba",
+                   "parent_survival_rate",
                    "parent_num",
+                   "parent_ba",
                    "parent_survival_num",
+                   "parent_survival_ba",
                    "juv_dbh",
-                   "juv_ba",
                    "juv_num",
-                   "juv_ba_sum")
+                   "juv_ba")
 sum41$juv_dbh[is.na(sum41$juv_dbh)]<-0
 sum41$juv_num[is.na(sum41$juv_num)]<-0
 sum41$juv_ba[is.na(sum41$juv_ba)]<-0
-sum41$juv_ba_sum[is.na(sum41$juv_ba_sum)]<-0
 library(GGally)
-g<-ggpairs(data=sum41)
+g<-ggpairs(data=sum41,columns=1:6)
 print(g)
+g<-ggpairs(data=sum41,columns=7:9)
+print(g)
+
 plotList <- list()
 test<-data.frame
 
 #col<-colnames(sum41)
+#↓死亡木のみを解析する場合
+sum42<-subset(sum41,sum41$parent_survival_rate<0.01)
+sum42<-sum42[c(-2,-5,-6)]
 k=1
+name1<-colnames(sum42)
+for(i in 1:3){
+  for (j in 4:6){
+    xmax<-max(sum42[i])
+    ymax<-max(sum42[j])
+    plotList[[k]]<-ggplot(data=sum42,aes_string(x=name1[i],y=name1[j]))+
+      geom_point()+
+      geom_text(x=xmax/2,
+                y=ymax/2,
+                label=as.character(round(cor(sum42[i],sum42[j],method ="spearman"),digits=4)),alpha=0.5,color="blue")
+    k<-k+1
+  }
+}
+pm<-ggmatrix(plotList,
+             nrow=3,ncol=3,
+             xAxisLabels = name1[1:3],
+             yAxisLabels=name1[4:6],
+             byrow = FALSE)
+print(pm)
+p<-ggpairs(sum42)
+print(p)
 
+plotList <- list()
+k=1
 name1<-colnames(sum41)
 for (i in 1:6){
-  for (j in 7:10){
+  for (j in 7:9){
     xmax<-max(sum41[i])
     ymax<-max(sum41[j])
     plotList[[k]]<-ggplot(data=sum41,aes_string(x=name1[i],y=name1[j]))+
@@ -109,17 +140,9 @@ for (i in 1:6){
 
 
 pm<-ggmatrix(plotList,
-             nrow=4,ncol=6,
-             xAxisLabels = c("parent_dbh",
-                 "parent_survival",
-                 "parent_ba",
-                 "parent_survival_ba",
-                 "parent_num",
-                 "parent_survival_num"),
-              yAxisLabels=c("juv_dbh",
-                 "juv_ba",
-                 "juv_num",
-                 "juv_ba_sum"),
+             nrow=3,ncol=6,
+             xAxisLabels = name1[1:6],
+             yAxisLabels=name1[7:9],
              byrow = FALSE)
 print(pm)
 # for (i in 1:6) {

@@ -1,8 +1,23 @@
+#実生用だよー
 library(dplyr)
+library(doBy)
 parent<-read.csv("fire_5m_da.csv", fileEncoding = "UTF-8-BOM")
-children<-read.csv("5m_poplus_datateisei.csv",fileEncoding = "UTF-8-BOM")
-children<-distinct(children)
-sum1<-merge(parent,children,all=TRUE)
+children<-read.csv("fire2004seedling.csv", fileEncoding = "UTF-8-BOM")
+children$SP[children$SP=="Larix"]<-"La"
+children$SP[children$SP=="Populus"]<-"Po"
+
+children<-subset(children,children$SP=="Be")
+sum_children<-summaryBy(Hcm04~x+y,data = children,FUN=c(mean,length))
+
+#children<-distinct(children)
+sum1<-merge(parent,sum_children,all=TRUE)
+
+x<-0:17
+x<-x*5
+y<-0:19
+y<-y*5
+allplot<-merge(x,y)
+sum1<-merge(sum1,allplot,all=TRUE)
 sum1[is.na(sum1)] <- 0
 
 xmax<-16
@@ -23,11 +38,15 @@ for(i in 1:xmax){
     
   }
 }
+sumLa<-sum1[,c("La_A","La_D","La_tonari_A","La_tonari_D","La_naname_A","La_naname_D","Hcm04.length")]
 
 
-sumBe<-sum1[,c("Be_A","Be_D","Be_tonari_A","Be_tonari_D","Be_naname_A","Be_naname_D","Be_sucker2000","Be_sucker2002","Be_seedling2000","Be_seedling2002")]
+sumBe<-sum1[,c("Be_A","Be_D","Be_tonari_A","Be_tonari_D","Be_naname_A","Be_naname_D","Hcm04.length")]
+
 
 library(GGally)
+La<-ggpairs(sumLa)
+print(La)
 Be<-ggpairs(sumBe)
 print(Be)
 
