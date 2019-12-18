@@ -24,6 +24,57 @@ for(i in 1:xmax){
     }
 }
 
+x<-0:19
+x<-x*5-5
+hanigai1<-data.frame(x=x,y=-5)
+hanigai2<-data.frame(x=x,y=100)
+y<-0:21
+y<-y*5-5
+hanigai3<-data.frame(x=-5,y=y)
+hanigai4<-data.frame(x=90,y=y)
+hanigai<-rbind(hanigai1,hanigai2,hanigai3,hanigai4)
+hanigai$Po<-1
+oya<-merge(hanigai,sum1,all=TRUE)
+oya<-subset(oya,oya$Po>0)
+#kodomo<-subset(sum1,sum1$Po_sucker2000>0)
+kodomo<-subset(sum1,sum1$Po_sucker2000<1)
+
+konum<-nrow(kodomo)
+oyanum<-nrow(oya)
+distlist<-list()
+kodomo$dis<-0
+for (i in 1:konum){
+  dist_<-100
+  for (j in 1:oyanum){
+    dis<-((kodomo$x[i]-oya$x[j])^2+(kodomo$y[i]-oya$y[j])^2)^0.5
+    if (dis<dist_){
+      dist_<-dis
+    }
+    kodomo$dis[i]<-dist_
+  }
+}
+kodomo1<-kodomo
+kodomo1$sucker<-"t"
+kodomo2<-kodomo
+kodomo2$sucker<-"f"
+kodomo3<-rbind(kodomo1,kodomo2)
+p<-ggplot(kodomo3,aes(x=sucker,y=dis,colour=sucker,))+
+  geom_violin()+geom_boxplot(width=.1,fill="black",outer.colour=NA)+
+stat_summary(fun.y=mean,geom = "point", fill="white",shape=21,size=2.5)
+print(p)
+
+
+
+library(ggplot2)
+g<-ggplot(data=sum1,mapping=aes(x=x,y=y,size=Po_sucker2000,colour=Po_sucker2000))+
+  geom_point(alpha=0.3,fill="darkorange")+
+  geom_text(mapping=aes(x=x,y=y,label=Po_sucker2000),size=5,colour="black")
+print(g)
+g<-ggplot(data=sum1,mapping=aes(x=x,y=y,size=Po))+
+  geom_point(alpha=0.1,fill="darkorange")+
+  geom_text(mapping=aes(x=x,y=y,label=Po))
+print(g)
+
 
 sumBe<-sum1[,c("Be","Be_tonari","Be_naname","Be_sucker2000","Be_sucker2002","Be_seedling2000","Be_seedling2002")]
 
