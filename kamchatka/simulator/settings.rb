@@ -66,6 +66,13 @@ class Settings
 		if _setdata[ "plot_y" ] != nil
 			@@plot_y = _setdata[ "plot_y" ]
 		end
+		if _setdata[ "fire_r_min" ] != nil
+			@@fire_r_min = _setdata[ "fire_r_min" ]
+		end
+		if _setdata[ "fire_r_max" ] != nil
+			@@fire_r_max = _setdata[ "fire_r_max" ]
+		end
+		
 
 
 		for i in 1..@@num_sp do#種数だけ実行
@@ -98,6 +105,12 @@ class Settings
 
 	def plot_y
 		return @@plot_y
+	end
+	def fire_r_min
+		return @@fire_r_min
+	end
+	def fire_r_max
+		return @@fire_r_max
 	end
 
 	def spdata(i,key)

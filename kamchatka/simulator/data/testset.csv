@@ -5,11 +5,11 @@
 "duration", 5
 "num_sp", 3
 "firefreq",1000
+"fire_r_min",5
+"fire_r_max",10
 
 #######################
 ### Sp1 settings(lc)
-
-
 "sp_1_growth1",0.2929574
 "sp_1_growth2",-0.0052073
 "sp_1_growth3",0

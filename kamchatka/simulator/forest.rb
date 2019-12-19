@@ -3,7 +3,7 @@ require "./tree.rb"
 require "./map.rb"
 
 class Forest
-	attr_accessor :trees,:pcount
+	attr_accessor :trees,:pcount,:fire_layer
 	@@num_count=Hash.new
 	@@death_count=Hash.new
 	@@sinki_count=Hash.new
@@ -24,8 +24,9 @@ class Forest
 			buf[6]
 			) )#Treeクラスはtree.rbで定義
 #		@plotmap=Array.new(@settings.plot_x/5).map{Array.new(@settings.plot_y/5)}
-		@pcount=PoplusCount.new(0,0,@settings.plot_x,@settings.plot_y,5)
 		end
+		@pcount=PoplusCount.new(0,0,@settings.plot_x,@settings.plot_y,5)
+		@fire_layer=Fire.new(0,0,@settings.plot_x,@settings.plot_y)
 		
 	end
 	def popluscount(trees)
@@ -40,6 +41,14 @@ class Forest
 	end
 	def make_poplussprout
 		@pcount.make_sprout
+	end
+	def fire_evoke
+		@fire_layer.fire_evoke
+	end
+	def fire_ask
+		@trees.each do |tree|
+			p @fire_layer.ask(tree)
+		end
 	end
 
 
@@ -82,7 +91,7 @@ class Forest
 			|tree| tree.fire_dead
 		}
 		for spp in 1..@settings.num_sp do
-			@@death_count[spp]+=sinu.count{|item| item.sp==spp}
+			@@death_count[spp] += sinu.count{|item| item.sp==spp}
 		end
 		@trees=@trees-sinu
 
