@@ -28,10 +28,9 @@ def params
 		"kanyu21",#dsを計算する距離限界、ランダム
 		"kanyu22",#定数、ランダム
 		"kanyu23",#dsに比例、ランダム
+		"dist_lim"
 		]
 end
-
-
 
 class Settings
 	@@duration = 0
@@ -39,6 +38,7 @@ class Settings
 	@@plot_x = 0
 	@@plot_y = 0
 	@@spdata = Hash.new#hash:配列に追加
+
 
 
 	def load_file( setting_array )

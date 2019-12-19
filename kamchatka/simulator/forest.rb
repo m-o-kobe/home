@@ -1,8 +1,9 @@
 require "./settings.rb"
 require "./tree.rb"
+require "./map.rb"
 
 class Forest
-	attr_accessor :trees
+	attr_accessor :trees,:pcount
 	@@num_count=Hash.new
 	@@death_count=Hash.new
 	@@sinki_count=Hash.new
@@ -22,9 +23,23 @@ class Forest
 			0,
 			buf[6]
 			) )#Treeクラスはtree.rbで定義
-		
+#		@plotmap=Array.new(@settings.plot_x/5).map{Array.new(@settings.plot_y/5)}
+		@pcount=PoplusCount.new(0,0,@settings.plot_x,@settings.plot_y,5)
 		end
 		
+	end
+	def popluscount(trees)
+	#	@pcount.reset
+		@pcount.count(trees)
+	end
+	def get_counter_2d
+		@pcount.get_count_2d
+	end
+	def get_counter(x,y)
+		@pcount.get_count
+	end
+	def make_poplussprout
+		@pcount.make_sprout
 	end
 
 
@@ -124,7 +139,6 @@ class Forest
 			end
 		end
 	end
-
 
 	def records
 		buf = Array.new

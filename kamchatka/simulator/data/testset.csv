@@ -1,0 +1,95 @@
+#######################
+#### Common settings
+"plot_x", 20
+"plot_y", 20
+"duration", 5
+"num_sp", 3
+"firefreq",1000
+
+#######################
+### Sp1 settings(lc)
+
+
+"sp_1_growth1",0.2929574
+"sp_1_growth2",-0.0052073
+"sp_1_growth3",0
+"sp_1_growth4",-0.0012914
+
+"sp_1_death11",-0.097104792
+"sp_1_death12",0.077700698
+"sp_1_death13",0
+"sp_1_death14",0.027092855
+
+"sp_1_death21", 0
+"sp_1_death22", 0
+"sp_1_death23", 0
+"sp_1_death24", 0
+
+"sp_1_kanyu1",0.913830362
+
+"sp_1_kanyu2",0
+
+"sp_1_kanyu3",0.118644068
+
+"sp_1_kanyu4",1.0
+
+"sp_1_kanyu11",3
+"sp_1_kanyu12",-2.30063
+"sp_1_kanyu13",-0.02808
+
+
+### Sp2 settings(bp)
+"sp_2_growth1",0.086865
+"sp_2_growth2",0
+"sp_2_growth3",0
+"sp_2_growth4",0
+
+"sp_2_death11",2.817916678
+"sp_2_death12",0
+"sp_2_death13",0
+"sp_2_death14",0
+
+"sp_2_death21", 0
+"sp_2_death22", 0
+"sp_2_death23", 0
+"sp_2_death24", 0
+
+"sp_2_kanyu1",0.24007571
+
+"sp_2_kanyu2",0.2365
+"sp_2_kanyu3",0.968232044
+"sp_2_kanyu4",1.0
+
+"sp_2_kanyu11",0
+"sp_2_kanyu12",100
+"sp_2_kanyu13",0
+"sp_2_kanyu21",0
+"sp_2_kanyu22",100
+"sp_2_kanyu23",0
+
+### Sp3 settings(pt)
+"sp_3_growth1",0.15753
+"sp_3_growth2",0
+"sp_3_growth3",0
+"sp_3_growth4",0
+
+"sp_3_death11", 1.589888629
+"sp_3_death12", 3.013580784
+"sp_3_death13", 0
+"sp_3_death14", 0
+
+"sp_3_death21", 0
+"sp_3_death22", 0
+"sp_3_death23", 0
+"sp_3_death24", 0
+
+"sp_3_kanyu1",5.962143539
+
+"sp_3_kanyu2",0
+"sp_3_kanyu3",87.70968
+"sp_3_kanyu4",1.0
+
+"sp_3_kanyu11",0
+"sp_3_kanyu12",100
+"sp_3_kanyu13",0
+"sp_3_dist_lim",5
