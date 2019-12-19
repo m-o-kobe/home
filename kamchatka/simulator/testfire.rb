@@ -8,8 +8,8 @@ tmp.load_file( fileio.read_settings )
 
 forest=Forest.new(
 	[
-	[5.0,5.0,3,10,10,0,1],#[x,y,sp,age,mysize,tag,mother,spnum]
-	[2.5,3.4,3,0,1,0,1],
+	[0.0,2.0,3,10,10,0,1],#[x,y,sp,age,mysize,tag,mother,spnum]
+	[0.0,3.4,3,0,1,0,1],
 	[8.0,3.0,3,0,1,0,1],
 	[15.0,3.0,3,0,1,0,1]
 	]
@@ -19,8 +19,11 @@ forest=Forest.new(
 # fire.fire_evoke
 # p fire
 forest.fire_evoke
-forest.fire_ask
-p forest.fire_layer
+#forest.fire_ask
+#p forest.fire_layer
+p forest
+forest.firedeath
+p forest
 # tree=Tree.new(
 # 	0.0,0.0,3,10,10,0,0,1
 #  )

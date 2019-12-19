@@ -87,12 +87,13 @@ class Forest
 		firesinki
 	end
 	def firedeath
-		sinu=@trees.select{
-			|tree| tree.fire_dead
+		sinu=@trees.select{|tree| 
+			tree.fire_dead(@fire_layer.ask(tree))
 		}
-		for spp in 1..@settings.num_sp do
-			@@death_count[spp] += sinu.count{|item| item.sp==spp}
-		end
+		# for spp in 1..@settings.num_sp do
+		# 	@@death_count[spp] += sinu.count{|item| item.sp==spp}
+		# end
+
 		@trees=@trees-sinu
 
 	end

@@ -64,12 +64,18 @@ class Tree
 		return seisi>seizonritu
 	end
 	
-	def fire_dead
+	def fire_dead(tf)
 		seisi=rand(0.0..1.0)
-		seizonritu=1.0/(1.0+Math::exp(-@settings.spdata(@sp,"death21")-@settings.spdata(@sp,"death22")*@mysize-@settings.spdata(@sp,"death23")*@kabu-@settings.spdata(@sp,"death24")*@crd))
+		if tf then	
+			seizonritu=@settings.spdata(@sp,"death21")
+#			seizonritu=1.0/(1.0+Math::exp(-@settings.spdata(@sp,"death21")-@settings.spdata(@sp,"death22")*@mysize-@settings.spdata(@sp,"death23")*@kabu-@settings.spdata(@sp,"death24")*@crd))	
+		else
+			seizonritu=@settings.spdata(@sp,"death22")
+#			seizonritu=1.0/(1.0+Math::exp(-@settings.spdata(@sp,"death21")-@settings.spdata(@sp,"death22")*@mysize-@settings.spdata(@sp,"death23")*@kabu-@settings.spdata(@sp,"death24")*@crd))
+		end
 		return seisi>seizonritu
-	end
 
+	end
 
 	def record
 		return [ @x, @y, @sp, @age, @mysize, @tag, @mother,@crd,@kabu,@sprout ] 

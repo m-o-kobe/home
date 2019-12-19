@@ -15,6 +15,9 @@ class Fire
         @fire_x=rand(@x_min.to_f..@x_max.to_f)
         @fire_y=rand(@y_min.to_f..@y_max.to_f)
         @fire_r=rand(@fire_r_min.to_f..@fire_r_max.to_f)
+        # @fire_x=0.0
+        # @fire_y=0.0
+        # @fire_r=5.0
     end
     def ask(tree)
 #        p dist(tree,@fire_x,@fire_y)
