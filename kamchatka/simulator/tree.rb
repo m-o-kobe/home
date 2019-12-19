@@ -12,7 +12,8 @@ class Tree
 				:mother,
 				:crd,
 				:kabu,
-				:sprout
+				:sprout,
+				:zombie
 # Newborn tags: Change if the initial data has >10000 trees
 	@@tag = 10001
 	@@sprout=10001
@@ -27,6 +28,8 @@ class Tree
 		@mother = _mother
 		@crd=0.0
 		@kabu=0.0
+		@zombie=100
+#		@dead=0
 		#tagは木の一本ずつに振ってある番号
 		if _tag != 0 then
 			@tag = _tag

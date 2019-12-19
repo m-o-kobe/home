@@ -18,12 +18,22 @@ forest=Forest.new(
 # fire=Fire.new(0,0,20,20)
 # fire.fire_evoke
 # p fire
-forest.fire_evoke
 #forest.fire_ask
 #p forest.fire_layer
 p forest
-forest.firedeath
+forest.fire_evoke
+forest.tree_death
+p "sinu"
 p forest
+
+
+
+# p "Feuer!"
+# p forest
+# forest.zombie_year
+# p forest
+# forest.zombie_year
+# p forest
 # tree=Tree.new(
 # 	0.0,0.0,3,10,10,0,0,1
 #  )

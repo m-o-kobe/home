@@ -86,15 +86,29 @@ class Forest
 		firedeath
 		firesinki
 	end
+	def zombie_year
+		@trees.each do |tree|
+			if tree.zombie<99 then
+				tree.zombie-=1
+				if tree.zombie<1 then
+					
+				end
+			end
+		end
+	end
 	def firedeath
-		sinu=@trees.select{|tree| 
-			tree.fire_dead(@fire_layer.ask(tree))
-		}
+		@trees.each do |tree|
+			if tree.fire_dead(@fire_layer.ask(tree)) then
+				tree.zombie=3
+			end
+		end
+		# sinu=@trees.select{|tree| 
+		# 	tree.fire_dead(@fire_layer.ask(tree))
+		# }
 		# for spp in 1..@settings.num_sp do
 		# 	@@death_count[spp] += sinu.count{|item| item.sp==spp}
 		# end
-
-		@trees=@trees-sinu
+		#@trees=@trees-sinu
 
 	end
 	def kakunin
@@ -263,13 +277,19 @@ class Forest
 	end
 
 	def tree_death
-		sinu=@trees.select{
-			|tree| tree.is_dead
-		}
-		for spp in 1..@settings.num_sp do
-			@@death_count[spp]+=sinu.count{|item| item.sp==spp}
+		@trees.each do |tree|
+			if tree.is_dead then
+				tree.zombie=0
+			end
 		end
-		@trees=@trees-sinu
+
+		# sinu=@trees.select{
+		# 	|tree| tree.is_dead
+		# }
+		# for spp in 1..@settings.num_sp do
+		# 	@@death_count[spp]+=sinu.count{|item| item.sp==spp}
+		# end
+		# @trees=@trees-sinu
 	end
 	def crdcal
 		@trees.each do |tar|
