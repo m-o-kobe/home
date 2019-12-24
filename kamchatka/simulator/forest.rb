@@ -87,19 +87,24 @@ class Forest
 		firesinki
 	end
 	def zombie_year
+		@sinu=Array.new
 		@trees.each do |tree|
 			if tree.zombie<99 then
 				tree.zombie-=1
 				if tree.zombie<1 then
-					
+					sinu.push(tree)
 				end
 			end
 		end
+		@trees=@trees-sinu
+		@@death_count[spp]+=sinu.count{|item| item.sp==spp}
 	end
 	def firedeath
 		@trees.each do |tree|
 			if tree.fire_dead(@fire_layer.ask(tree)) then
-				tree.zombie=3
+				if tree.zombie>99 then
+					tree.zombie=3
+				end
 			end
 		end
 		# sinu=@trees.select{|tree| 
@@ -278,8 +283,10 @@ class Forest
 
 	def tree_death
 		@trees.each do |tree|
-			if tree.is_dead then
-				tree.zombie=0
+			if tree.zombie>99 then
+				if tree.is_dead then
+					tree.zombie=0
+				end
 			end
 		end
 

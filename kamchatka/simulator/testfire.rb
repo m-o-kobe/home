@@ -22,7 +22,11 @@ forest=Forest.new(
 #p forest.fire_layer
 p forest
 forest.fire_evoke
+
+
 forest.tree_death
+p forest
+forest.firedeath
 p "sinu"
 p forest
 
