@@ -122,6 +122,7 @@ class Forest
 		puts @@sinki_count
 	end
 	def firesinki
+		#親の元配置を加味した分布も入れる
 		for spp in 1..@settings.num_sp do
 			oyagi=Array.new
 			oyagi=oyagiselect(spp)
