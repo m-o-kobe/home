@@ -11,34 +11,63 @@ class PoplusCount
         @step=step
         @x_size=(@x_max-@x_min)/@step
         @y_size=(@y_max-@y_min)/@step
-        @counter=Array.new(@x_size).map{Array.new(@y_size,0)}
-        @lim=@settings.spdata(3,"dist_lim")
+#        @counter=Array.new(@x_size).map{Array.new(@y_size,0)}
+        @counter_05=Array.new(@x_size).map{Array.new(@y_size,0)}
+        @counter_10=Array.new(@x_size).map{Array.new(@y_size,0)}
+        @counter_15=Array.new(@x_size).map{Array.new(@y_size,0)}
+        @counter_20=Array.new(@x_size).map{Array.new(@y_size,0)}
+        
+        #@lim=@settings.spdata(3,"dist_lim")
+        
     end
+    # def count(trees)
+    #     for i in 0..@x_size-1
+    #         for j in 0..@y_size-1
+    #             oyacrd=0
+    #             trees.each do |tree|
+    #                 if tree.sp==3 then
+    #                     dist_chuusin=dist(tree,i,j)
+    #                     if dist_chuusin < @lim then
+    #                         oyacrd += 1 / (dist_chuusin+0.1)
+    #                     end
+    #                     @counter[i][j] = oyacrd
+    #                 end
+    #             end
+    #         end
+    #     end  
+    # end
     def count(trees)
         for i in 0..@x_size-1
             for j in 0..@y_size-1
-                oyacrd=0
-                trees.each do |tree|
-                    if tree.sp==3 then
-                        dist_chuusin=dist(tree,i,j)
-                        if dist_chuusin < @lim then
-                            oyacrd += 1 / (dist_chuusin+0.1)
-                        end
-                        @counter[i][j] = oyacrd
+                trees.each do |obj|
+                    _dist=dist(obj,i,j)
+                    if _dist<5.0
+                        @counter_05[i][j]+=obj.mysize
+                    elsif _dist<10.0
+                        @counter_10[i][j]+=obj.mysize
+                    elsif _dist<15.0
+                        @counter_15[i][j]+=obj.mysize
+                    elsif _dist<20.0
+                        @counter_20[i][j]+=obj.mysize
                     end
                 end
             end
-        end  
+        end
     end
     def reset
         for i in 0..@x_size-1 do
             for j in 0..@y_size-1 do
-                @counter[i][j]=0
+                @counter_05[i][j]=0.0
+                @counter_10[i][j]=0.0
+                @counter_15[i][j]=0.0
+                @counter_20[i][j]=0.0
+
             end
         end
     end
     def get_count_2d
-        return @counter
+        return @counter_05
+        return @counter_10
     end
     def get_count(x,y)
         return @counter[x][y]
@@ -54,7 +83,8 @@ class PoplusCount
         sprout_zahyou=Array.new
         for i in 0..@x_size-1 do
             for j in 0..@y_size-1 do
-                sprout_kazu=@counter[i][j]*2
+                sprout_kazu=@counter_05[i][j]*2
+                #それっぽい式にしておく
                 sprout_kazu=sprout_kazu.to_i
                 p sprout_kazu
                 for k in 1..sprout_kazu

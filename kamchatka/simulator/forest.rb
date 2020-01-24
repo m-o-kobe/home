@@ -1,6 +1,7 @@
 require "./settings.rb"
 require "./tree.rb"
 require "./map.rb"
+require "./fire.rb"
 
 class Forest
 	attr_accessor :trees,:pcount,:fire_layer
@@ -29,14 +30,14 @@ class Forest
 		@fire_layer=Fire.new(0,0,@settings.plot_x,@settings.plot_y)
 		
 	end
-	def popluscount(trees)
-	#	@pcount.reset
-		@pcount.count(trees)
+	def popluscount
+		@pcount.reset
+		@pcount.count(@trees)
 	end
 	def get_counter_2d
 		@pcount.get_count_2d
 	end
-	def get_counter(x,y)
+	def get_counter
 		@pcount.get_count
 	end
 	def make_poplussprout

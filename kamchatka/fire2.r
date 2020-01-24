@@ -67,9 +67,10 @@ sum_juvenile$sum_ba<-sum_juvenile$juvenile_ba.mean*sum_juvenile$juvenile_ba.leng
 sum_juvenile3<-sum_juvenile[c(1,2,3,5,7)]
 
 sum1<-merge(sum_parent1,sum_juvenile3,by=c("parent_num1","parent_color"),all = TRUE)
-#sum2<-merge(sum_parent,sum_juvenile,by=c("parent_num1","parent_color"))
+sum2<-merge(sum_parent,sum_juvenile,by=c("parent_num1","parent_color"))
 #sum3<-subset(sum1,is.na(sum1$dbh0.mean))
-sum4<-subset(sum1,!is.na(sum1$dbh0.mean))
+sum4<-subset(sum1,is.na(sum1$dbh0.mean))
+difB <- setdiff(sum1, sum2)
 
 sum41<-sum4[,c(-1,-2)]
 
