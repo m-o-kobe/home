@@ -2,13 +2,13 @@ library(doBy)
 library(dplyr)
 library(spatstat)
 library("colorRamps")
-tc <- colourmap(matlab.like2(30), breaks=seq(0.0,1.0,length=31))
-tc1 <- colourmap(matlab.like2(30), breaks=seq(0.0,0.2,length=31))
+library(ggplot2)
+
+tc <- colourmap(matlab.like2(30), breaks=seq(0.0,1.01,length=31))
+tc1 <- colourmap(matlab.like2(30), breaks=seq(0.0,0.31,length=31))
 
 
-tc1 <- colourmap(topo.colors(30), breaks=seq(0.0,0.2,length=31))
 
-tc1 <- colourmap(blue2green(30), breaks=seq(0.0,0.2,length=31))
 
 motofire<-read.csv("fire_maiboku.csv", fileEncoding = "UTF-8-BOM")
 #fire_sprout1<-read.csv("fire_bp_sprout.csv", fileEncoding = "UTF-8-BOM")
@@ -23,20 +23,55 @@ fire1$da[fire1$D.A..2000.=="A"]<-1
 
 
 pppfire<-ppp(fire1$xx,fire1$yy,window=owin(c(0,90),c(0,100)),marks=fire1$D.A..2000.)
-plot(density(pppfire))
+plot(density(pppfire,sigma=5.8))
 
 fire3<-fire1
 
 title="all"
-fire3<-subset(fire1,fire1$sp.=="Be")
-#fire3<-subset(fire1,fire1$dbh0<=100)
-#fire3<-subset(fire3,fire3$dbh0>20)
+#fire3<-subset(fire1,fire1$sp.=="Be")
+fire3<-subset(fire1,fire1$dbh0<=10)
+fire3<-subset(fire3,fire3$dbh0>0.0)
 fire2<-subset(fire3,fire3$da==0)
 pppfire1<-ppp(fire3$xx,fire3$yy,window=owin(c(0,90),c(0,100)))
-denfire1<-density(pppfire1)
+denfire1<-density(pppfire1,sigma=5.8)
 pppfire2<-ppp(fire2$xx,fire2$yy,window=owin(c(0,90),c(0,100)),marks=fire2$D.A..2000.)
-denfire2<-density(pppfire2)
+denfire2<-density(pppfire2,sigma=5.8)
 
-plot(denfire1,col=tc1,axes=TRUE,main=title)
-plot(denfire2/denfire1,col=tc,axes=TRUE,main=title)
+plot(denfire1,col=tc1,axes=TRUE,main=title,asp=1)
 
+plot(denfire2/denfire1,col=tc,axes=TRUE,main=title,asp=1)
+
+intensity1<-denfire2/denfire1
+
+xstep<-intensity1$xstep
+ystep<-intensity1$ystep
+f<-function(x,y){
+  x<129&x>0&y<129&y>0
+}
+fire1$firex<-as.integer((fire1$xx/xstep)+1)
+fire1$firey<-as.integer((fire1$yy/ystep)+1)
+
+fire4<-subset(fire1,f(firex,firey))
+fire4$fire<-0
+intensity2<-intensity1$v
+len<-nrow(fire4)
+for(i in 1:len){
+  fire_intensity<-intensity2[fire4$firey[i],fire4$firex[i]]
+  fire4$fire[i]<-as.numeric(fire_intensity)
+}
+fire4$fire_intense<-0
+fire4$fire_intense[fire4$fire>0.8102]<-1
+sp<-"Po"
+fire_sp<-subset(fire4,fire4$sp.==sp)
+
+model1<-glm(formula=da~fire+dbh0,data=fire_sp,family="binomial")
+summary(model1)
+model2<-step(model1)
+summary(model2)
+
+
+g<-ggplot(data=fire_sp,aes(x=dbh0,y=fire,color=D.A..2000.))+
+  ggtitle(sp)+
+  geom_point()
+print(g)          
+          
