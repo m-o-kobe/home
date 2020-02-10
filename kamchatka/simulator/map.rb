@@ -83,8 +83,11 @@ class PoplusCount
         sprout_zahyou=Array.new
         for i in 0..@x_size-1 do
             for j in 0..@y_size-1 do
-                sprout_kazu=@counter_05[i][j]*2
-                #それっぽい式にしておく
+                sprout_kazu=@counter_05[i][j]*@settings.spdata(3,"fire1_05")+
+                @counter_10[i][j]*@settings.spdata(3,"fire1_10")+
+                @counter_15[i][j]*@settings.spdata(3,"fire1_15")+
+                @counter_20[i][j]*@settings.spdata(3,"fire1_20")
+                
                 sprout_kazu=sprout_kazu.to_i
                 p sprout_kazu
                 for k in 1..sprout_kazu

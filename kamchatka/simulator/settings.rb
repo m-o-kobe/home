@@ -28,7 +28,13 @@ def params
 		"kanyu21",#dsを計算する距離限界、ランダム
 		"kanyu22",#定数、ランダム
 		"kanyu23",#dsに比例、ランダム
-		"dist_lim"
+		"dist_lim",
+
+		"fire1_05",
+		"fire1_10",
+		"fire1_15",
+		"fire1_20"
+
 		]
 end
 

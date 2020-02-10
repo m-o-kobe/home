@@ -26,3 +26,5 @@ end
 #p forest.trees
 forest.popluscount
 p forest.get_counter_2d
+p forest.make_poplussprout
+

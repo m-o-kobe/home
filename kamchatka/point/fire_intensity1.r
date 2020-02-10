@@ -60,11 +60,12 @@ for(i in 1:len){
   fire4$fire[i]<-as.numeric(fire_intensity)
 }
 fire4$fire_intense<-0
-fire4$fire_intense[fire4$fire>0.8102]<-1
-sp<-"Po"
+fire4$fire_intense[fire4$fire>0.8240]<-1
+sp<-"La"
 fire_sp<-subset(fire4,fire4$sp.==sp)
+fire_sp<-fire4
 
-model1<-glm(formula=da~fire+dbh0,data=fire_sp,family="binomial")
+model1<-glm(formula=da~fire_intense+dbh0,data=fire_sp,family="binomial")
 summary(model1)
 model2<-step(model1)
 summary(model2)

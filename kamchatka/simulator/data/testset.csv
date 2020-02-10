@@ -1,7 +1,7 @@
 #######################
 #### Common settings
-"plot_x", 20
-"plot_y", 20
+"plot_x", 10
+"plot_y", 10
 "duration", 5
 "num_sp", 3
 "firefreq",1000
@@ -93,3 +93,8 @@
 "sp_3_kanyu12",100
 "sp_3_kanyu13",0
 "sp_3_dist_lim",5
+
+"sp_3_fire1_05",4.0
+"sp_3_fire1_10",3.0
+"sp_3_fire1_15",2.0
+"sp_3_fire1_20",1.0
