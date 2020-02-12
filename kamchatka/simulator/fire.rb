@@ -19,12 +19,12 @@ class Fire
         @fire_y=0.0
         @fire_r=5.0
     end
-    def ask(tree)
+    def ask(x,y)
 #        p dist(tree,@fire_x,@fire_y)
-        return dist(tree,@fire_x,@fire_y)<@fire_r
+        return dist(x,y,@fire_x,@fire_y)<@fire_r
         
     end
-    def dist( tree_a,x,y)
-        return Math::sqrt((tree_a.x - x)**2 + (tree_a.y - y)**2)
+    def dist( x_1,y_1,x_2,y_2)
+        return Math::sqrt((x_1 - x_2)**2 + (y_1 - y_2)**2)
 	end
 end

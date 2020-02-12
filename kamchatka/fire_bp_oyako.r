@@ -1,7 +1,7 @@
 #bp解析用
 library(doBy)
 library("stringr")
-motofire<-read.csv("fire_maiboku.csv", fileEncoding = "UTF-8-BOM")
+motofire<-read.csv("fire_maiboku0212.csv")
 fire_sprout1<-read.csv("fire_bp_sprout.csv", fileEncoding = "UTF-8-BOM")
 fire1<-motofire
 #fire1$xx<-as.numeric(fire1$grid..x.)+as.numeric(as.character(fire1$x))
@@ -52,7 +52,7 @@ for(i in 1:len1){
 
 
 juvenile2<-juvenile1[,c(-2)]
-sum_parent<-summaryBy(formula = dbh0+da+ba+survival_ba~color+sprout..old.,data=parent_bp,FUN=c(mean,length))
+sum_parent<-summaryBy(formula = dbh0+da+ba+survival_ba+fire_intense~color+sprout..old.,data=parent_bp,FUN=c(mean,length))
 sum_juvenile<-summaryBy(formula = X04DBHmm+juvenile_ba~parent_color+parent_num1,data=juvenile2,FUN=c(mean,length))
 names(sum_parent)[ which( names(sum_parent)=="sprout..old." ) ] <- "parent_num1"
 names(sum_parent)[ which( names(sum_parent)=="color" ) ] <- "parent_color"
@@ -63,6 +63,9 @@ sum_parent$survivalba<-0
 sum_parent$survivalba[sum_parent$survival_ba.mean>0.01]<-sum_parent$survival_ba.mean[sum_parent$survival_ba.mean>0.01]/sum_parent$da.mean[sum_parent$survival_ba.mean>0.01]
   
 sum_parent1<-sum_parent[c(1,2,3,4,7,11,12,13)]
+sum_parent1<-sum_parent[c(1,2,3,4,5,6,7,8)]
+sum_parent1$parent_ba<-sum_parent1$ba.mean*sum_parent$dbh0.length
+
 sum_juvenile$sum_ba<-sum_juvenile$juvenile_ba.mean*sum_juvenile$juvenile_ba.length
 sum_juvenile3<-sum_juvenile[c(1,2,3,5,7)]
 
@@ -71,26 +74,22 @@ sum2<-merge(sum_parent,sum_juvenile,by=c("parent_num1","parent_color"))
 #sum3<-subset(sum1,is.na(sum1$dbh0.mean))
 sum4<-subset(sum1,!is.na(sum1$dbh0.mean))
 
-sum41<-sum4[,c(-1,-2)]
+sum41<-sum4[,c(-1,-2,-5,-6,-9,-12)]
 
 
 
 colnames(sum41)<-c("parent_dbh",
                    "parent_survival_rate",
+                   "fire",
                    "parent_num",
-                   "parent_survival_num",
-                   "parent_ba",
-                   "parent_survival_ba",
                    "juv_dbh",
-                   "juv_num",
-                   "juv_ba")
+                   "juv_num")
 
 
 sum41$juv_dbh[is.na(sum41$juv_dbh)]<-0
 sum41$juv_num[is.na(sum41$juv_num)]<-0
-sum41$juv_ba[is.na(sum41$juv_ba)]<-0
-sum41$da<-"a"
-sum41$da[sum41$juv_ba==0]<-"d"
+#sum41$da<-"a"
+#sum41$da[sum41$juv_ba==0]<-"d"
 
 
 
@@ -149,10 +148,19 @@ pm<-ggmatrix(plotList,
              byrow = FALSE)
 print(pm)
 
-model3<-lm(formula=juv_num~parent_dbh+parent_num,data=sum42)
+#sum42<-subset(sum41,sum41$juv_num>0)
+#model3<-lm(formula=juv_num~parent_dbh+parent_num+fire+parent_survival_rate,data=sum42)
+model3<-lm(formula=juv_num~parent_dbh+parent_num+fire+parent_survival_rate,data=sum41)
+
+
 summary(model3)
+model3<-step(model3)
+
 par(mfrow=c(2,2))
+
 plot(model3)
 par(mfrow=c(1,1))
 
 plot(model3$fitted.values,sum42$juv_num)
+
+

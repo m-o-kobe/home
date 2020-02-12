@@ -74,5 +74,6 @@ summary(model2)
 g<-ggplot(data=fire_sp,aes(x=dbh0,y=fire,color=D.A..2000.))+
   ggtitle(sp)+
   geom_point()
-print(g)          
+print(g)
+write.csv(fire4,"fire_maiboku0212.csv")
           

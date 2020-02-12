@@ -122,9 +122,72 @@ class Forest
 		puts @@death_count
 		puts @@sinki_count
 	end
+	def fire_poplus_regeneration
+		sprout=Array.new
+		sprout=@pcount.make_sprout
+		sprout.each do |spzahyou|
+			@trees.push(Tree.new(
+				spzahyou[0],
+				spzahyou[1],
+				3,#sp
+				0,#age
+				0.0,#size
+				0,#@tag
+				0,#motherのタグ
+				0
+				))
+		end
+	end
+	def fire_betula_regeneration
+		
+		bp_sp=Array.new
+		all_bp=Array.new
+		@trees.each do |tree|
+			if tree.sp==2 then
+				bp_sp.push(tree.sprout)
+				all_bp.push(tree)
+			end
+		end
+#		p bp_sp
+		bp_sp=bp_sp.uniq
+#		p bp_sp
+		bp_sp.each do |bp_parents|
+			parent_num=0
+			parent_dbh=0.0
+			parent_x=0.0
+			parent_y=0.0
+			all_bp.each do |tree|
+				if bp_parents==tree.sprout then
+					parent_x+=tree.x
+					parent_y+=tree.y
+					parent_num+=1
+					parent_dbh+=tree.mysize
+				end
+			end
+			parent_dbh=parent_dbh/parent_num
+			parent_x=parent_x/parent_num
+			parent_y=parent_y/parent_num
+			# p parent_num
+			# p parent_dbh
+			# p parent_x
+			# p parent_y
+			parent_fire=@fire_layer.ask(parent_x,parent_y) ? 1 : 0
+			juv_num=parent_dbh*@setting.spdata(3,"fire1_dbh")+
+			parent_num*@setting.spdata(3,"fire1_num")+
+			parent_fire*@setting.spdata(3,"fire1_fire")
+			juv_num=juv_num.to_i
+			#ここにtree.pushを作る
+		end
+	end
+
 	def firesinki
 		#親の元配置を加味した分布も入れる
 		for spp in 1..@settings.num_sp do
+			if spp==3 then
+				fire_poplus_regeneration
+			elsif spp==2 then
+				fire_betula_regeneration
+			end
 			oyagi=Array.new
 			oyagi=oyagiselect(spp)
 			oyakazu=oyagi.count

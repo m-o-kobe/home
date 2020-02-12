@@ -23,7 +23,6 @@ forest=Forest.new(
 p forest
 forest.fire_evoke
 
-
 forest.tree_death
 p forest
 forest.firedeath
