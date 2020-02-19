@@ -1,6 +1,6 @@
 #######################
 #### Common settings
-"plot_x", 100
+"plot_x", 90
 "plot_y", 100
 "duration", 1
 "num_sp", 3

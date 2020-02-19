@@ -11,11 +11,12 @@ INIT_SPROUT =6
 
 class Fileio
 
-	def initialize( settings_file, initial_file, out_file,stat_file)
+	def initialize( settings_file, initial_file, out_file,stat_file,fire_layer)
 		@setfile 	= CSV.open( settings_file, "r" )#settingファイルを読み込みモード
 		@initfile 	= CSV.open( initial_file, "r" )
 	 	@outfile	= File.open( out_file, "w" )#outputファイルに書き込みモード
-	 	@statfile=File.open(stat_file,"w")
+		@statfile=File.open(stat_file,"w")
+		@firefile=CSV.open(fire_layer,"r")
 	end
 
 	def read_init
@@ -30,9 +31,14 @@ class Fileio
 			]}
 		#x[0]が#で始まっていたら削除.x[init_x]などを整数型に変える処理
 	end
+	def read_fire
+		return @firefile.read
+	end
 
 	def read_settings
+		
 		return @setfile.read.delete_if{|x| x.size!=2|| x[0]=~/^#/}
+
 	end
 
 	def close_init
