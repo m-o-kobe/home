@@ -1,10 +1,10 @@
 #######################
 #### Common settings
-"plot_x", 10
-"plot_y", 10
-"duration", 5
+"plot_x", 100
+"plot_y", 100
+"duration", 1
 "num_sp", 3
-"firefreq",1000
+"firefreq",1
 "fire_r_min",5
 "fire_r_max",10
 
@@ -20,9 +20,9 @@
 "sp_1_death13",0
 "sp_1_death14",0.027092855
 
-"sp_1_death21", 0
-"sp_1_death22", 0
-"sp_1_death23", 0
+"sp_1_death21", -1.8324
+"sp_1_death22", 0.1403
+"sp_1_death23", -3.4960
 "sp_1_death24", 0
 
 "sp_1_kanyu1",0.913830362
@@ -49,9 +49,9 @@
 "sp_2_death13",0
 "sp_2_death14",0
 
-"sp_2_death21", 0
-"sp_2_death22", 0
-"sp_2_death23", 0
+"sp_2_death21", -3.82708
+"sp_2_death22", 0.38488
+"sp_2_death23", -19.04804
 "sp_2_death24", 0
 
 "sp_2_kanyu1",0.24007571
@@ -66,6 +66,12 @@
 "sp_2_kanyu21",0
 "sp_2_kanyu22",100
 "sp_2_kanyu23",0
+
+"sp_2_fire1_intercept",-1.0171
+"sp_2_fire1_dbh",0.6720
+"sp_2_fire1_num",1.2448
+"sp_2_fire1_fire",0
+
 
 ### Sp3 settings(pt)
 "sp_3_growth1",0.15753
@@ -94,7 +100,8 @@
 "sp_3_kanyu13",0
 "sp_3_dist_lim",5
 
-"sp_3_fire1_05",1.0
-"sp_3_fire1_10",1.0
-"sp_3_fire1_15",1.0
-"sp_3_fire1_20",1.0
+"sp_3_fire1_intercept",1.06098
+"sp_3_fire1_05",2.36760
+"sp_3_fire1_10",1.03445
+"sp_3_fire1_15",0.31372
+"sp_3_fire1_20",0.12344

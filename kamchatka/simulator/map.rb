@@ -20,35 +20,23 @@ class PoplusCount
         #@lim=@settings.spdata(3,"dist_lim")
         
     end
-    # def count(trees)
-    #     for i in 0..@x_size-1
-    #         for j in 0..@y_size-1
-    #             oyacrd=0
-    #             trees.each do |tree|
-    #                 if tree.sp==3 then
-    #                     dist_chuusin=dist(tree,i,j)
-    #                     if dist_chuusin < @lim then
-    #                         oyacrd += 1 / (dist_chuusin+0.1)
-    #                     end
-    #                     @counter[i][j] = oyacrd
-    #                 end
-    #             end
-    #         end
-    #     end  
-    # end
+ 
     def count(trees)
         for i in 0..@x_size-1
             for j in 0..@y_size-1
                 trees.each do |obj|
-                    _dist=dist(obj,i,j)
-                    if _dist<5.0
-                        @counter_05[i][j]+=obj.mysize
-                    elsif _dist<10.0
-                        @counter_10[i][j]+=obj.mysize
-                    elsif _dist<15.0
-                        @counter_15[i][j]+=obj.mysize
-                    elsif _dist<20.0
-                        @counter_20[i][j]+=obj.mysize
+                    if obj.sp==3 then
+                        _dist=dist(obj,i,j)
+                        if _dist<5.0
+                            @counter_05[i][j]+=obj.mysize
+                        elsif _dist<10.0
+                            @counter_10[i][j]+=obj.mysize
+                        elsif _dist<15.0
+                            @counter_15[i][j]+=obj.mysize
+                        elsif _dist<20.0
+                            @counter_20[i][j]+=obj.mysize
+                        end
+    
                     end
                 end
             end
@@ -83,13 +71,14 @@ class PoplusCount
         sprout_zahyou=Array.new
         for i in 0..@x_size-1 do
             for j in 0..@y_size-1 do
-                sprout_kazu=@counter_05[i][j]*@settings.spdata(3,"fire1_05")+
+                sprout_kazu=@settings.spdata(3,"fire1_intercept")+
+                @counter_05[i][j]*@settings.spdata(3,"fire1_05")+
                 @counter_10[i][j]*@settings.spdata(3,"fire1_10")+
                 @counter_15[i][j]*@settings.spdata(3,"fire1_15")+
                 @counter_20[i][j]*@settings.spdata(3,"fire1_20")
                 
                 sprout_kazu=sprout_kazu.to_i
-                p sprout_kazu
+                #p sprout_kazu
                 for k in 1..sprout_kazu
                     # sprout_zahyou[l]=[
                     #     @step*i+rand(0.0..@step),

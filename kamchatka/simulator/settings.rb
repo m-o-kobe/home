@@ -33,7 +33,11 @@ def params
 		"fire1_05",
 		"fire1_10",
 		"fire1_15",
-		"fire1_20"
+		"fire1_20",
+		"fire1_dbh",
+		"fire1_num",
+		"fire1_fire",
+		"fire1_intercept"
 
 		]
 end

@@ -8,6 +8,7 @@ class Forest
 	@@num_count=Hash.new
 	@@death_count=Hash.new
 	@@sinki_count=Hash.new
+	@@zombie=Hash.new
 	
 	def initialize( init_array )
 		@year = 0
@@ -56,7 +57,10 @@ class Forest
 	def yearly_activities#成長量･新規･枯死計算
 		@year += 1
 		reset_counter
+
 		crdcal
+		@pcount.count(@trees)
+		@pcount.count(@trees)
 		if @year%@settings.firefreq==0 then
 			fire
 			crdcal
@@ -71,6 +75,7 @@ class Forest
 			@@num_count[spp]=0
 			@@death_count[spp]=0
 			@@sinki_count[spp]=0
+			@@zombie=0
 		end
 	end
 	
@@ -84,6 +89,7 @@ class Forest
 	end
 	
 	def fire
+		fire_evoke
 		firedeath
 		firesinki
 	end
@@ -102,9 +108,10 @@ class Forest
 	end
 	def firedeath
 		@trees.each do |tree|
-			if tree.fire_dead(@fire_layer.ask(tree)) then
+			if tree.fire_dead(@fire_layer.ask(tree.x,tree.y)) then
 				if tree.zombie>99 then
 					tree.zombie=3
+					@@zombie+=1
 				end
 			end
 		end
@@ -121,11 +128,13 @@ class Forest
 		puts @@num_count
 		puts @@death_count
 		puts @@sinki_count
+		puts @@zombie
 	end
 	def fire_poplus_regeneration
 		sprout=Array.new
 		sprout=@pcount.make_sprout
 		sprout.each do |spzahyou|
+			@@sinki_count[3]=@@sinki_count[3]+1
 			@trees.push(Tree.new(
 				spzahyou[0],
 				spzahyou[1],
@@ -167,16 +176,29 @@ class Forest
 			parent_dbh=parent_dbh/parent_num
 			parent_x=parent_x/parent_num
 			parent_y=parent_y/parent_num
-			# p parent_num
-			# p parent_dbh
+			#p parent_num
+			#p parent_dbh
 			# p parent_x
 			# p parent_y
 			parent_fire=@fire_layer.ask(parent_x,parent_y) ? 1 : 0
-			juv_num=parent_dbh*@setting.spdata(3,"fire1_dbh")+
-			parent_num*@setting.spdata(3,"fire1_num")+
-			parent_fire*@setting.spdata(3,"fire1_fire")
+			juv_num=@settings.spdata(2,"fire1_intercept")+
+			parent_dbh*@settings.spdata(2,"fire1_dbh")+
+			parent_num*@settings.spdata(2,"fire1_num")+
+			parent_fire*@settings.spdata(2,"fire1_fire")
 			juv_num=juv_num.to_i
-			#ここにtree.pushを作る
+			for i in 1..juv_num
+				@@sinki_count[2] = 1 + @@sinki_count[2]
+				@trees.push(Tree.new(
+					parent_x,
+					parent_y,
+					2,
+					0,#age
+					0.0,#size
+					0,#@tag
+					bp_parents,#motherのタグ
+					bp_parents
+					))
+			end
 		end
 	end
 
@@ -188,49 +210,49 @@ class Forest
 			elsif spp==2 then
 				fire_betula_regeneration
 			end
-			oyagi=Array.new
-			oyagi=oyagiselect(spp)
-			oyakazu=oyagi.count
-			kanyuusuu=(oyakazu*@settings.spdata(spp,"kanyu3")).to_i
-			@@sinki_count[spp]+=kanyuusuu
-			for i in 1..kanyuusuu do
+			# oyagi=Array.new
+			# oyagi=oyagiselect(spp)
+			# oyakazu=oyagi.count
+			# kanyuusuu=(oyakazu*@settings.spdata(spp,"kanyu3")).to_i
+			# @@sinki_count[spp]+=kanyuusuu
+			# for i in 1..kanyuusuu do
 				
-					for j in 1..1000 do
-						oya=rand(oyakazu)-1
-						#親木を選ぶ
-						kyori=rand(0.0..1.0)*@settings.spdata(spp,"kanyu4")
-						kaku=rand(0.0..2.0*Math::PI)
-						kouhox=oyagi[oya].x+kyori*Math.sin(kaku)#@x
-						kouhoy=oyagi[oya].y+kyori*Math.cos(kaku)#@y
-						ds=0.0
-						@trees.each do |obj|
-							_dist =((kouhox-obj.x)**2.0+(kouhoy-obj.y)**2.0)**0.5
-							if _dist<@settings.spdata(spp,"kanyu11")&&obj.sp!=spp
-								if _dist==0.0
-									ds+=obj.mysize/0.01
-								else
-									ds+=obj.mysize/_dist
-								end
-							end
-						end
-						kanyu=rand(0.0..1.0)
-						kanyuritu=1.0/(1.0+Math::exp(-@settings.spdata(spp,"kanyu12")-ds*@settings.spdata(spp,"kanyu13")))
-						if kanyu<kanyuritu
-							@trees.push(Tree.new(
-								kouhox,
-								kouhoy,
-								spp,
-								0,#age
-								0.0,#size
-								0,#@tag
-								oyagi[oya].tag,#motherのタグ
-								oyagi[oya].sprout
-								))
-							break
-						end
-					end
+			# 		for j in 1..1000 do
+			# 			oya=rand(oyakazu)-1
+			# 			#親木を選ぶ
+			# 			kyori=rand(0.0..1.0)*@settings.spdata(spp,"kanyu4")
+			# 			kaku=rand(0.0..2.0*Math::PI)
+			# 			kouhox=oyagi[oya].x+kyori*Math.sin(kaku)#@x
+			# 			kouhoy=oyagi[oya].y+kyori*Math.cos(kaku)#@y
+			# 			ds=0.0
+			# 			@trees.each do |obj|
+			# 				_dist =((kouhox-obj.x)**2.0+(kouhoy-obj.y)**2.0)**0.5
+			# 				if _dist<@settings.spdata(spp,"kanyu11")&&obj.sp!=spp
+			# 					if _dist==0.0
+			# 						ds+=obj.mysize/0.01
+			# 					else
+			# 						ds+=obj.mysize/_dist
+			# 					end
+			# 				end
+			# 			end
+			# 			kanyu=rand(0.0..1.0)
+			# 			kanyuritu=1.0/(1.0+Math::exp(-@settings.spdata(spp,"kanyu12")-ds*@settings.spdata(spp,"kanyu13")))
+			# 			if kanyu<kanyuritu
+			# 				@trees.push(Tree.new(
+			# 					kouhox,
+			# 					kouhoy,
+			# 					spp,
+			# 					0,#age
+			# 					0.0,#size
+			# 					0,#@tag
+			# 					oyagi[oya].tag,#motherのタグ
+			# 					oyagi[oya].sprout
+			# 					))
+			# 				break
+			# 			end
+			# 		end
 				
-			end
+			# end
 		end
 	end
 

@@ -12,7 +12,7 @@ for(i in 0:xmax){
   }
 }
 parent1<-subset(parent1,parent1$x!=1000)
-write.csv(parent1,"map.csv")
+#write.csv(parent1,"map.csv")
 
 fire1<-subset(parent,parent$sp.=="Po")
 fire1$xx<-as.numeric(fire1$grid..x.)+as.numeric(as.character(fire1$x))
@@ -25,12 +25,27 @@ poplus$x1<-0
 poplus$x2<-0
 poplus$x3<-0
 
-write.csv(poplus,"fire_poplus.csv")
+#write.csv(poplus,"fire_poplus.csv")
 
 children<-read.csv("5m_poplus_datateisei.csv",fileEncoding = "UTF-8-BOM")
 parent<-read.csv("crd/poplus_map.csv")
+
+parent$firex<-as.integer(((parent$x+2.5)/xstep)+1)
+parent$firey<-as.integer(((parent$y+2.5)/ystep)+1)
+
+fire4<-subset(parent,f(firex,firey))
+fire4$fire<-0
+intensity2<-intensity1$v
+len<-nrow(fire4)
+for(i in 1:len){
+  fire_intensity<-intensity2[fire4$firey[i],fire4$firex[i]]
+  fire4$fire[i]<-as.numeric(fire_intensity)
+}
+
+parent<-fire4
+
 taiou<-merge(parent,children)
-sum41<-taiou[,c(3,4,5,6,7,8,10,17)]
+sum41<-taiou[,c(3,4,5,6,7,10,11,20)]
 name1<-colnames(sum41)
 plotList <- list()
 k=1
@@ -59,7 +74,15 @@ print(pm)
 library(GGally)
 p<-ggpairs(data=sum41)
 print(p)
-po_lm<-lm(formula=Po_sucker2000~Crd5+Crd10+Crd15+crd20,data=sum41)
+po_lm<-lm(formula=Po_sucker2000~Crd5+Crd10+Crd15+crd20+fire-1,data=sum41)
 summary(po_lm)
+po_lm1<-step(po_lm,k=log(nrow(sum41)))
+summary(po_lm1)
 par(mfrow=c(2,2)) 
-plot(po_lm)
+plot(po_lm1)
+
+par(mfrow=c(1,1))
+plot(po_lm1$fitted.values,sum41$Po_sucker2000)
+
+summary(po_lm1$fitted.values)
+

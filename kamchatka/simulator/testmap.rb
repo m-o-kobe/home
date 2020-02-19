@@ -20,4 +20,7 @@ p forest
 # forest.get_counter_2d
 forest.fire_evoke
 
-forest.fire_betula_regeneration
+forest.reset_counter
+forest.yearly_activities
+forest.kakunin
+#p forest

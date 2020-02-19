@@ -26,57 +26,39 @@ pppfire<-ppp(fire1$xx,fire1$yy,window=owin(c(0,90),c(0,100)),marks=fire1$D.A..20
 plot(density(pppfire,sigma=5.8))
 
 fire3<-fire1
-
-title="all"
-fire3<-subset(fire1,fire1$sp.=="Be")
-#fire3<-subset(fire1,fire1$dbh0<=10)
-#fire3<-subset(fire3,fire3$dbh0>0.0)
 fire2<-subset(fire3,fire3$da==0)
 pppfire1<-ppp(fire3$xx,fire3$yy,window=owin(c(0,90),c(0,100)))
 denfire1<-density(pppfire1,sigma=5.8)
 pppfire2<-ppp(fire2$xx,fire2$yy,window=owin(c(0,90),c(0,100)),marks=fire2$D.A..2000.)
 denfire2<-density(pppfire2,sigma=5.8)
 
-plot(denfire1,col=tc1,axes=TRUE,main=title,asp=1)
+#plot(denfire1,col=tc1,axes=TRUE,main=title,asp=1)
 
-plot(denfire2/denfire1,col=tc,axes=TRUE,main=title,asp=1)
+#plot(denfire2/denfire1,col=tc,axes=TRUE,main=title,asp=1)
 
 intensity1<-denfire2/denfire1
+fire_intensity3<-as.vector(intensity2)
 
-xstep<-intensity1$xstep
-ystep<-intensity1$ystep
-f<-function(x,y){
-  x<129&x>0&y<129&y>0
-}
-fire1$firex<-as.integer((fire1$xx/xstep)+1)
-fire1$firey<-as.integer((fire1$yy/ystep)+1)
+fire3<-fire1
+#fire3<-subset(fire1,fire1$sp.=="Be")
+fire3<-subset(fire1,fire1$dbh0<=10)
+fire3<-subset(fire3,fire3$dbh0>0)
+#fire2<-subset(fire3,fire3$da==0)
+pppfire1<-ppp(fire3$xx,fire3$yy,window=owin(c(0,90),c(0,100)))
+denfire1<-density(pppfire1,sigma=5.8)
+#pppfire2<-ppp(fire2$xx,fire2$yy,window=owin(c(0,90),c(0,100)),marks=fire2$D.A..2000.)
+#denfire2<-density(pppfire2,sigma=5.8)
 
-fire4<-subset(fire1,f(firex,firey))
-fire4$fire<-0
-intensity2<-intensity1$v
-len<-nrow(fire4)
-for(i in 1:len){
-  fire_intensity<-intensity2[fire4$firey[i],fire4$firex[i]]
-  fire4$fire[i]<-as.numeric(fire_intensity)
-}
-fire4$fire_intense<-0
-fire4$fire_intense[fire4$fire>0.8240]<-1
-sp<-"La"
-fire_sp<-subset(fire4,fire4$sp.==sp)
-#fire_sp<-fire4
+#intensity1<-denfire2/denfire1
+intensity_<-denfire1$v
+intensity0_10<-as.vector(intensity_)
+plot(denfire1)
 
-model1<-glm(formula=da~fire_intense+dbh0,data=fire_sp,family="binomial")
+model1<-lm(fire_intensity3~intensity0_10+intensity10_20+intensity20_+intensity_bp+intensity_lc+intensity_pt)
 summary(model1)
-model2<-step(model1)
-summary(model2)
-
-
-g<-ggplot(data=fire_sp,aes(x=dbh0,y=fire,color=D.A..2000.))+
-  ggtitle(sp)+
-  geom_point()
-print(g)
-write.csv(fire4,"fire_maiboku0212.csv")
-          
-
-class(intensity2)
-intensity3<-as.vector(intensity2)
+step()
+fire_iroiro<-cbind(fire_intensity3,intensity0_10,intensity10_20,intensity20_,intensity_lc,intensity_bp,intensity_pt)
+library(GGally)
+fire_iroiro<-as.data.frame(fire_iroiro)
+g1<-ggpairs(fire_iroiro)
+print(g1)
