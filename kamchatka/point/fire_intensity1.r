@@ -25,38 +25,37 @@ fire1$da[fire1$D.A..2000.=="A"]<-1
 pppfire<-ppp(fire1$xx,fire1$yy,window=owin(c(0,90),c(0,100)),marks=fire1$D.A..2000.)
 plot(density(pppfire,sigma=5.8))
 
+
+
 fire3<-fire1
 
 title="all"
-fire3<-subset(fire1,fire1$sp.=="Be")
+#fire3<-subset(fire1,fire1$sp.=="Be")
 #fire3<-subset(fire1,fire1$dbh0<=10)
 #fire3<-subset(fire3,fire3$dbh0>0.0)
 fire2<-subset(fire3,fire3$da==0)
 pppfire1<-ppp(fire3$xx,fire3$yy,window=owin(c(0,90),c(0,100)))
-denfire1<-density(pppfire1,sigma=5.8)
+denfire1<-density(pppfire1,sigma=5.8,eps=c(1,1))
 pppfire2<-ppp(fire2$xx,fire2$yy,window=owin(c(0,90),c(0,100)),marks=fire2$D.A..2000.)
-denfire2<-density(pppfire2,sigma=5.8)
+denfire2<-density(pppfire2,sigma=5.8,eps=c(1,1))
+
 
 plot(denfire1,col=tc1,axes=TRUE,main=title,asp=1)
-
 plot(denfire2/denfire1,col=tc,axes=TRUE,main=title,asp=1)
 
 intensity1<-denfire2/denfire1
 
-xstep<-intensity1$xstep
-ystep<-intensity1$ystep
-f<-function(x,y){
-  x<129&x>0&y<129&y>0
-}
-fire1$firex<-as.integer((fire1$xx/xstep)+1)
-fire1$firey<-as.integer((fire1$yy/ystep)+1)
-
-fire4<-subset(fire1,f(firex,firey))
+fire4<-fire1
 fire4$fire<-0
 intensity2<-intensity1$v
 len<-nrow(fire4)
+intensity3<-t(intensity2)
+write.csv(intensity3,"fire_intensity.csv", row.names = FALSE,col.names = FALSE)
+#write.table(intensity2, file="fire_intensity.csv", row.names=FALSE, col.names=FALSE)
+
+
 for(i in 1:len){
-  fire_intensity<-intensity2[fire4$firey[i],fire4$firex[i]]
+  fire_intensity<-intensity2[as.integer(fire4$xx[i]),as.integer(fire4$yy[i])]
   fire4$fire[i]<-as.numeric(fire_intensity)
 }
 fire4$fire_intense<-0

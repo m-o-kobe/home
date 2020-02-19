@@ -1,6 +1,7 @@
 require "./settings.rb"
 require "./tree.rb"
 class Fire_layer
+#森林火災の強度を返すクラス
     def initialize
         @settings=Settings.new
         @x_max=@settings.plot_x
