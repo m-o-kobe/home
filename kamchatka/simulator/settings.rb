@@ -42,6 +42,10 @@ def params
 		]
 end
 
+LARIX=1
+BETULA=2
+POPLUS=3
+
 class Settings
 	@@duration = 0
 	@@num_sp = 0
