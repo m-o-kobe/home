@@ -119,36 +119,60 @@ class PoplusCount
         sp_num=sp_num.uniq
         return oya, oyanum, ave_size, sp_num
     end
-    def betula_sprout_count(sp_num,oya)
+    def betula_kousin(oya_info,juv_sum,sprout_kazu)
+        sprout_zahyou=Array.new
+        oya_info.each do |oya|
+            kousinhonsuu=sprout_kazu*oya[4]/juv_sum
+            kousin_sei=kousinhonsuu.to_i
+            kousin_shou=kousinhonsuu-kousin_sei.to_f
+            kousin_sei = rand(0.0..1.0) > kousin_shou ? kousin_sei : kousin_sei+1
+            for k in 1..kousin_sei
+                oyagi=oya[5].sample
+                kyori=rand(0.0..0.05)
+                kaku=rand(0.0..2.0)*Math::PI
+                sprout_zahyou.push [
+                    oyagi.x+kyori*Math.sin(kaku),
+                    oyagi.y+kyori*Math.cos(kaku),
+                    oyagi.tag,
+                    oyagi.sprout
+                ]
+            end
+        end
+        return sprout_zahyou
+    end
+    def count_betula_sprout(sp_num,oya)
         oya_info=Array.new
         juv_sum=0.0
+        # sp_goto_oya=Array.new
         sp_num.each do |bp_parents|
             parent_num=0
             parent_dbh=0.0
             parent_x=0.0
             parent_y=0.0
-            oya.each do |tree|
-                if bp_parents==tree.sprout then
+  #          sp_oya=Array.new
+            #sp_oya.push(bp_parents)
+   #         sp_oya_=Array.new
+            parent=oya.select{|tree| tree.sprout==bp_parents}
+            parent.each do |tree|
                     parent_x+=tree.x
                     parent_y+=tree.y
                     parent_num+=1
                     parent_dbh+=tree.mysize
-                end
             end
-
             parent_dbh=parent_dbh/parent_num
             parent_x=parent_x/parent_num
             parent_y=parent_y/parent_num
             fire=@fire_layer.fire_intensity(parent_x,parent_y)
             juv=parent_dbh*0.5+parent_num*0.5*fire+0.5
             juv_sum+=juv
-            oya_info.push([parent_num,parent_dbh,parent_x,parent_y,fire,juv])
+            oya_info.push([bp_parents,parent_num,parent_dbh,fire,juv,parent])
+            # sp_goto_oya.push(sp_oya)
+            #oya_infoの値の順はなるべく変えない。変えるときはbetula_kousinも変える必要がある
         end
-        return oya_info,juv_sum
+        return oya_info,juv_sum#,sp_goto_oya
     end
-    def make_betula_sprout
+    def make_betula_sprout(trees)
         sprout_zahyou=Array.new
-        p @fire_layer.fire_intensity(50,10)
         for i in 0..@x_size-1 do
             for j in 0..@y_size-1 do
                 oya, oyakazu, oyasize,sp_num= b_count(trees,i,j)
@@ -157,33 +181,38 @@ class PoplusCount
                 # @counter_05[i][j]*@settings.spdata(2,"fire1_size")+
                 # @counter_10[i][j]*@settings.spdata(2,"fire1_num")+
                 # @counter_10[i][j]*@settings.spdata(2,"fire1_num")
-                sprout_kazu=0.5+
+                sprout_kazu=0.0+
                 oyasize*0.5+
                 oyakazu*0.5+
                 fire*0.5
-                sprout_kazu=sprout_kazu.to_i
-                if sprout_kazu.to_i>0 then
+                if sprout_kazu>0 then
                     if oyakazu>0 then
-                        oya_info,juv_sum,=betula_sprout_count(sp_num,oya)
-
+                        oya_info,juv_sum=count_betula_sprout(sp_num,oya)
+#                        juv_zahyou=betula_kousin(oya_info,juv_sum,sprout_kazu)
+                        sprout_zahyou.concat betula_kousin(oya_info,juv_sum,sprout_kazu)
                     else
+                        sprout_zahyou.concat dokuritu_kousin(sprout_kazu,i,j)
                     end
-                end
-                #p sprout_kazu
-                for k in 1..sprout_kazu
-                    # sprout_zahyou[l]=[
-                    #     @step*i+rand(0.0..@step),
-                    #     @step*j+rand(0.0..@step)
-                    # ]
-                    sprout_zahyou.push [
-                        @step*i+rand(0.0..@step),
-                        @step*j+rand(0.0..@step)
-                    ]
-
-                    # l += 1
                 end
             end
         end
         return sprout_zahyou
+    end
+    def dokuritu_kousin(sprout_kazu,i,j)
+        kousin_sei=sprout_kazu.to_i
+        kousin_shou=sprout_kazu-kousin_sei.to_f
+        kousin_sei = rand(0.0..1.0) > kousin_shou ? kousin_sei : kousin_sei+1
+        juv_zahyou=Array.new
+       
+
+        for k in 1..kousin_sei
+            juv_zahyou.push [
+                (i+rand(0.0..1.0))*@step,
+                (j+rand(0.0..1.0))*@step,
+                0,
+                "newsprout"
+            ]    
+        end
+        return juv_zahyou
     end
 end

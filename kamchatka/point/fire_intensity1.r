@@ -44,12 +44,13 @@ plot(denfire1,col=tc1,axes=TRUE,main=title,asp=1)
 plot(denfire2/denfire1,col=tc,axes=TRUE,main=title,asp=1)
 
 intensity1<-denfire2/denfire1
+intensity2<-intensity1$v
+intensity3<-t(intensity2)
+
 
 fire4<-fire1
 fire4$fire<-0
-intensity2<-intensity1$v
 len<-nrow(fire4)
-intensity3<-t(intensity2)
 write.csv(intensity3,"fire_intensity.csv", row.names = FALSE,col.names = FALSE)
 #write.table(intensity2, file="fire_intensity.csv", row.names=FALSE, col.names=FALSE)
 

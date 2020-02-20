@@ -37,10 +37,11 @@ juv1<-children[c("x","y","Be_sucker2002","Be_sucker2000")]
 #as.character(juvenile1$parent_num1)
 
 
-juvenile2<-juvenile1[,c(-2)]
+#juvenile2<-juvenile1[,c(-2)]
 sum_parent<-summaryBy(formula = dbh0+da+ba+survival_ba+fire_intense~xx+yy,data=parent_bp,FUN=c(mean,length))
 names(juv1)[ which( names(juv1)=="x" ) ] <- "xx"
 names(juv1)[ which( names(juv1)=="y" ) ] <- "yy"
+
 
 
 sum_parent$survival_num<-sum_parent$dbh0.length*sum_parent$da.mean
@@ -48,14 +49,20 @@ sum_parent$ba<-sum_parent$ba.mean*sum_parent$ba.length
 sum_parent$survivalba<-0
 sum_parent$survivalba[sum_parent$survival_ba.mean>0.01]<-sum_parent$survival_ba.mean[sum_parent$survival_ba.mean>0.01]/sum_parent$da.mean[sum_parent$survival_ba.mean>0.01]
 
-sum_parent1<-sum_parent[c(1,2,3,4,7,11,12,13)]
+#sum_parent1<-sum_parent[c(1,2,3,4,7,11,12,13)]
 sum_parent1<-sum_parent[c(1,2,3,4,5,6,7,8)]
 sum_parent1$parent_ba<-sum_parent1$ba.mean*sum_parent$dbh0.length
 
 
 sum1<-merge(sum_parent1,juv1,by=c("xx","yy"),all = TRUE)
-sum2<-merge(sum_parent,sum_juvenile,by=c("parent_num1","parent_color"))
+#sum2<-merge(sum_parent,sum_juvenile,by=c("parent_num1","parent_color"))
 #sum3<-subset(sum1,is.na(sum1$dbh0.mean))
+#intensity3はfire_intensity1.rからとってくること
+len=nrow(sum1)
+for(i in 1:len){
+  fire_intensity<-intensity3[as.integer(sum1$xx[i])+3,as.integer(sum1$yy[i])+3]
+  sum1$fire[i]<-as.numeric(fire_intensity)
+}
 
 sum41<-sum1[,c(-1,-2,-4,-5,-6,-7)]
 
@@ -65,7 +72,10 @@ colnames(sum41)<-c("parent_dbh",
                    "parent_num",
                    "parent_ba",
                    "be_2002",
-                   "be_2000")
+                   "be_2000",
+                   "fire"
+                   )
+sum41<-sum41[c(1,2,3,6,4,5)]
 
 
 sum41$parent_dbh[is.na(sum41$parent_dbh)]<-0
@@ -78,7 +88,6 @@ sum41$parent_ba[is.na(sum41$parent_ba)]<-0
 
 
 
-library(ggplot2)
 g<-ggplot(data=sum41,
           mapping=aes(x=parent_num,fill=da))+
   geom_histogram(position = "dodge")
@@ -91,7 +100,7 @@ print(g1)
 
 yy<-ifelse(sum41$da == "a", 1, 0)
 
-model1<-glm(formula=yy~sum41$parent_num+sum41$parent_dbh+sum41$parent_num*sum41$parent_dbh,family=binomial)
+model1<-glm(formula=yy~sum41$parent_num +sum41$parent_dbh+sum41$parent_num*sum41$parent_dbh,family=binomial)
 summary(model1)
 model2<-step(model1)
 summary(model2)
@@ -116,8 +125,8 @@ sum41<-sum42
 k=1
 plotList <- list()
 name1<-colnames(sum41)
-for(i in 1:3){
-  for (j in 4:5){
+for(i in 1:4){
+  for (j in 5:6){
     xmax<-max(sum41[i])
     ymax<-max(sum41[j])
     plotList[[k]]<-ggplot(data=sum41,aes_string(x=name1[i],y=name1[j]))+
@@ -129,20 +138,32 @@ for(i in 1:3){
   }
 }
 pm<-ggmatrix(plotList,
-             nrow=2,ncol=3,
-             xAxisLabels=name1[1:3],
-             yAxisLabels=name1[4:5],
+             nrow=2,ncol=4,
+             xAxisLabels=name1[1:4],
+             yAxisLabels=name1[5:6],
              byrow = FALSE)
 print(pm)
 plot(sum41$be_2000,sum41$be_2002)
+g<-ggplot(data=sum41,mapping=aes(x=parent_num,y=be_2002,colour=fire))+
+  geom_point()+
+  scale_color_gradientn(colours=c('springgreen4', 'yellow', 'red'))
 
-
-
-
+print(g)
+sum41$sum_dbh<-sum41$parent_dbh*sum41$parent_num
+model1<-lm(formula=be_2000~parent_num+parent_dbh+fire+parent_num*fire+parent_dbh*parent_num+parent_dbh*fire+0,data=sum41)
+summary(model1)
+model2<-step(model1,k=log(nrow(sum41)))
+summary(model2)
+summary(model2$fitted.values)
+plot(model2$fitted.values,sum41$be_2000)
+par(mfrow=c(2,2))
+plot(model2)
 
 #sum42<-subset(sum41,sum41$juv_num>0)
 #model3<-lm(formula=juv_num~parent_dbh+parent_num+fire+parent_survival_rate,data=sum42)
 bp_sum<-sum41
+
+plot(sum41$be_2000,sum41$be_2002)
 bp_sum$parent_num<-sum41$parent_num-1
 
 
