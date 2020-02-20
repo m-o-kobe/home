@@ -4,8 +4,16 @@ require"./fileio.rb"
 require"./map.rb"
 require"./betula_regene.rb"
 srand 1234
-fileio = Fileio.new( "data/testset.csv","data/init.csv","data/output.dat","data/output.dat","data/fire.csv")
+fileio = Fileio.new( "data/setting_test.csv","data/init.csv","data/output.dat","data/output.dat","data/fire.csv")
 tmp=Settings.new()
+
+# hash = Hash.new { |h,k| h[k] = {} }
+
+# hash["a"]["b"] = 1
+# p hash["a"]["b"]
+
+
+
 tmp.load_file( fileio.read_settings )
 
 forest=Forest.new(
@@ -27,7 +35,7 @@ counttest=BetulaSprout.new(0,0,15,15,5)
 # a,b=counttest.count_betula_sprout([1,2],forest.trees)
 # p a
 # p b
-p counttest.make_betula_sprout(forest.trees)
+p counttest.make_betula_sprout(forest.trees,false)
 # p  counttest.betula_kousin(
 # 	a,
 # 	b,

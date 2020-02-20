@@ -72,7 +72,7 @@ class BetulaSprout
         end
         return sprout_zahyou
     end
-    def count_betula_sprout(sp_num,oya)
+    def count_betula_sprout(sp_num,oya,fire_or)
         oya_info=Array.new
         oya_info=Array.new
         juv_sum=0.0
@@ -92,7 +92,11 @@ class BetulaSprout
             parent_x=parent_x/parent_num
             parent_y=parent_y/parent_num
             fire=@fire_layer.fire_intensity(parent_x,parent_y)
-            juv=parent_dbh*0.5+parent_num*0.5*fire+0.5
+            juv=parent_dbh*@settings.spdata(2,fire_or,"kanyu5")+
+            parent_num*@settings.spdata(2,fire_or,"kanyu6")+
+            fire*@settings.spdata(2,fire_or,"kanyu7")+
+            @settings.spdata(2,fire_or,"kanyu8")
+
             juv_sum+=juv
             oya_info.push OyakabuBetula.new(
                 bp_parents,
@@ -104,23 +108,20 @@ class BetulaSprout
         end
         return oya_info,juv_sum
     end
-    def make_betula_sprout(trees)
+    def make_betula_sprout(trees,fire_or_not)
         sprout_zahyou=Array.new
+        fire_or= fire_or_not ? "fire" : "heiwa"
         for i in 0..@x_size-1 do
             for j in 0..@y_size-1 do
                 oya, oyakazu, oyasize,sp_num= b_count(trees,i,j)
                 fire=@fire_layer.fire_intensity((i+0.5)*@step,(j+0.5)*@step)
-                # sprout_kazu=@settings.spdata(2,"fire1_intercept")+
-                # @counter_05[i][j]*@settings.spdata(2,"fire1_size")+
-                # @counter_10[i][j]*@settings.spdata(2,"fire1_num")+
-                # @counter_10[i][j]*@settings.spdata(2,"fire1_num")
-                sprout_kazu=0.5+
-                oyasize*0.5+
-                oyakazu*0.5+
-                fire*0.5
+                 sprout_kazu=@settings.spdata(2,fire_or,"kanyu1")+
+                oyasize*@settings.spdata(2,fire_or,"kanyu2")+
+                oyakazu*@settings.spdata(2,fire_or,"kanyu3")+
+                fire*@settings.spdata(2,fire_or,"kanyu4")
                 if sprout_kazu>0 then
                     if oyakazu>0 then
-                        oya_info,juv_sum=count_betula_sprout(sp_num,oya)
+                        oya_info,juv_sum=count_betula_sprout(sp_num,oya,fire_or)
                         sprout_zahyou.concat betula_kousin(oya_info,juv_sum,sprout_kazu)
                     else
                         sprout_zahyou.concat dokuritu_kousin(sprout_kazu,i,j)
