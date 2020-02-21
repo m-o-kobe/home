@@ -4,13 +4,13 @@ require "./forest.rb"
 
 
 class Simulator
-	def initialize( setting_file, initial_file, output_file,stat_file)
-		@fileio = Fileio.new( setting_file, initial_file, output_file,stat_file )
+	def initialize( setting_file, initial_file, output_file,stat_file,fire_file)
+		@fileio = Fileio.new( setting_file, initial_file, output_file,stat_file,fire_file )
 		@settings = Settings.new
 		#settingはsetting.rbの中で定義されているクラス
 		@settings.load_file( @fileio.read_settings )
         #load_fileはsettings.rbの中で定義されているメソッド
-		@forest = Forest.new( @fileio.read_init)
+		@forest = Forest.new( @fileio.read_init,@fileio.read_fire)
 		#Forestはforest.rbの中で定義されているクラス
 	end
 	def run

@@ -56,19 +56,6 @@ class Tree
 		@age += 1
 	end
 
-	# def is_dead
-	# 	seisi=rand(0.0..1.0)
-	# 	if @age<5&&@sp==POPLUS then
-	# 		seizonritu=0.122
-	# 	else
-	# 		seizonritu=(1.0/(1.0+Math::exp(-@settings.spdata(@sp,"death11")-
-	# 		@settings.spdata(@sp,"death12")*@mysize-
-	# 		@settings.spdata(@sp,"death13")*@kabu-
-	# 		@settings.spdata(@sp,"death14")*@crd)))**(1.0/3.0)
-	# 	end
-	# 	return seisi>seizonritu
-	# end
-
 	def is_dead(fire_or_not,fire_intense)
 		seisi=rand(0.0..1.0)
 		fire_or= fire_or_not ? "fire" : "heiwa"
@@ -90,18 +77,6 @@ class Tree
 		end
 		return seisi>seizonritu
 	end
-# 	def fire_dead(tf)
-# 		seisi=rand(0.0..1.0)
-# 		fire_intense=tf ? 1 : 0
-# 		#seizonritu=@settings.spdata(@sp,"death21")
-# 		seizonritu=1.0/(1.0+Math::exp(-@settings.spdata(@sp,"fire","death1")-
-# 		@settings.spdata(@sp,"fire","death2")*@mysize-
-# 		@settings.spdata(@sp,"fire","death3")*fire_intense))	
-# 		#	seizonritu=@settings.spdata(@sp,"death22")
-# #			seizonritu=1.0/(1.0+Math::exp(-@settings.spdata(@sp,"death21")-@settings.spdata(@sp,"death22")*@mysize-@settings.spdata(@sp,"death23")*@kabu-@settings.spdata(@sp,"death24")*@crd))
-# 		return seisi>seizonritu
-
-# 	end
 
 	def record
 		return [ @x, @y, @sp, @age, @mysize, @tag, @mother,@crd,@kabu,@sprout ] 

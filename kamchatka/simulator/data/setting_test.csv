@@ -1,16 +1,16 @@
 #### Common settings,
 plot_x,90
 plot_y,100
-duration,1
+duration,2
 num_sp,3
-firefreq,5
+firefreq,2
 fire_r_min,5
 fire_r_max,10
 sp_1_heiwa_growth1,0.5
 sp_1_heiwa_growth2,0.5
 sp_1_heiwa_growth3,0.5
 sp_1_heiwa_growth4,0.5
-sp_1_heiwa_death1,-10
+sp_1_heiwa_death1,10
 sp_1_heiwa_death2,-10
 sp_1_heiwa_death3,-10
 sp_1_heiwa_death4,-0.5

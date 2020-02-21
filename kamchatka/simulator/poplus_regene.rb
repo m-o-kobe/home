@@ -12,7 +12,6 @@ class PoplusCount
         @step=step
         @x_size=(@x_max-@x_min)/@step
         @y_size=(@y_max-@y_min)/@step
-#        @counter=Array.new(@x_size).map{Array.new(@y_size,0)}
         @counter_05=Array.new(@x_size).map{Array.new(@y_size,0)}
         @counter_10=Array.new(@x_size).map{Array.new(@y_size,0)}
         @counter_15=Array.new(@x_size).map{Array.new(@y_size,0)}
