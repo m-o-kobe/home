@@ -1,5 +1,4 @@
 require "./settings.rb"
-
 class Tree
 	
 	###############
@@ -47,36 +46,62 @@ class Tree
 	end
 
 	def grow
-		gro=@settings.spdata( @sp , "growth1" ) +@settings.spdata( @sp , "growth2" )*@mysize+@settings.spdata(@sp,"growth3")*@kabu+@settings.spdata(@sp,"growth4")*@crd
+		gro=@settings.spdata( @sp ,"heiwa", "growth1" ) +
+			@settings.spdata( @sp ,"heiwa", "growth2" )*@mysize+
+			@settings.spdata(@sp,"heiwa","growth3")*@kabu+
+			@settings.spdata(@sp,"heiwa","growth4")*@crd
 		if gro>=0&&@age>=5 then
 			@mysize+=gro
 		end
 		@age += 1
 	end
 
-	def is_dead
+	# def is_dead
+	# 	seisi=rand(0.0..1.0)
+	# 	if @age<5&&@sp==POPLUS then
+	# 		seizonritu=0.122
+	# 	else
+	# 		seizonritu=(1.0/(1.0+Math::exp(-@settings.spdata(@sp,"death11")-
+	# 		@settings.spdata(@sp,"death12")*@mysize-
+	# 		@settings.spdata(@sp,"death13")*@kabu-
+	# 		@settings.spdata(@sp,"death14")*@crd)))**(1.0/3.0)
+	# 	end
+	# 	return seisi>seizonritu
+	# end
+
+	def is_dead(fire_or_not,fire_intense)
 		seisi=rand(0.0..1.0)
-		if @age<5&&@sp==3 then
-			seizonritu=0.122
+		fire_or= fire_or_not ? "fire" : "heiwa"
+		if fire_or_not
+			seizonritu=1.0/(1.0+Math::exp(-@settings.spdata(@sp,fire_or,"death1")-
+			@settings.spdata(@sp,fire_or,"death2")*@mysize-
+			@settings.spdata(@sp,fire_or,"death3")*fire_intense
+			))
 		else
-			seizonritu=(1.0/(1.0+Math::exp(-@settings.spdata(@sp,"death11")-@settings.spdata(@sp,"death12")*@mysize-@settings.spdata(@sp,"death13")*@kabu-@settings.spdata(@sp,"death14")*@crd)))**(1.0/3.0)
+			if @age<5 && @sp==POPLUS then
+				seizonritu=@settings.spdata(POPLUS,"heiwa","death5")
+			else
+				seizonritu=(1.0/(1.0+Math::exp(-@settings.spdata(@sp,fire_or,"death1")-
+				@settings.spdata(@sp,fire_or,"death2")*@mysize-
+				@settings.spdata(@sp,fire_or,"death3")*@kabu-
+				@settings.spdata(@sp,fire_or,"death4")*@crd)))**(1.0/3.0)
+				
+			end	
 		end
-
 		return seisi>seizonritu
 	end
-	
-	def fire_dead(tf)
-		seisi=rand(0.0..1.0)
-		fire_intense=tf ? 1 : 0
-		#seizonritu=@settings.spdata(@sp,"death21")
-		seizonritu=1.0/(1.0+Math::exp(-@settings.spdata(@sp,"death21")-
-		@settings.spdata(@sp,"death22")*@mysize-
-		@settings.spdata(@sp,"death23")*fire_intense))	
-		#	seizonritu=@settings.spdata(@sp,"death22")
-#			seizonritu=1.0/(1.0+Math::exp(-@settings.spdata(@sp,"death21")-@settings.spdata(@sp,"death22")*@mysize-@settings.spdata(@sp,"death23")*@kabu-@settings.spdata(@sp,"death24")*@crd))
-		return seisi>seizonritu
+# 	def fire_dead(tf)
+# 		seisi=rand(0.0..1.0)
+# 		fire_intense=tf ? 1 : 0
+# 		#seizonritu=@settings.spdata(@sp,"death21")
+# 		seizonritu=1.0/(1.0+Math::exp(-@settings.spdata(@sp,"fire","death1")-
+# 		@settings.spdata(@sp,"fire","death2")*@mysize-
+# 		@settings.spdata(@sp,"fire","death3")*fire_intense))	
+# 		#	seizonritu=@settings.spdata(@sp,"death22")
+# #			seizonritu=1.0/(1.0+Math::exp(-@settings.spdata(@sp,"death21")-@settings.spdata(@sp,"death22")*@mysize-@settings.spdata(@sp,"death23")*@kabu-@settings.spdata(@sp,"death24")*@crd))
+# 		return seisi>seizonritu
 
-	end
+# 	end
 
 	def record
 		return [ @x, @y, @sp, @age, @mysize, @tag, @mother,@crd,@kabu,@sprout ] 

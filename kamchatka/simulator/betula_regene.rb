@@ -1,3 +1,6 @@
+#LarixやPoplus：各5×5m区の中心点から20mまでの点にあるものを計算
+#Betulaは各5×5m区内の樹木を集計。株立ちするから。
+#機能1つにまとめたほうが処理は速くなる気がするが保留中(所詮3倍だし)
 require "./settings.rb"
 require "./tree.rb"
 require "./fire_layer"
@@ -51,7 +54,7 @@ class BetulaSprout
         sp_num=sp_num.uniq
         return oya, oyanum, ave_size, sp_num
     end
-    def betula_kousin(oya_info,juv_sum,sprout_kazu)
+    def kabudati_kousin(oya_info,juv_sum,sprout_kazu)
         sprout_zahyou=Array.new
         oya_info.each do |oya|
             kousinhonsuu=sprout_kazu*oya.juv/juv_sum
@@ -72,7 +75,7 @@ class BetulaSprout
         end
         return sprout_zahyou
     end
-    def count_betula_sprout(sp_num,oya,fire_or)
+    def count_sprout(sp_num,oya,fire_or)
         oya_info=Array.new
         oya_info=Array.new
         juv_sum=0.0
@@ -92,11 +95,11 @@ class BetulaSprout
             parent_x=parent_x/parent_num
             parent_y=parent_y/parent_num
             fire=@fire_layer.fire_intensity(parent_x,parent_y)
-            juv=parent_dbh*@settings.spdata(2,fire_or,"kanyu5")+
-            parent_num*@settings.spdata(2,fire_or,"kanyu6")+
-            fire*@settings.spdata(2,fire_or,"kanyu7")+
-            @settings.spdata(2,fire_or,"kanyu8")
-
+            juv=parent_dbh*@settings.spdata(BETULA,fire_or,"kanyu5")+
+                parent_num*@settings.spdata(BETULA,fire_or,"kanyu6")+
+                fire*@settings.spdata(BETULA,fire_or,"kanyu7")+
+                @settings.spdata(BETULA,fire_or,"kanyu8")
+                #交絡も入れる必要がある木。パラメータもっと増える？
             juv_sum+=juv
             oya_info.push OyakabuBetula.new(
                 bp_parents,
@@ -108,21 +111,21 @@ class BetulaSprout
         end
         return oya_info,juv_sum
     end
-    def make_betula_sprout(trees,fire_or_not)
+    def make_sprout(trees,fire_or_not)
         sprout_zahyou=Array.new
         fire_or= fire_or_not ? "fire" : "heiwa"
         for i in 0..@x_size-1 do
             for j in 0..@y_size-1 do
                 oya, oyakazu, oyasize,sp_num= b_count(trees,i,j)
                 fire=@fire_layer.fire_intensity((i+0.5)*@step,(j+0.5)*@step)
-                 sprout_kazu=@settings.spdata(2,fire_or,"kanyu1")+
-                oyasize*@settings.spdata(2,fire_or,"kanyu2")+
-                oyakazu*@settings.spdata(2,fire_or,"kanyu3")+
-                fire*@settings.spdata(2,fire_or,"kanyu4")
+                sprout_kazu=@settings.spdata(BETULA,fire_or,"kanyu1")+
+                    oyasize*@settings.spdata(BETULA,fire_or,"kanyu2")+
+                    oyakazu*@settings.spdata(BETULA,fire_or,"kanyu3")+
+                    fire*@settings.spdata(BETULA,fire_or,"kanyu4")
                 if sprout_kazu>0 then
                     if oyakazu>0 then
-                        oya_info,juv_sum=count_betula_sprout(sp_num,oya,fire_or)
-                        sprout_zahyou.concat betula_kousin(oya_info,juv_sum,sprout_kazu)
+                        oya_info,juv_sum=count_sprout(sp_num,oya,fire_or)
+                        sprout_zahyou.concat kabudati_kousin(oya_info,juv_sum,sprout_kazu)
                     else
                         sprout_zahyou.concat dokuritu_kousin(sprout_kazu,i,j)
                     end

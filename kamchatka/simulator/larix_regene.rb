@@ -2,7 +2,7 @@ require "./settings.rb"
 require "./tree.rb"
 require "./fire_layer"
 
-class PoplusCount
+class LarixRegene
     def initialize(xmin,ymin,xmax,ymax,step)
         @settings = Settings.new
         @x_max=xmax
@@ -20,11 +20,14 @@ class PoplusCount
         @fire_layer=Fire_layer.new        
     end
  
-    def pcount(trees)
+    #↓はPopulus tremulaとLarix cajanderiまとめたほうがいい？処理時間かかってるかも
+    def lcount(trees)
+        reset
+
         for i in 0..@x_size-1
             for j in 0..@y_size-1
                 trees.each do |obj|
-                    if obj.sp==POPLUS then
+                    if obj.sp==LARIX then
                         _dist=dist(obj,i,j)
                         if _dist<5.0
                             @counter_05[i][j]+=obj.mysize
@@ -53,10 +56,12 @@ class PoplusCount
             end
         end
     end
+    #↓あまり意味はない。あえて言うならテスト用
     def get_count_2d
-        return @counter_05
-        return @counter_10
+        return @counter_05, @counter_10, @counter_15,@counter_20
+        
     end
+    #↓作ってはみたが使ってない
     def get_count(x,y)
         return @counter[x][y]
     end
@@ -66,30 +71,25 @@ class PoplusCount
 
 		return Math::sqrt((tree_a.x - x)**2 + (tree_a.y - y)**2)#木aと木bの距離。sqは上で定義されている
 	end
-    def make_poplus_sprout
-        #l=0
+    def make_sprout(trees,fire_or_not)
+        fire_or= fire_or_not ? "fire" : "heiwa"
+        pcount(trees)
         sprout_zahyou=Array.new
         for i in 0..@x_size-1 do
             for j in 0..@y_size-1 do
-                sprout_kazu=@settings.spdata(POPLUS,"fire1_intercept")+
-                @counter_05[i][j]*@settings.spdata(POPLUS,"fire1_05")+
-                @counter_10[i][j]*@settings.spdata(POPLUS,"fire1_10")+
-                @counter_15[i][j]*@settings.spdata(POPLUS,"fire1_15")+
-                @counter_20[i][j]*@settings.spdata(POPLUS,"fire1_20")
-                
-                sprout_kazu=sprout_kazu.to_i
-                #p sprout_kazu
+                sprout_kazu=@counter_05[i][j]*@settings.spdata(LARIX,fire_or,"kanyu1")+
+                @counter_10[i][j]*@settings.spdata(LARIX,fire_or,"kanyu2")+
+                @counter_15[i][j]*@settings.spdata(LARIX,fire_or,"kanyu3")+
+                @counter_20[i][j]*@settings.spdata(LARIX,fire_or,"kanyu4")
+                #@settings.spdata(LARIX,fire_or,"fire1")
+                sprout_sei=sprout_kazu.to_i
+                sprout_shou=sprout_kazu-sprout_sei.to_f
+                sprout_sei = rand(0.0..1.0) > sprout_shou ? sprout_sei : sprout_sei+1
                 for k in 1..sprout_kazu
-                    # sprout_zahyou[l]=[
-                    #     @step*i+rand(0.0..@step),
-                    #     @step*j+rand(0.0..@step)
-                    # ]
                     sprout_zahyou.push [
                         @step*i+rand(0.0..@step),
                         @step*j+rand(0.0..@step)
                     ]
-
-                    # l += 1
                 end
             end
         end
