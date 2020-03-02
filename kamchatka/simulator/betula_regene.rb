@@ -95,10 +95,11 @@ class BetulaSprout
             parent_x=parent_x/parent_num
             parent_y=parent_y/parent_num
             fire=@fire_layer.fire_intensity(parent_x,parent_y)
-            juv=parent_dbh*@settings.spdata(BETULA,fire_or,"kanyu5")+
-                parent_num*@settings.spdata(BETULA,fire_or,"kanyu6")+
-                fire*@settings.spdata(BETULA,fire_or,"kanyu7")+
-                @settings.spdata(BETULA,fire_or,"kanyu8")
+            juv=@settings.spdata(BETULA,fire_or,"kanyu8")+
+                parent_num*@settings.spdata(BETULA,fire_or,"kanyu9")+
+                fire*@settings.spdata(BETULA,fire_or,"kanyu10")+
+                parent_dbh*@settings.spdata(BETULA,fire_or,"kanyu11")+
+                parent_dbh*fire*@settings.spdata(BETULA,fire_or,"kanyu12")
                 #交絡も入れる必要がある木。パラメータもっと増える？
             juv_sum+=juv
             oya_info.push OyakabuBetula.new(
@@ -121,7 +122,10 @@ class BetulaSprout
                 sprout_kazu=@settings.spdata(BETULA,fire_or,"kanyu1")+
                     oyasize*@settings.spdata(BETULA,fire_or,"kanyu2")+
                     oyakazu*@settings.spdata(BETULA,fire_or,"kanyu3")+
-                    fire*@settings.spdata(BETULA,fire_or,"kanyu4")
+                    fire*@settings.spdata(BETULA,fire_or,"kanyu4")+
+                    oyasize*oyakazu*@settings.spdata(BETULA,fire_or,"kanyu5")+
+                    oyasize*fire*@settings.spdata(BETULA,fire_or,"kanyu6")+
+                    oyakazu*fire*@settings.spdata(BETULA,fire_or,"kanyu7")
                 if sprout_kazu>0 then
                     if oyakazu>0 then
                         oya_info,juv_sum=count_sprout(sp_num,oya,fire_or)

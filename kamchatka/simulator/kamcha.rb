@@ -1,12 +1,16 @@
 require "./simulator.rb"
 require 'timeout'
+#↓実行例
+# ruby kamcha.rb ../../../kamchatka/setting/setting.csv data/init.csv data/output.csv data/stat.csv data/fireat.csv data/fire.csvruby kamcha.rb ../../../kamchatka/setting/setting.csv data/init.csv data/output.csv data/stat.csv data/fireat.csv data/fire.csv
+
+
 ######################
 # Fix random numbers: for development purpose
 Encoding.default_external = 'utf-8'
 
 #ARGVはコマンドライン引数の取得
 if ARGV.size < 5
-  STDERR.print "Usage: ruby #{$0} setting_filename initial_filename output_filename stat_filename\n"
+  STDERR.print "Usage: ruby #{$0} setting_filename initial_filename output_filename stat_filename fire_file\n"
   #settingのプロットサイズは5の倍数にしてね
 	exit
 end

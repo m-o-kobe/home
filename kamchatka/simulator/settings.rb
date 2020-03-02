@@ -27,10 +27,11 @@ def params
 		"kanyu5",
 		"kanyu6",
 		"kanyu7",
-		"kanyu8"
-		
-
-
+		"kanyu8",
+		"kanyu9",
+		"kanyu10",
+		"kanyu11",
+		"kanyu12"
 		# "kanyu11",#dsを計算する距離限界、親木の周りに分布する場合
 		# "kanyu12",#定数、親木の周りに分布
 		# "kanyu13",#dsに比例、親木の周りに分布

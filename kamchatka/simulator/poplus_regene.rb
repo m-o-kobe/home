@@ -75,11 +75,11 @@ class PoplusCount
         sprout_zahyou=Array.new
         for i in 0..@x_size-1 do
             for j in 0..@y_size-1 do
-                sprout_kazu=@counter_05[i][j]*@settings.spdata(POPLUS,fire_or,"kanyu1")+
-                @counter_10[i][j]*@settings.spdata(POPLUS,fire_or,"kanyu2")+
-                @counter_15[i][j]*@settings.spdata(POPLUS,fire_or,"kanyu3")+
-                @counter_20[i][j]*@settings.spdata(POPLUS,fire_or,"kanyu4")
-                #@settings.spdata(POPLUS,fire_or,"fire1")
+                sprout_kazu=@settings.spdata(POPLUS,fire_or,"kanyu1")+
+                @counter_05[i][j]*@settings.spdata(POPLUS,fire_or,"kanyu2")+
+                @counter_10[i][j]*@settings.spdata(POPLUS,fire_or,"kanyu3")+
+                @counter_15[i][j]*@settings.spdata(POPLUS,fire_or,"kanyu4")+
+                @counter_20[i][j]*@settings.spdata(POPLUS,fire_or,"kanyu5")
                 sprout_sei=sprout_kazu.to_i
                 sprout_shou=sprout_kazu-sprout_sei.to_f
                 sprout_sei = rand(0.0..1.0) > sprout_shou ? sprout_sei : sprout_sei+1
