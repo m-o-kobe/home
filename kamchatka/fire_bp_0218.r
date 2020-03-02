@@ -1,4 +1,24 @@
 #bp解析用
+
+function(datalm,data,ou){
+  sum<-summary(datalm)
+  coe <- sum$coefficient
+  N <- nrow(data)
+  AIC <- AIC(datalm)
+  R_squared<-sum$r.squared
+  adjusted_R_squared<-sum$adj.r.squared
+  
+  result <- cbind(coe,AIC,N,R_squared,adjusted_R_squared)
+  ro<-nrow(result)
+  if(ro>1){
+    result[2:nrow(result),5:8] <- ""
+  }
+  
+  write.table(matrix(c("\n",colnames(result)),nrow=1),ou,append=T,quote=F,sep=","
+              ,row.names=F,col.names=F)
+  write.table(result,ou,append=T,quote=F,sep=",",row.names=T,col.names=F)
+}
+
 library(doBy)
 library("stringr")
 library(ggplot2)
@@ -38,7 +58,7 @@ juv1<-children[c("x","y","Be_sucker2002","Be_sucker2000")]
 
 
 #juvenile2<-juvenile1[,c(-2)]
-sum_parent<-summaryBy(formula = dbh0+da+ba+survival_ba+fire_intense~xx+yy,data=parent_bp,FUN=c(mean,length))
+sum_parent<-summaryBy(formula = dbh0+da+ba+survival_ba~xx+yy,data=parent_bp,FUN=c(mean,length))
 names(juv1)[ which( names(juv1)=="x" ) ] <- "xx"
 names(juv1)[ which( names(juv1)=="y" ) ] <- "yy"
 
@@ -58,11 +78,14 @@ sum1<-merge(sum_parent1,juv1,by=c("xx","yy"),all = TRUE)
 #sum2<-merge(sum_parent,sum_juvenile,by=c("parent_num1","parent_color"))
 #sum3<-subset(sum1,is.na(sum1$dbh0.mean))
 #intensity3はfire_intensity1.rからとってくること
+
 len=nrow(sum1)
 for(i in 1:len){
+  print(i)
   fire_intensity<-intensity3[as.integer(sum1$xx[i])+3,as.integer(sum1$yy[i])+3]
   sum1$fire[i]<-as.numeric(fire_intensity)
 }
+#↑のintensity3はfire_intensity1ファイルから出してくること
 
 sum41<-sum1[,c(-1,-2,-4,-5,-6,-7)]
 
@@ -81,6 +104,7 @@ sum41<-sum41[c(1,2,3,6,4,5)]
 sum41$parent_dbh[is.na(sum41$parent_dbh)]<-0
 sum41$parent_num[is.na(sum41$parent_num)]<-0
 sum41$parent_ba[is.na(sum41$parent_ba)]<-0
+sum41<-subset(sum41,!is.na(sum41$be_2002))
 
 
 #sum41$da<-"a"
@@ -150,14 +174,33 @@ g<-ggplot(data=sum41,mapping=aes(x=parent_num,y=be_2002,colour=fire))+
 
 print(g)
 sum41$sum_dbh<-sum41$parent_dbh*sum41$parent_num
-model1<-lm(formula=be_2000~parent_num+parent_dbh+fire+parent_num*fire+parent_dbh*parent_num+parent_dbh*fire+0,data=sum41)
+model1<-lm(be_2000~parent_num*parent_dbh*fire-1,data=sum41)
 summary(model1)
+library(MuMIn)
+options(na.action = "na.fail")
+model_hikaku<-dredge(model1,rank="BIC")
+best.model <- get.models(model_hikaku, subset = 1)[1]
+best.model_<-best.model$`64`
+model_6<-lm(best.model_$call,data=sum41)
+summary(model_6)
+
+
+
+
 model2<-step(model1,k=log(nrow(sum41)))
 summary(model2)
 summary(model2$fitted.values)
 plot(model2$fitted.values,sum41$be_2000)
 par(mfrow=c(2,2))
 plot(model2)
+
+#outcsv<-paste("kousin_plot",sp,"0225.csv",sep="_")
+
+outcsv<-"kousin_plot_bp0226.csv"
+tablecsv(model1,sum41,outcsv)
+tablecsv(model2,sum41,outcsv)
+tablecsv(model_6,sum41,outcsv)
+
 
 #sum42<-subset(sum41,sum41$juv_num>0)
 #model3<-lm(formula=juv_num~parent_dbh+parent_num+fire+parent_survival_rate,data=sum42)
@@ -174,10 +217,6 @@ plot(model_4$fitted.values,bp_sum$juv_num)
 summary(model_4$fitted.values)
 
 df<-cbind(bp_sum,model_4$fitted.values)
-
-
-
-
 
 model3<-lm(formula=juv_num~parent_dbh+parent_num+fire+parent_survival_rate-1,data=sum41)
 summary(model3)

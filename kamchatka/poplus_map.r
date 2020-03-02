@@ -1,18 +1,25 @@
+tablecsv<-function(datalm,data,ou){
+  sum<-summary(datalm)
+  coe <- sum$coefficient
+  N <- nrow(data)
+  AIC <- AIC(datalm)
+  R_squared<-sum$r.squared
+  adjusted_R_squared<-sum$adj.r.squared
+  
+  result <- cbind(coe,AIC,N,R_squared,adjusted_R_squared)
+  ro<-nrow(result)
+  if(ro>1){
+    result[2:nrow(result),5:8] <- ""
+  }
+  
+  write.table(matrix(c("\n",colnames(result)),nrow=1),ou,append=T,quote=F,sep=","
+              ,row.names=F,col.names=F)
+  write.table(result,ou,append=T,quote=F,sep=",",row.names=T,col.names=F)
+}
+
+
 parent<-read.csv("fire2.csv", fileEncoding = "UTF-8-BOM")
 
-xmax<-17
-ymax<-19
-parent1<-data.frame(x=1000,y=1000)
-for(i in 0:xmax){
-  xi<-i*5
-  for(j in 0:ymax){
-    yj<-j*5
-    parent2<-c(xi,yj)
-    parent1<-rbind(parent1,parent2)
-  }
-}
-parent1<-subset(parent1,parent1$x!=1000)
-#write.csv(parent1,"map.csv")
 
 fire1<-subset(parent,parent$sp.=="Po")
 fire1$xx<-as.numeric(fire1$grid..x.)+as.numeric(as.character(fire1$x))
@@ -30,22 +37,24 @@ poplus$x3<-0
 children<-read.csv("5m_poplus_datateisei.csv",fileEncoding = "UTF-8-BOM")
 parent<-read.csv("crd/poplus_map.csv")
 
-parent$firex<-as.integer(((parent$x+2.5)/xstep)+1)
-parent$firey<-as.integer(((parent$y+2.5)/ystep)+1)
+#parent$firex<-as.integer(((parent$x+2.5)/xstep)+1)
+#parent$firey<-as.integer(((parent$y+2.5)/ystep)+1)
 
-fire4<-subset(parent,f(firex,firey))
+#fire4<-subset(parent,f(firex,firey))
+fire4<-parent
 fire4$fire<-0
 intensity2<-intensity1$v
 len<-nrow(fire4)
 for(i in 1:len){
-  fire_intensity<-intensity2[fire4$firey[i],fire4$firex[i]]
+  fire_intensity<-intensity2[fire4$y[i]+3,fire4$x[i]+3]
+  print(i)
   fire4$fire[i]<-as.numeric(fire_intensity)
 }
 
 parent<-fire4
 
 taiou<-merge(parent,children)
-sum41<-taiou[,c(3,4,5,6,7,10,11,20)]
+sum41<-taiou[,c(3,4,5,6,8,18)]
 name1<-colnames(sum41)
 plotList <- list()
 k=1
@@ -74,14 +83,35 @@ print(pm)
 library(GGally)
 p<-ggpairs(data=sum41)
 print(p)
-po_lm<-lm(formula=Po_sucker2000~Crd5+Crd10+Crd15+crd20+fire-1,data=sum41)
+po_lm<-lm(formula=Po_sucker2000~Crd5*Crd10*Crd15*crd20-1,data=sum41)
+
+library(MuMIn)
+options(na.action = "na.fail")
+model_5<-dredge(po_lm,rank="BIC")
+best.model <- get.models(model_5, subset = 1)[1]
+best.model_<-best.model$`24`
+model_6<-lm(best.model_$call,data=bp_sum)
+summary(model_6)
+tablecsv(model_6,bp_sum,"bp_fire_kabugoto0226.csv")
+
+
+
 summary(po_lm)
 po_lm1<-step(po_lm,k=log(nrow(sum41)))
 summary(po_lm1)
+sp="po"
+outcsv<-paste("kousin_plot",sp,"0225.csv",sep="_")
+
+tablecsv(po_lm,sum41,outcsv)
+tablecsv(po_lm1,sum41,outcsv)
+
+
+
 par(mfrow=c(2,2)) 
 plot(po_lm1)
 
 par(mfrow=c(1,1))
+
 plot(po_lm1$fitted.values,sum41$Po_sucker2000)
 
 summary(po_lm1$fitted.values)

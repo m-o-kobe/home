@@ -3,6 +3,7 @@ library(dplyr)
 library(spatstat)
 library("colorRamps")
 library(ggplot2)
+library(MuMIn)
 
 tc <- colourmap(matlab.like2(30), breaks=seq(0.0,1.01,length=31))
 tc1 <- colourmap(matlab.like2(30), breaks=seq(0.0,0.31,length=31))
@@ -48,25 +49,46 @@ intensity2<-intensity1$v
 intensity3<-t(intensity2)
 
 
-fire4<-fire1
+fire4<-subset(fire1,fire1$xx>0.0 && fire1$xx<90.0 && fire1$yy>0.0 &&fire1$yy<1000)
 fire4$fire<-0
 len<-nrow(fire4)
-write.csv(intensity3,"fire_intensity.csv", row.names = FALSE,col.names = FALSE)
+#write.csv(intensity3,"fire_intensity.csv", row.names = FALSE,col.names = FALSE)
 #write.table(intensity2, file="fire_intensity.csv", row.names=FALSE, col.names=FALSE)
 
 
 for(i in 1:len){
-  fire_intensity<-intensity2[as.integer(fire4$xx[i]),as.integer(fire4$yy[i])]
+  print(i)
+  fire_intensity<-intensity2[as.integer(fire4$yy[i]+1),as.integer(fire4$xx[i]+1)]
   fire4$fire[i]<-as.numeric(fire_intensity)
 }
-fire4$fire_intense<-0
-fire4$fire_intense[fire4$fire>0.8240]<-1
-sp<-"La"
+#fire4$fire_intense<-0
+#fire4$fire_intense[fire4$fire>0.8240]<-1
+sp<-"Po"
 fire_sp<-subset(fire4,fire4$sp.==sp)
 #fire_sp<-fire4
+fire_sp<-subset(fire_sp,!is.na(fire_sp$fire))
 
-model1<-glm(formula=da~fire_intense+dbh0,data=fire_sp,family="binomial")
+
+model1<-glm(formula=da~fire*dbh0+0,data=fire_sp,family="binomial")
 summary(model1)
+model2<-glm(formula=da~dbh0,data=fire_sp,family="binomial")
+summary(model2)
+
+
+
+options(na.action = "na.fail")
+
+model_hikaku1<-dredge(model1,rank="BIC")
+model_hikaku2<-dredge(model2,rank="BIC")
+model_hikaku<-merge(model_hikaku1,model_hikaku2)
+
+
+outcsv<-paste("mortality/mortality",sp,"0228.csv",sep="_")
+write.csv(model_hikaku,outcsv)
+tablecsv(model2,fire_sp,outcsv)
+
+
+
 model2<-step(model1)
 summary(model2)
 
@@ -75,8 +97,32 @@ g<-ggplot(data=fire_sp,aes(x=dbh0,y=fire,color=D.A..2000.))+
   ggtitle(sp)+
   geom_point()
 print(g)
-write.csv(fire4,"fire_maiboku0212.csv")
+write.csv(fire3,"fire_maiboku0212.csv")
           
 
 class(intensity2)
 intensity3<-as.vector(intensity2)
+
+datalm<-model1
+data=fire_sp
+ou="test.csv"
+tablecsv<-function(datalm,data,ou){
+  
+  sum<-summary(datalm)
+  coe <- sum$coefficient
+  N <- nrow(data)
+  AIC <- AIC(datalm)
+  R_squared<-sum$r.squared
+  adjusted_R_squared<-sum$adj.r.squared
+  
+  result <- cbind(coe,AIC,N,R_squared,adjusted_R_squared)
+  ro<-nrow(result)
+  if(ro>1){
+    result[2:nrow(result),5:6] <- ""
+  }
+  
+  write.table(matrix(c("\n",colnames(result)),nrow=1),ou,append=T,quote=F,sep=","
+              ,row.names=F,col.names=F)
+  write.table(result,ou,append=T,quote=F,sep=",",row.names=T,col.names=F)
+}
+
