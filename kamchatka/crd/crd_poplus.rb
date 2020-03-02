@@ -1,14 +1,28 @@
 $targetspp="pt"#ここで樹種を変える"pt"or"bp"or"lc"
-plot="ctr"
+plot="int"
 #$cal="grow"#"da"or"grow"
 limlim=9
-infile1 = File.open("../../../kamchatka/fire_poplus.csv", "r")
-infile2 = File.open("../../../kamchatka/map.csv", "r")
+#infile1 = File.open("../../../kamchatka/fire_poplus.csv", "r")
+#infile2 = File.open("../../../kamchatka/map.csv", "r")
 
-$xmax=90.0#プロットサイズ
+if plot=="int" then
+	infile1 = File.open("../../../kamchatka/int0313.csv", "r")
+	infile2 = File.open("../../../kamchatka/crd/map_int.csv", "r")
+	$xmax=50.0#プロットサイズ
+	$ymax=50.0
+	$xmin=0.0
+	$ymin=-50.0
+elsif plot=="fire" then
+	infile1 = File.open("../../../kamchatka/fire_poplus.csv", "r")
+	infile2 = File.open("../../../kamchatka/crd/map.csv", "r")
+	$xmax=90.0#プロットサイズ
 	$ymax=100.0
 	$xmin=0.0
-	$ymin=0.0
+	$ymin=0.0	
+end
+
+
+
 
 $xmid=$xmin+($xmax-$xmin)/2
 $ymid=$ymin+($ymax-$ymin)/2
@@ -56,7 +70,7 @@ def sq (_flt)
 	return _flt * _flt
 end
 def dist( tree_a, tree_b )
-	return Math::sqrt(sq(tree_a.x+2.5 - tree_b.x) + sq(tree_a.y+2.5 - tree_b.y))#木aと木bの距離。sqは上で定義されている
+	return Math::sqrt(sq(tree_a.x - tree_b.x) + sq(tree_a.y - tree_b.y))#木aと木bの距離。sqは上で定義されている
 end
 def edge_effect( a, x, y )#エッジ効果は林縁部にかかる効果
 	if  y > x	# yがxより大きかったらxとyを入れ替えるためのif　よって常にx>y
@@ -114,6 +128,9 @@ infile1.each do |line|#1行目で読み込んだinfileの1行目だけ取り除�
 		trees.push( Tree.new(line) )
 	end
 end
+trees=trees.select{|obj|
+	obj.spp==$targetspp
+}
 maps = Array.new#treesを配列として定義
 infile2.each do |line|#1行目で読み込んだinfileの1行目だけ取り除いてTreeに入れ込む処理？
 	if line =~/^#/
@@ -124,10 +141,16 @@ end
 sel_trees=Array.new
 ############### Calculate
 sel_trees=trees.select{|item|plotout(item)}
+
+
 #p(sel_trees[0])
 maps.each do|target|
+	target.x=target.x+2.5
+	target.y=target.y+2.5
+	p target
+
 	crdcal=Array.new(4,0)
-	trees.each do | obj |#treesのデータがobjに格納された上で以下の処理を繰り返す
+	sel_trees.each do | obj |#treesのデータがobjに格納された上で以下の処理を繰り返す
 
 		
 			_dist =dist(target, obj)#targetとobjの距離を_distで返す
@@ -155,8 +178,8 @@ maps.each do|target|
 				end
 		end
     end
-	    
-    for lim_dist in [5.0,10.0,15.0,20.0] do
+	for lim_dist in [5.0,10.0,15.0,20.0] do
+		
 		area_ratio=(sq(lim_dist)*edge_effect(lim_dist, target.edge_x, target.edge_y)-sq(lim_dist-5.0)*edge_effect(lim_dist-5.0, target.edge_x, target.edge_y))/(sq(lim_dist)-sq(lim_dist-5.0))
 		target.set_crd(lim_dist,crdcal[lim_dist/5-1]/area_ratio)
 		
@@ -164,6 +187,8 @@ maps.each do|target|
 	# target.dgrw=(dgrw(target.dbh04,target.dbh01))
 	# target.death=(death(target.dbh04))
 	target.sc=target.sc/area_ratio
+	target.x=(target.x-2.5).to_i
+	target.y=(target.y-2.5).to_i
 end
 
 Result=["x","y","Crd5","Crd10","Crd15","crd20"]
@@ -171,7 +196,8 @@ Result=["x","y","Crd5","Crd10","Crd15","crd20"]
 Result.push("crd")
 #pp(sel_trees)
 require "csv"
-file_out = File.open('../../../kamchatka/crd/poplus_map.csv','w') #出力ファイル名変えたいならここ
+file_out = File.open('../../../kamchatka/crd/map_'+plot+"_"+$targetspp+'_200228.csv','w') #出力ファイル名変えたいならここ
+
 file_out.print Result.join(","), "\n"	
 maps.each do |target|
 	#file_out.print target.num, ","

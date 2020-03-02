@@ -1,9 +1,10 @@
 #bp解析用
 library(doBy)
 library("stringr")
-motofire<-read.csv("fire_maiboku0212.csv")
+#motofire<-read.csv("fire_maiboku0212.csv")
 fire_sprout1<-read.csv("fire_bp_sprout.csv", fileEncoding = "UTF-8-BOM")
 fire1<-motofire
+#fire1<-fire4
 #fire1$xx<-as.numeric(fire1$grid..x.)+as.numeric(as.character(fire1$x))
 #fire1$yy<-as.numeric(fire1$grid..y.)+as.numeric(as.character(fire1$y))
 fire1$DBH00cm[is.na(fire1$DBH00cm)]<-0
@@ -11,10 +12,27 @@ fire1$GBH00cmn[is.na(fire1$GBH00cmn)]<-0
 fire1$dbh0<-as.numeric(fire1$DBH00cm)+as.numeric(fire1$GBH00cmn)/acos(-1)
 fire1$da<-0
 fire1$da[fire1$D.A..2000.=="A"]<-1
-plot(fire1$grid..x.,fire1$grid..y.)
+#plot(fire1$grid..x.,fire1$grid..y.)
+#plot(fire_sprout1$X,fire_sprout1$Y)
 
-
-plot(fire_sprout1$X,fire_sprout1$Y)
+tablecsv<-function(datalm,data,ou){
+  sum<-summary(datalm)
+  coe <- sum$coefficient
+  N <- nrow(data)
+  AIC <- AIC(datalm)
+  R_squared<-sum$r.squared
+  adjusted_R_squared<-sum$adj.r.squared
+  
+  result <- cbind(coe,AIC,N,R_squared,adjusted_R_squared)
+  ro<-nrow(result)
+  if(ro>1){
+    result[2:nrow(result),5:8] <- ""
+  }
+  
+  write.table(matrix(c("\n",colnames(result)),nrow=1),ou,append=T,quote=F,sep=","
+              ,row.names=F,col.names=F)
+  write.table(result,ou,append=T,quote=F,sep=",",row.names=T,col.names=F)
+}
 
 parent_bp<-subset(fire1,fire1$sp.=="Be")
 parent_bp$color<-"0"
@@ -31,6 +49,7 @@ parent_bp$sprout..old.<-as.character(parent_bp$sprout..old.)
 parent_bp$sprout..old.[is.na(parent_bp$sprout..old)]<-as.character(parent_bp$num)[is.na(parent_bp$sprout..old)]
 parent_bp$sprout..old.[parent_bp$sprout..old==""]<-as.character(parent_bp$num)[parent_bp$sprout..old==""]
 parent_bp<-subset(parent_bp,parent_bp$color!="y")
+
 parent_bp$color<-"b"
 parent_bp$ba<-pi*parent_bp$dbh0^2
 parent_bp$survival_ba<-parent_bp$ba*parent_bp$da
@@ -55,7 +74,7 @@ for(i in 1:len1){
 
 
 juvenile2<-juvenile1[,c(-2)]
-sum_parent<-summaryBy(formula = dbh0+da+ba+survival_ba+fire_intense~color+sprout..old.,data=parent_bp,FUN=c(mean,length))
+sum_parent<-summaryBy(formula = dbh0+da+ba+survival_ba+fire~color+sprout..old.,data=parent_bp,FUN=c(mean,length))
 sum_juvenile<-summaryBy(formula = X04DBHmm+juvenile_ba~parent_color+parent_num1,data=juvenile2,FUN=c(mean,length))
 names(sum_parent)[ which( names(sum_parent)=="sprout..old." ) ] <- "parent_num1"
 names(sum_parent)[ which( names(sum_parent)=="color" ) ] <- "parent_color"
@@ -65,7 +84,7 @@ sum_parent$ba<-sum_parent$ba.mean*sum_parent$ba.length
 sum_parent$survivalba<-0
 sum_parent$survivalba[sum_parent$survival_ba.mean>0.01]<-sum_parent$survival_ba.mean[sum_parent$survival_ba.mean>0.01]/sum_parent$da.mean[sum_parent$survival_ba.mean>0.01]
   
-sum_parent1<-sum_parent[c(1,2,3,4,7,11,12,13)]
+#sum_parent1<-sum_parent[c(1,2,3,4,7,11,12,13)]
 sum_parent1<-sum_parent[c(1,2,3,4,5,6,7,8)]
 sum_parent1$parent_ba<-sum_parent1$ba.mean*sum_parent$dbh0.length
 
@@ -154,14 +173,36 @@ print(pm)
 #sum42<-subset(sum41,sum41$juv_num>0)
 #model3<-lm(formula=juv_num~parent_dbh+parent_num+fire+parent_survival_rate,data=sum42)
 bp_sum<-sum41
-bp_sum$parent_num<-sum41$parent_num-1
+bp_sum$parent_num<-sum41$parent_num
 
 
-model_4<-lm(formula=juv_num~parent_dbh+parent_num+fire+parent_survival_rate-1,data=bp_sum)
+#model_4<-lm(formula=juv_num~parent_dbh+parent_num+fire+parent_survival_rate-1,data=bp_sum)
+#model_4<-lm(formula=juv_num~parent_dbh+parent_num+fire+parent_survival_rate+
+#              parent_dbh*parent_num+parent_dbh*fire+parent_dbh*parent_survival_rate+
+#              parent_num*fire+parent_num*parent_survival_rate+
+#              fire*parent_survival_rate-1,data=bp_sum)
+
+model_4<-lm(formula=juv_num~parent_dbh*parent_num*fire*parent_survival_rate-1,data=bp_sum)
+
+
+
 summary(model_4)
-model_4<-step(model_4,k=log(nrow(bp_sum)))
-plot(model_4$fitted.values,bp_sum$juv_num)
+#model_5<-step(model_4,k=log(nrow(bp_sum)))
+#summary(model_5)
+#plot(model_4$fitted.values,bp_sum$juv_num)
+install.packages("MuMIn")
+library(MuMIn)
+options(na.action = "na.fail")
+model_5<-dredge(model_4,rank="BIC")
+best.model <- get.models(model_5, subset = 1)[1]
+best.model_<-best.model$`24`
+model_6<-lm(best.model_$call,data=bp_sum)
+summary(model_6)
+tablecsv(model_6,bp_sum,"bp_fire_kabugoto0226.csv")
+
 summary(model_4$fitted.values)
+
+
 
 df<-cbind(bp_sum,model_4$fitted.values)
 
