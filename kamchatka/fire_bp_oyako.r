@@ -1,7 +1,7 @@
 #bp解析用
 library(doBy)
 library("stringr")
-#motofire<-read.csv("fire_maiboku0212.csv")
+motofire<-read.csv("fire_maiboku0302.csv")
 fire_sprout1<-read.csv("fire_bp_sprout.csv", fileEncoding = "UTF-8-BOM")
 fire1<-motofire
 #fire1<-fire4
@@ -173,7 +173,7 @@ print(pm)
 #sum42<-subset(sum41,sum41$juv_num>0)
 #model3<-lm(formula=juv_num~parent_dbh+parent_num+fire+parent_survival_rate,data=sum42)
 bp_sum<-sum41
-bp_sum$parent_num<-sum41$parent_num
+bp_sum$parent_num<-sum41$parent_num-1
 
 
 #model_4<-lm(formula=juv_num~parent_dbh+parent_num+fire+parent_survival_rate-1,data=bp_sum)
@@ -181,24 +181,29 @@ bp_sum$parent_num<-sum41$parent_num
 #              parent_dbh*parent_num+parent_dbh*fire+parent_dbh*parent_survival_rate+
 #              parent_num*fire+parent_num*parent_survival_rate+
 #              fire*parent_survival_rate-1,data=bp_sum)
+library(MuMIn)
+options(na.action = "na.fail")
+model_1<-lm(formula=juv_num~parent_dbh*parent_num*fire*parent_survival_rate-1,data=bp_sum)
+model_2<-lm(formula=juv_num~parent_dbh*parent_num*fire*parent_survival_rate,data=bp_sum)
+model_hikaku1<-dredge(model_1,rank="BIC")
+model_hikaku2<-dredge(model_2,rank="BIC")
+model_hikaku<-merge(model_hikaku1,model_hikaku2)
 
-model_4<-lm(formula=juv_num~parent_dbh*parent_num*fire*parent_survival_rate-1,data=bp_sum)
+write.csv(model_hikaku,"bp_fire_kabugoto0302_2.csv")
 
 
+tablecsv(model_6,bp_sum,"bp_fire_kabugoto0302.csv")
 
-summary(model_4)
 #model_5<-step(model_4,k=log(nrow(bp_sum)))
 #summary(model_5)
 #plot(model_4$fitted.values,bp_sum$juv_num)
-install.packages("MuMIn")
-library(MuMIn)
-options(na.action = "na.fail")
+
 model_5<-dredge(model_4,rank="BIC")
-best.model <- get.models(model_5, subset = 1)[1]
-best.model_<-best.model$`24`
+best.model <- get.models(model_hikaku, subset = 1)[1]
+best.model_<-best.model$`24.x`
 model_6<-lm(best.model_$call,data=bp_sum)
 summary(model_6)
-tablecsv(model_6,bp_sum,"bp_fire_kabugoto0226.csv")
+tablecsv(model_6,bp_sum,"bp_fire_kabugoto0302_2.csv")
 
 summary(model_4$fitted.values)
 

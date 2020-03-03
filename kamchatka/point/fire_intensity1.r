@@ -11,7 +11,7 @@ tc1 <- colourmap(matlab.like2(30), breaks=seq(0.0,0.31,length=31))
 
 
 
-motofire<-read.csv("fire_maiboku.csv", fileEncoding = "UTF-8-BOM")
+motofire<-read.csv("fire_maiboku0212.csv")
 #fire_sprout1<-read.csv("fire_bp_sprout.csv", fileEncoding = "UTF-8-BOM")
 fire1<-motofire
 fire1$xx<-as.numeric(fire1$grid..x.)+as.numeric(as.character(fire1$x))
@@ -97,7 +97,14 @@ g<-ggplot(data=fire_sp,aes(x=dbh0,y=fire,color=D.A..2000.))+
   ggtitle(sp)+
   geom_point()
 print(g)
-write.csv(fire3,"fire_maiboku0212.csv")
+
+len=nrow(fire3)
+for(i in 1:len){
+  print(i)
+  fire_intensity<-intensity3[as.integer(fire3$xx[i])+1,as.integer(fire3$yy[i])+1]
+  fire3$fire[i]<-as.numeric(fire_intensity)
+}
+write.csv(fire3,"fire_maiboku0302.csv")
           
 
 class(intensity2)

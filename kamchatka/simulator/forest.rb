@@ -60,7 +60,7 @@ class Forest
 
 		crdcal
 #		@pcount.count(@trees)
-		if @year%@settings.firefreq==0 then
+		if @year%@settings.firefreq==1 then
 			fire
 			crdcal
 		else

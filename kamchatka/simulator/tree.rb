@@ -50,6 +50,7 @@ class Tree
 			@settings.spdata( @sp ,"heiwa", "growth2" )*@mysize+
 			@settings.spdata(@sp,"heiwa","growth3")*@kabu+
 			@settings.spdata(@sp,"heiwa","growth4")*@crd
+
 		if gro>=0&&@age>=5 then
 			@mysize+=gro
 		end
@@ -59,10 +60,12 @@ class Tree
 	def is_dead(fire_or_not,fire_intense)
 		seisi=rand(0.0..1.0)
 		fire_or= fire_or_not ? "fire" : "heiwa"
+				
 		if fire_or_not
 			seizonritu=1.0/(1.0+Math::exp(-@settings.spdata(@sp,fire_or,"death1")-
 			@settings.spdata(@sp,fire_or,"death2")*@mysize-
-			@settings.spdata(@sp,fire_or,"death3")*fire_intense
+			@settings.spdata(@sp,fire_or,"death3")*fire_intense-
+			@settings.spdata(@sp,fire_or,"death4")*fire_intense*@mysize
 			))
 		else
 			if @age<5 && @sp==POPLUS then
