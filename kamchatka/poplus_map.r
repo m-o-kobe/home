@@ -84,15 +84,17 @@ library(GGally)
 p<-ggpairs(data=sum41)
 print(p)
 po_lm<-lm(formula=Po_sucker2000~Crd5*Crd10*Crd15*crd20-1,data=sum41)
+po_lm<-lm(formula=Po_sucker2000~Crd5+Crd10+Crd15+crd20-1,data=sum41)
 
 library(MuMIn)
 options(na.action = "na.fail")
 model_5<-dredge(po_lm,rank="BIC")
 best.model <- get.models(model_5, subset = 1)[1]
-best.model_<-best.model$`24`
-model_6<-lm(best.model_$call,data=bp_sum)
+best.model_<-best.model$`16`
+model_6<-lm(best.model_$call,data=sum41)
 summary(model_6)
-tablecsv(model_6,bp_sum,"bp_fire_kabugoto0226.csv")
+
+#tablecsv(model_6,bp_sum,"bp_fire_kabugoto0226.csv")
 
 
 
@@ -112,7 +114,9 @@ plot(po_lm1)
 
 par(mfrow=c(1,1))
 
-plot(po_lm1$fitted.values,sum41$Po_sucker2000)
+plot(model_6$fitted.values,sum41$Po_sucker2000)
+sum(model_6$fitted.values)
 
 summary(po_lm1$fitted.values)
 
+sum(sum41$Po_sucker2000)

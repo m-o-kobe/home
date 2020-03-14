@@ -1,7 +1,7 @@
-args <- commandArgs(trailingOnly=T)
-filename <-args[1]
-outfile  <-args[2]
-title1<-args[3]
+#args <- commandArgs(trailingOnly=T)
+filename <-"output/output0303.csv"
+outfile  <-"output/draw0303_1.pdf"
+title1<-"fire"
 library(ggplot2)
 pdf(outfile, paper ="a4", pointsize=18)
 
@@ -18,11 +18,13 @@ for (year in all_years){
 	theme(plot.margin=unit(c(0,0,0,0),"lines"))+
 	theme_bw()+
 	scale_radius(name="DBH", breaks=seq(0,50,by=10),limits=c(0,50),range=c(0,15))+
-	scale_x_continuous(breaks=seq(0,50,by=10), limits=c(-2,52))+
-	scale_y_continuous(breaks=seq(0,100,by=10), limits=c(-2,102))+
+	#scale_x_continuous(breaks=seq(0,50,by=10), limits=c(-2,52))+
+	 scale_x_continuous(breaks=seq(0,90,by=10), limits=c(-2,92))+
+	 scale_y_continuous(breaks=seq(0,100,by=10), limits=c(-2,102))+
 	scale_colour_discrete(drop=FALSE)+
-	scale_color_manual(values = c("Larix cajanderi"="#58BE89","Betula platyphylla"="#FBA848","Populus tremula"="#40AAEF"))
-
+	scale_color_manual(values = c("Larix cajanderi"="#58BE89","Betula platyphylla"="#FBA848","Populus tremula"="#40AAEF"))+
+	scale_size_continuous(range = c(1, 6))
+	  
 	print( output )
 	#ggsave("output.pdf", plot=output, width=210, height=297, units= "mm")
 }

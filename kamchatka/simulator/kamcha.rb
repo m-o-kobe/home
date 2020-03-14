@@ -1,7 +1,7 @@
 require "./simulator.rb"
 require 'timeout'
 #↓実行例
-# ruby kamcha.rb ../../../kamchatka/setting/setting.csv ../../../kamchatka/setting/init_fire0302.csv ../../../kamchatka/output/output.csv ../../../kamchatka/output/stat.csv data/fire.csv
+# ruby kamcha.rb ../../../kamchatka/setting/setting.csv ../../../kamchatka/setting/init_fire0302.csv ../../../kamchatka/output/output0309.csv ../../../kamchatka/output/stat.csv data/fire.csv
 
 ######################
 # Fix random numbers: for development purpose

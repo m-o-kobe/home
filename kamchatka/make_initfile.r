@@ -11,7 +11,13 @@ df2$sp[df2$sp.=="La"]<-1
 df2$sp[df2$sp.=="Be"]<-2
 df2$sp[df2$sp.=="Po"]<-3
 df3<-subset(df2,df2$sp!=0)
+#df3<-subset(df3,df3$D.A......2004.=="A")
+#↑生存のみ出力用
 df3$age<-100
 df3$spnum<-as.integer(df3$sprout..old.)
 df4<-df3[c("xx","yy","sp","age","dbh0","X.1","spnum")]
 write.csv(df4,"setting/init_fire0302.csv",row.names = FALSE)
+
+
+summary(df1)
+

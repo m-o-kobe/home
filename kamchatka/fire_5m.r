@@ -5,6 +5,12 @@ children<-distinct(children)
 sum1<-merge(parent,children,all=TRUE)
 sum1[is.na(sum1)] <- 0
 
+sum(children$Po_sucker2000)+sum(children$Po_seedling2000)
+sum(children$Be_sucker2000)+sum(children$Be_seedling2000)
+sum(children$La_seedling2000)
+sum(children$Po_sucker2004)
+
+
 xmax<-16
 ymax<-18
 

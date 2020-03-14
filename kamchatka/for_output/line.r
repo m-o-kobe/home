@@ -1,7 +1,11 @@
-args <- commandArgs(trailingOnly=T)
-filename <-args[1]
-outfile  <-args[2]
-title1<-args[3]
+#args <- commandArgs(trailingOnly=T)
+#filename <-args[1]
+#outfile  <-args[2]
+#title1<-args[3]
+filename <-"output/output.csv"
+outfile  <-"output/line0303.pdf"
+title1<-"fire"
+
 library(ggplot2)
 library(ggsci)
 
@@ -13,7 +17,6 @@ df <- data.frame(matrix(rep(NA, n), nrow=1))[numeric(0), ]
 pdf(outfile, paper ="a4", pointsize=18)
 
 for (year in all_years){
-
     dat<-subset(buf,V1==year)
     for (j in 1:3){
         sp<-subset(dat,V4==j)
@@ -35,3 +38,4 @@ axis<-scale_y_log10()
 g<-chartmap+charttype+label+axis
 print(df)
 print(g)
+dev.off()

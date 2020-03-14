@@ -172,8 +172,8 @@ class Forest
 				0,#age
 				0.0,#size
 				0,#@tag
-				spzahyou[3],#motherのタグ
-				spzahyou[4]#sprout_tag
+				spzahyou[2],#motherのタグ
+				spzahyou[3]#sprout_tag
 				))
 		end
 	end

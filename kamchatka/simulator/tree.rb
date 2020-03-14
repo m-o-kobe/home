@@ -68,7 +68,7 @@ class Tree
 			@settings.spdata(@sp,fire_or,"death4")*fire_intense*@mysize
 			))
 		else
-			if @age<5 && @sp==POPLUS then
+			if @age<3 && @sp==POPLUS then
 				seizonritu=@settings.spdata(POPLUS,"heiwa","death5")
 			else
 				seizonritu=(1.0/(1.0+Math::exp(-@settings.spdata(@sp,fire_or,"death1")-
