@@ -28,3 +28,6 @@ kamchatka/simulator/data/init.csv
 ### fire_file
 各1m×1mプロット位置における火災強度のファイル。実データからRのspatstatパッケージ、density関数を用いて計算したものを用いている。setting_fileで指定したプロットサイズに合わせておく。以下のファイルをテスト用として使用していた。
 kamchatka/simulator/data/fire.csv
+
+火災をシミュレートし、立木位置図として可視化した例
+![火災前](https://github.com/m-o-kobe/forest/blob/master/zu2.jpg "サンプル")
