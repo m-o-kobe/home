@@ -37,7 +37,7 @@ kamchatka/simulator/data/fire.csv
 ##### 火災後
 ![火災後](https://github.com/m-o-kobe/forest/blob/master/zu3.jpg "サンプル")
 
-#License
+# License
 Copyright 2020 Shigeaki Hasegawa & Momoko Okabe
 
     This program is free software: you can redistribute it and/or modify
