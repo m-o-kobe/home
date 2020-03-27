@@ -30,4 +30,8 @@ kamchatka/simulator/data/init.csv
 kamchatka/simulator/data/fire.csv
 
 火災をシミュレートし、立木位置図として可視化した例
+##### 火災前
 ![火災前](https://github.com/m-o-kobe/forest/blob/master/zu2.jpg "サンプル")
+##### 火災後
+![火災後](https://github.com/m-o-kobe/forest/blob/master/zu.jpg "サンプル")
+
