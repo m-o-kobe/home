@@ -33,5 +33,6 @@ kamchatka/simulator/data/fire.csv
 ##### 火災前
 ![火災前](https://github.com/m-o-kobe/forest/blob/master/zu2.jpg "サンプル")
 ##### 火災後
-![火災後](https://github.com/m-o-kobe/forest/blob/master/zu.jpg "サンプル")
+![火災後](https://github.com/m-o-kobe/forest/blob/master/zu3.jpg "サンプル")
 
+![火災後](https://github.com/m-o-kobe/forest/blob/master/zu1.jpg "サンプル")
