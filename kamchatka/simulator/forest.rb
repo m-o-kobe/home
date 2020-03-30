@@ -129,7 +129,7 @@ class Forest
 		sprout=Array.new
 		sprout=@pcount.make_sprout(@trees,tf)
 		sprout.each do |spzahyou|
-			@@sinki_count[POPLUS]=@@sinki_count[POPLUS]+1
+			@@sinki_count[POPLUS] = @@sinki_count[POPLUS] + 1
 			@trees.push(Tree.new(
 				spzahyou[0],
 				spzahyou[1],
@@ -166,8 +166,8 @@ class Forest
 		sprout.each do |spzahyou|
 			@@sinki_count[BETULA]=@@sinki_count[BETULA]+1
 			@trees.push(Tree.new(
-				spzahyou[0],
-				spzahyou[1],
+				spzahyou[0] % @settings.plot_x,
+				spzahyou[1] % @settings.plot_y,
 				BETULA,#sp
 				0,#age
 				0.0,#size
