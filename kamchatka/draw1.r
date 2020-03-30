@@ -17,3 +17,21 @@ g<-ggplot(data=fire2,mapping=aes(x=xx,y=yy,size=dbh0,colour=sp.,shape=D.A..2000.
   geom_point()+
   coord_fixed()
 print(g)
+
+
+sp<-c("Larix cajanderi", "Betula platyphylla", "Populus tremula")
+
+g<-ggplot(data=fire2,mapping=aes(x=xx,y=yy,size=dbh0,colour=sp.))+
+  scale_color_manual(values = c("#FBA848","#58BE89","#40AAEF"))+
+  labs(x="X", y="Y", title="before_fire", size="DBH", colour="Species")+
+  geom_point(alpha=0.4)+
+  scale_radius(name="DBH", breaks=seq(0,50,by=10),limits=c(0,50),range=c(0,15))+
+  theme(plot.margin=unit(c(0,0,0,0),"lines"))+
+  scale_size_continuous(range = c(1, 6))+
+  scale_x_continuous(breaks=seq(0,90,by=10), limits=c(-2,92))+
+  scale_y_continuous(breaks=seq(0,100,by=10), limits=c(-2,102))+
+  theme_bw()+
+  coord_fixed()
+pdf("output/before_fire.pdf", paper ="a4", pointsize=18)
+print(g)
+dev.off()
