@@ -1,1 +1,5 @@
+((max_x/2-x)+x)%max_x
+
+
 crdŒvZ‚É‚¨‚¯‚éedge‚Ì•â³
+

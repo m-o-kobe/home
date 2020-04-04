@@ -257,8 +257,13 @@ class Forest
 		end
 	end
 	
+	# def dist( tree_a, tree_b )
+	# 	return Math::sqrt(sq(tree_a.x - tree_b.x) + sq(tree_a.y - tree_b.y))#木aと木bの距離。sqは上で定義されている
+	# end
 	def dist( tree_a, tree_b )
-		return Math::sqrt(sq(tree_a.x - tree_b.x) + sq(tree_a.y - tree_b.y))#木aと木bの距離。sqは上で定義されている
+		b_x=((@settings.plot_x/2.0-tree_a.x)+tree_b.x) % @settings.plot_x
+		b_y=((@settings.plot_y/2.0-tree_a.y)+tree_b.y) % @settings.plot_y
+		return Math::sqrt(sq(@settings.plot_x/2.0 - b_x) + sq(@settings.plot_y/2.0 - b_y))#木aと木bの距離。sqは上で定義されている
 	end
 	
 	def sq(_flt)

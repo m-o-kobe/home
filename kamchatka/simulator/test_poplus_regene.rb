@@ -3,7 +3,8 @@ require"./forest.rb"
 require"./fileio.rb"
 require"./poplus_regene.rb"
 require"./betula_regene.rb"
-srand 1234
+require"./tree.rb"
+
 fileio = Fileio.new( "data/setting_test.csv","data/init.csv","data/output.dat","data/output.dat","data/fire.csv")
 tmp=Settings.new()
 
@@ -29,7 +30,15 @@ forest.betula_regeneration(false)
 #forest.fire_evoke
 # fir=Fire_layer.new()
 # fir.load_file(fileio.read_fire)
-# counttest=PoplusCount.new(0,0,15,15,5)
+tree1=Tree.new(
+	2.5,99,2,10,10,0,0,1
+)
+tree2=Tree.new(
+	1.0,3.0,2,0,1,0,0,1
+)
+
+counttest=PoplusCount.new(0,0,90,100,5)
+counttest.dist(tree1,0,0)
 # counttest.pcount(forest.trees)
 # p counttest.get_count_2d
 #p counttest.make_poplus_sprout(false)

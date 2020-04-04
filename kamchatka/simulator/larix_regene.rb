@@ -65,12 +65,20 @@ class LarixRegene
     def get_count(x,y)
         return @counter[x][y]
     end
+    # def dist( tree_a, plot_x,plot_y )
+    #     x=@step*(plot_x+0.5)
+    #     y=@step*(plot_y+0.5)
+
+	# 	return Math::sqrt((tree_a.x - x)**2 + (tree_a.y - y)**2)#木aと木bの距離。sqは上で定義されている
+    # end
     def dist( tree_a, plot_x,plot_y )
         x=@step*(plot_x+0.5)
         y=@step*(plot_y+0.5)
-
-		return Math::sqrt((tree_a.x - x)**2 + (tree_a.y - y)**2)#木aと木bの距離。sqは上で定義されている
+        b_x=((@x_max/2.0-x)+tree_a.x) % @x_max
+        b_y=((@y_max/2.0-y)+tree_a.y) % @y_max
+        return Math::sqrt((@x_max/2.0 - b_x)**2 + (@y_max/2.0 - b_y)**2)
 	end
+
     def make_sprout(trees,fire_or_not)
         fire_or= fire_or_not ? "fire" : "heiwa"
         pcount(trees)
