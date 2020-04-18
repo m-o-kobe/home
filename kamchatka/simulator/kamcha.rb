@@ -1,7 +1,7 @@
 require "./simulator.rb"
 require 'timeout'
-#↓実行例
-# ruby kamcha.rb ../../../kamchatka/setting/setting.csv ../../../kamchatka/setting/init_fire0302.csv ../../../kamchatka/output/output0309.csv ../../../kamchatka/output/stat.csv data/fire.csv
+#↓実行例 日付変える
+# ruby kamcha.rb ../../../kamchatka/setting/setting.csv ../../../kamchatka/setting/init_fire0302.csv ../../../kamchatka/output/output0405.csv ../../../kamchatka/output/stat0405.csv data/fire.csv
 
 ######################
 # Fix random numbers: for development purpose
@@ -20,7 +20,7 @@ simulator = Simulator.new( ARGV[0], ARGV[1], ARGV[2],ARGV[3],ARGV[4])
 begin
   Timeout.timeout(600){
     #puts"start"
- simulator.run
+  simulator.run
   }
 rescue Timeout::Error
   puts "timeout"

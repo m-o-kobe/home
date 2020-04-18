@@ -1,5 +1,5 @@
 #$targetspp="lc"#ここで樹種を変える"pt"or"bp"or"lc"
-plot="ctr"
+plot="fire_sv"
 #$cal="grow"#"da"or"grow"
 limlim=9
 
@@ -18,6 +18,19 @@ elsif plot=="int"
 	$ymax=50.0
 	$xmin=0.0
 	$ymin=-50.0
+elsif plot=="fire"
+	infile = File.open("../../../kamchatka/crd/fire0409.csv", "r")
+	$xmax=90.0
+	$ymax=100.0
+	$xmin=0.0
+	$ymin=0.0
+elsif plot=="fire_sv"
+	infile = File.open("../../../kamchatka/crd/fire_survival0410.csv", "r")
+	$xmax=90.0
+	$ymax=100.0
+	$xmin=0.0
+	$ymin=0.0
+
 elsif plot=="test"
 	infile = File.open("../../../kamchatka/test.csv", "r")
 	$xmax=100.0#プロットサイズ
@@ -32,14 +45,14 @@ class Tree #クラスTreeを定義
 	def initialize( line ) #オブジェクト作成時必ず実行される処理.()内をlineに読み込む
 		buf = line.chop.split(",")#lineの最後の文字を消し(chop),","を区切り文字とした配列をbufに読み込み
 		
-		@num = buf[0].to_i#配列の1列目を整数型に変換して@numに格納。@numはインスタンス変数
+		@num = buf[0]#配列の1列目を整数型に変換して@numに格納。@numはインスタンス変数
 		@x   = buf[1].to_f#浮動小数点型。後は同上
 		@y   = buf[2].to_f
 		@spp = buf[3]
 		@dbh01=buf[4].to_f
 		@dbh04=buf[5].to_f
 		@hgt = buf[6].to_f
-		@sprout=buf[7].to_i
+		@sprout=buf[7]
 		@crd=Hash.new(0)
 		@sc=0
 		if @x>$xmid
@@ -134,6 +147,7 @@ sel_trees=Array.new
 sel_trees=trees.select{|item|plotout(item)}
 #p(sel_trees[0])
 sel_trees.each do|target|
+	p target.sprout
 	crdcal=Array.new(limlim,0)
 	trees.each do | obj |#treesのデータがobjに格納された上で以下の処理を繰り返す
 
@@ -141,7 +155,7 @@ sel_trees.each do|target|
 			_dist =dist(target, obj)#targetとobjの距離を_distで返す
 			for lim_dist in 1..limlim do
 				if _dist<lim_dist&&_dist >=(lim_dist-1.0)#もしtargetとobjectの距離が0~9なら(lim_distより)
-					if target.sprout==obj.sprout&&target.sprout!=0
+					if target.sprout==obj.sprout&&target.sprout!="0"
 						if _dist<=0.01
 							#target.sc+=obj.dbh01/0.01
 							target.sc+=obj.dbh01
@@ -181,7 +195,7 @@ end
 Result.push("crd")
 #pp(sel_trees)
 require "csv"
-file_out = File.open('../../../kamchatka/crd/crd_'+plot+'_191209.csv','w') #出力ファイル名変えたいならここ
+file_out = File.open('../../../kamchatka/crd/crd_'+plot+'_200410.csv','w') #出力ファイル名変えたいならここ
 file_out.print Result.join(","), "\n"	
 sel_trees.each do |target|
 	file_out.print target.num, ","

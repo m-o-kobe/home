@@ -1,9 +1,10 @@
 $targetspp="pt"#ここで樹種を変える"pt"or"bp"or"lc"
-plot="int"
+plot="test"
 #$cal="grow"#"da"or"grow"
 limlim=9
 #infile1 = File.open("../../../kamchatka/fire_poplus.csv", "r")
 #infile2 = File.open("../../../kamchatka/map.csv", "r")
+#同種だけ取り出して処理を行っている
 
 if plot=="int" then
 	infile1 = File.open("../../../kamchatka/int0313.csv", "r")
@@ -18,7 +19,15 @@ elsif plot=="fire" then
 	$xmax=90.0#プロットサイズ
 	$ymax=100.0
 	$xmin=0.0
-	$ymin=0.0	
+	$ymin=0.0
+elsif plot=="ctr"
+	infile1 = File.open("../../../kamchatka/ctrl0315.csv", "r")#ここにファイル名を入れる
+	#infile = File.open("test.csv", "r")
+	$jogai=484#計算から除外したい木はこのように表記
+	$xmax=100.0#プロットサイズ
+	$ymax=50.0
+	$xmin=0.0
+	$ymin=0.0
 end
 
 
@@ -39,7 +48,9 @@ class Tree #クラスTreeを定義
 		@dbh04=buf[5].to_f
 		@hgt = buf[6].to_f
 		@sprout=buf[7].to_i
-		@crd=Hash.new(0)
+		@ssp=Hash.new(0)
+		@dsp=Hash.new(0)
+
 		@sc=0
 		if @x>$xmid
 			@edge_x=$xmax-@x
@@ -54,14 +65,22 @@ class Tree #クラスTreeを定義
 
 	end
 	
-	def get_crd( order )
-		return @crd[order]
+	def get_ssp( order )
+		return @ssp[order]
 	end
 	
-	def set_crd( order, value )
-		return @crd[order]=value
+	def set_ssp( order, value )
+		return @ssp[order]=value
+	end
+	def get_dsp( order )
+		return @dsp[order]
+	end
+	
+	def set_dsp( order, value )
+		return @dsp[order]=value
 	end
 end
+
 def dgrw(dbh04,dbh01)#dgrwは成長量
 		return (dbh04-dbh01)/3
 end
@@ -128,9 +147,6 @@ infile1.each do |line|#1行目で読み込んだinfileの1行目だけ取り除�
 		trees.push( Tree.new(line) )
 	end
 end
-trees=trees.select{|obj|
-	obj.spp==$targetspp
-}
 maps = Array.new#treesを配列として定義
 infile2.each do |line|#1行目で読み込んだinfileの1行目だけ取り除いてTreeに入れ込む処理？
 	if line =~/^#/
@@ -141,21 +157,22 @@ end
 sel_trees=Array.new
 ############### Calculate
 sel_trees=trees.select{|item|plotout(item)}
+# sel_trees=sel_trees.select{|obj|
+# 	obj.spp==$targetspp
+# }
 
 
 #p(sel_trees[0])
 maps.each do|target|
 	target.x=target.x+2.5
 	target.y=target.y+2.5
-	p target
+	sspcal=Array.new(4,0)
+	dspcal=Array.new(4,0)
 
-	crdcal=Array.new(4,0)
-	sel_trees.each do | obj |#treesのデータがobjに格納された上で以下の処理を繰り返す
-
-		
+	sel_trees.each do | obj |#treesのデータがobjに格納された上で以下の処理を繰り返す		
 			_dist =dist(target, obj)#targetとobjの距離を_distで返す
 			for lim_dist in [5.0,10.0,15.0,20.0] do
-				if _dist<lim_dist&&_dist >=(lim_dist-5.0)#もしtargetとobjectの距離が0~9なら(lim_distより)
+				if _dist<lim_dist&&_dist >=(lim_dist-5.0)
 					if target.sprout==obj.sprout&&target.sprout!=0
 						if _dist<=0.01
 							#target.sc+=obj.dbh01/0.01
@@ -166,14 +183,23 @@ maps.each do|target|
 							#target.sc+=obj.dbh01/_dist
 							break
 						end
-					else
+					elsif obj.spp==$targetspp
 						if _dist<=0.01
-							crdcal[lim_dist/5-1]+=obj.dbh01
+							sspcal[lim_dist/5-1]+=obj.dbh01
 							break
 						else
-							crdcal[lim_dist/5-1]+=obj.dbh01
+							sspcal[lim_dist/5-1]+=obj.dbh01
 							break
 						end
+					else
+						if _dist<=0.01
+							dspcal[lim_dist/5-1]+=obj.dbh01
+							break
+						else
+							dspcal[lim_dist/5-1]+=obj.dbh01
+							break
+						end
+
 					end
 				end
 		end
@@ -181,8 +207,8 @@ maps.each do|target|
 	for lim_dist in [5.0,10.0,15.0,20.0] do
 		
 		area_ratio=(sq(lim_dist)*edge_effect(lim_dist, target.edge_x, target.edge_y)-sq(lim_dist-5.0)*edge_effect(lim_dist-5.0, target.edge_x, target.edge_y))/(sq(lim_dist)-sq(lim_dist-5.0))
-		target.set_crd(lim_dist,crdcal[lim_dist/5-1]/area_ratio)
-		
+		target.set_ssp(lim_dist,sspcal[lim_dist/5-1]/area_ratio)
+		target.set_dsp(lim_dist,dspcal[lim_dist/5-1]/area_ratio)
 	end
 	# target.dgrw=(dgrw(target.dbh04,target.dbh01))
 	# target.death=(death(target.dbh04))
@@ -191,12 +217,12 @@ maps.each do|target|
 	target.y=(target.y-2.5).to_i
 end
 
-Result=["x","y","Crd5","Crd10","Crd15","crd20"]
+Result=["x","y","ssp5","ssp10","ssp15","ssp20","dsp5","dsp10","dsp15","dsp20"]
 
-Result.push("crd")
+#Result.push("ssp")
 #pp(sel_trees)
 require "csv"
-file_out = File.open('../../../kamchatka/crd/map_'+plot+"_"+$targetspp+'_200228.csv','w') #出力ファイル名変えたいならここ
+file_out = File.open('../../../kamchatka/crd/map_'+plot+"_"+$targetspp+'_200415.csv','w') #出力ファイル名変えたいならここ
 
 file_out.print Result.join(","), "\n"	
 maps.each do |target|
@@ -214,12 +240,15 @@ maps.each do |target|
 	# elsif $cal=="da"
 	# 	file_out.print target.death,","
 	# end
-	crd=0
+#	ssp=0
     for j in [5.0,10.0,15.0,20.0]
-		file_out.print target.get_crd(j),","
-		crd+=target.get_crd(j)
+		file_out.print target.get_ssp(j),","
 	end
-	file_out.print crd,"\n"
+	for j in [5.0,10.0,15.0,20.0]
+		file_out.print target.get_dsp(j),","
+	end
+
+	file_out.print "\n"
 	
 end
 #p(sel_trees[0])

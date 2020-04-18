@@ -59,9 +59,8 @@ class PoplusCount
         return @counter_05, @counter_10, @counter_15,@counter_20
         
     end
-    #↓作ってはみたが使ってない
     def get_count(x,y)
-        return @counter[x][y]
+        return @counter_20[x][y]
     end
     # def dist( tree_a, plot_x,plot_y )
     #     x=@step*(plot_x+0.5)
