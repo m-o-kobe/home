@@ -1,5 +1,5 @@
-$targetspp="pt"#ここで樹種を変える"pt"or"bp"or"lc"
-plot="test"
+$targetspp="Po"#ここで樹種を変える"pt"or"bp"or"lc"
+plot="fire"
 #$cal="grow"#"da"or"grow"
 limlim=9
 #infile1 = File.open("../../../kamchatka/fire_poplus.csv", "r")
@@ -14,7 +14,7 @@ if plot=="int" then
 	$xmin=0.0
 	$ymin=-50.0
 elsif plot=="fire" then
-	infile1 = File.open("../../../kamchatka/fire_poplus.csv", "r")
+	infile1 = File.open("../../../kamchatka/crd/fire_survival0410.csv", "r")
 	infile2 = File.open("../../../kamchatka/crd/map.csv", "r")
 	$xmax=90.0#プロットサイズ
 	$ymax=100.0
@@ -22,17 +22,13 @@ elsif plot=="fire" then
 	$ymin=0.0
 elsif plot=="ctr"
 	infile1 = File.open("../../../kamchatka/ctrl0315.csv", "r")#ここにファイル名を入れる
-	#infile = File.open("test.csv", "r")
+	infile2 = File.open("../../../kamchatka/crd/map_ctr.csv", "r")
 	$jogai=484#計算から除外したい木はこのように表記
 	$xmax=100.0#プロットサイズ
 	$ymax=50.0
 	$xmin=0.0
 	$ymin=0.0
 end
-
-
-
-
 $xmid=$xmin+($xmax-$xmin)/2
 $ymid=$ymin+($ymax-$ymin)/2
 class Tree #クラスTreeを定義
@@ -161,29 +157,44 @@ sel_trees=trees.select{|item|plotout(item)}
 # 	obj.spp==$targetspp
 # }
 
-
 #p(sel_trees[0])
+# sel_trees.each do |target|
+# 	if target.spp=="pt"
+# 		p target
+# 	end
+# end
 maps.each do|target|
 	target.x=target.x+2.5
 	target.y=target.y+2.5
 	sspcal=Array.new(4,0)
 	dspcal=Array.new(4,0)
 
-	sel_trees.each do | obj |#treesのデータがobjに格納された上で以下の処理を繰り返す		
+	sel_trees.each do | obj |#treesのデータがobjに格納された上で以下の処理を繰り返す	
 			_dist =dist(target, obj)#targetとobjの距離を_distで返す
+			# if obj.spp=="pt"
+			# 	p _dist
+			# end
 			for lim_dist in [5.0,10.0,15.0,20.0] do
 				if _dist<lim_dist&&_dist >=(lim_dist-5.0)
-					if target.sprout==obj.sprout&&target.sprout!=0
-						if _dist<=0.01
-							#target.sc+=obj.dbh01/0.01
-							target.sc+=obj.dbh01
-							break
-						else
-							target.sc+=obj.dbh01
-							#target.sc+=obj.dbh01/_dist
-							break
-						end
-					elsif obj.spp==$targetspp
+					# if target.sprout==obj.sprout&&target.sprout!=0
+					# 	if target.spp=="pt"
+					# 		p "1"
+					# 	end
+
+					# 	if _dist<=0.01
+					# 		#target.sc+=obj.dbh01/0.01
+					# 		target.sc+=obj.dbh01
+					# 		break
+					# 	else
+					# 		target.sc+=obj.dbh01
+					# 		#target.sc+=obj.dbh01/_dist
+					# 		break
+					# 	end
+					# elsif target.spp==$targetspp
+					if obj.spp==$targetspp
+						# if obj.spp=="pt"
+						# 	p "2"
+						# end
 						if _dist<=0.01
 							sspcal[lim_dist/5-1]+=obj.dbh01
 							break
@@ -192,6 +203,10 @@ maps.each do|target|
 							break
 						end
 					else
+						# if obj.spp=="pt"
+						# 	p "3"
+						# end
+
 						if _dist<=0.01
 							dspcal[lim_dist/5-1]+=obj.dbh01
 							break
@@ -203,7 +218,7 @@ maps.each do|target|
 					end
 				end
 		end
-    end
+	end
 	for lim_dist in [5.0,10.0,15.0,20.0] do
 		
 		area_ratio=(sq(lim_dist)*edge_effect(lim_dist, target.edge_x, target.edge_y)-sq(lim_dist-5.0)*edge_effect(lim_dist-5.0, target.edge_x, target.edge_y))/(sq(lim_dist)-sq(lim_dist-5.0))
@@ -226,7 +241,6 @@ file_out = File.open('../../../kamchatka/crd/map_'+plot+"_"+$targetspp+'_200415.
 
 file_out.print Result.join(","), "\n"	
 maps.each do |target|
-	#file_out.print target.num, ","
 	file_out.print target.x, ","
 	file_out.print target.y, ","
 	# file_out.print target.spp,","
@@ -249,6 +263,4 @@ maps.each do |target|
 	end
 
 	file_out.print "\n"
-	
 end
-#p(sel_trees[0])
