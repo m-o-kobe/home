@@ -12,10 +12,10 @@ class PoplusCount
         @step=step
         @x_size=(@x_max-@x_min)/@step
         @y_size=(@y_max-@y_min)/@step
-        @counter_05=Array.new(@x_size).map{Array.new(@y_size,0)}
-        @counter_10=Array.new(@x_size).map{Array.new(@y_size,0)}
-        @counter_15=Array.new(@x_size).map{Array.new(@y_size,0)}
-        @counter_20=Array.new(@x_size).map{Array.new(@y_size,0)}
+        @ssp_05=Array.new(@x_size).map{Array.new(@y_size,0)}
+        @ssp_10=Array.new(@x_size).map{Array.new(@y_size,0)}
+        @ssp_15=Array.new(@x_size).map{Array.new(@y_size,0)}
+        @ssp_20=Array.new(@x_size).map{Array.new(@y_size,0)}
         @fire_layer=Fire_layer.new        
     end
  
@@ -28,13 +28,13 @@ class PoplusCount
                     if obj.sp==POPLUS then
                         _dist=dist(obj,i,j)
                         if _dist<5.0
-                            @counter_05[i][j]+=obj.mysize
+                            @ssp_05[i][j]+=obj.mysize
                         elsif _dist<10.0
-                            @counter_10[i][j]+=obj.mysize
+                            @ssp_10[i][j]+=obj.mysize
                         elsif _dist<15.0
-                            @counter_15[i][j]+=obj.mysize
+                            @ssp_15[i][j]+=obj.mysize
                         elsif _dist<20.0
-                            @counter_20[i][j]+=obj.mysize
+                            @ssp_20[i][j]+=obj.mysize
                         end
     
                     end
@@ -46,21 +46,21 @@ class PoplusCount
     def reset
         for i in 0..@x_size-1 do
             for j in 0..@y_size-1 do
-                @counter_05[i][j]=0.0
-                @counter_10[i][j]=0.0
-                @counter_15[i][j]=0.0
-                @counter_20[i][j]=0.0
+                @ssp_05[i][j]=0.0
+                @ssp_10[i][j]=0.0
+                @ssp_15[i][j]=0.0
+                @ssp_20[i][j]=0.0
 
             end
         end
     end
     #↓あまり意味はない。あえて言うならテスト用
     def get_count_2d
-        return @counter_05, @counter_10, @counter_15,@counter_20
+        return @ssp_05, @ssp_10, @ssp_15,@ssp_20
         
     end
     def get_count(x,y)
-        return @counter_20[x][y]
+        return @ssp_20[x][y]
     end
     # def dist( tree_a, plot_x,plot_y )
     #     x=@step*(plot_x+0.5)
@@ -84,10 +84,10 @@ class PoplusCount
         for i in 0..@x_size-1 do
             for j in 0..@y_size-1 do
                 sprout_kazu=@settings.spdata(POPLUS,fire_or,"kanyu1")+
-                @counter_05[i][j]*@settings.spdata(POPLUS,fire_or,"kanyu2")+
-                @counter_10[i][j]*@settings.spdata(POPLUS,fire_or,"kanyu3")+
-                @counter_15[i][j]*@settings.spdata(POPLUS,fire_or,"kanyu4")+
-                @counter_20[i][j]*@settings.spdata(POPLUS,fire_or,"kanyu5")
+                @ssp_05[i][j]*@settings.spdata(POPLUS,fire_or,"kanyu2")+
+                @ssp_10[i][j]*@settings.spdata(POPLUS,fire_or,"kanyu3")+
+                @ssp_15[i][j]*@settings.spdata(POPLUS,fire_or,"kanyu4")+
+                @ssp_20[i][j]*@settings.spdata(POPLUS,fire_or,"kanyu5")
                 sprout_sei=sprout_kazu.to_i
                 sprout_shou=sprout_kazu-sprout_sei.to_f
                 sprout_sei = rand(0.0..1.0) > sprout_shou ? sprout_sei : sprout_sei+1
