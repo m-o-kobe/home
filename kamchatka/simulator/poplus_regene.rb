@@ -16,6 +16,10 @@ class PoplusCount
         @ssp_10=Array.new(@x_size).map{Array.new(@y_size,0)}
         @ssp_15=Array.new(@x_size).map{Array.new(@y_size,0)}
         @ssp_20=Array.new(@x_size).map{Array.new(@y_size,0)}
+        @dsp_05=Array.new(@x_size).map{Array.new(@y_size,0)}
+        @dsp_10=Array.new(@x_size).map{Array.new(@y_size,0)}
+        @dsp_15=Array.new(@x_size).map{Array.new(@y_size,0)}
+        @dsp_20=Array.new(@x_size).map{Array.new(@y_size,0)}
         @fire_layer=Fire_layer.new        
     end
  
@@ -36,7 +40,16 @@ class PoplusCount
                         elsif _dist<20.0
                             @ssp_20[i][j]+=obj.mysize
                         end
-    
+                    else
+                        if _dist<5.0
+                            @dsp_05[i][j]+=obj.mysize
+                        elsif _dist<10.0
+                            @dsp_10[i][j]+=obj.mysize
+                        elsif _dist<15.0
+                            @dsp_15[i][j]+=obj.mysize
+                        elsif _dist<20.0
+                            @dsp_20[i][j]+=obj.mysize
+                        end
                     end
                 end
             end
@@ -50,7 +63,10 @@ class PoplusCount
                 @ssp_10[i][j]=0.0
                 @ssp_15[i][j]=0.0
                 @ssp_20[i][j]=0.0
-
+                @dsp_05[i][j]=0.0
+                @dsp_10[i][j]=0.0
+                @dsp_15[i][j]=0.0
+                @dsp_20[i][j]=0.0
             end
         end
     end

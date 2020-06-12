@@ -1,5 +1,5 @@
 #$targetspp="lc"#ここで樹種を変える"pt"or"bp"or"lc"
-plot="fire_sv"
+plot="ctr"
 #$cal="grow"#"da"or"grow"
 limlim=9
 
@@ -195,7 +195,7 @@ end
 Result.push("crd")
 #pp(sel_trees)
 require "csv"
-file_out = File.open('../../../kamchatka/crd/crd_'+plot+'_200410.csv','w') #出力ファイル名変えたいならここ
+file_out = File.open('../../../kamchatka/crd/crd_'+plot+'_200604.csv','w') #出力ファイル名変えたいならここ
 file_out.print Result.join(","), "\n"	
 sel_trees.each do |target|
 	file_out.print target.num, ","
