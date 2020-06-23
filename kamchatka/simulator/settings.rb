@@ -20,6 +20,7 @@ def params
 		"death3",
 		"death4",
 		"death5",
+		"death6",
 		"kanyu1",#1個体あたりの加入数
 		"kanyu2",#ランダム散布割合(⇔親木の周りに分布)
 		"kanyu3",#山火事の時の1個体あたり加入数

@@ -37,8 +37,9 @@ data<-rbind(buf1,buf2)
 #data2.step<-step(data1.glm)
 #data1.glm<-glm(formula = death ~ dbh01 + crd+ sc,family=binomial, data = data)
 #data2.glm<-glm(formula = death ~ dbh01 + crd+ sc+0,family=binomial, data = data)
-#data1.glm<-glm(formula = death ~ dbh01 + crd,family=binomial, data = data)
+#data1.glm<-glm(formula = death ~ dbh01 +dbh01^2+ crd,family=binomial, data = data)
 #data2.glm<-glm(formula = death ~ dbh01 + crd+0,family=binomial, data = data)
+
 
 
 

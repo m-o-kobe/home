@@ -42,6 +42,8 @@ denfire2<-density(pppfire2,sigma=5.8,eps=c(1,1))
 
 
 plot(denfire1,col=tc1,axes=TRUE,main=title,asp=1)
+plot(denfire2,col=tc1,axes=TRUE,main=title,asp=1)
+
 plot(denfire2/denfire1,col=tc,axes=TRUE,main=title,asp=1)
 
 intensity1<-denfire2/denfire1

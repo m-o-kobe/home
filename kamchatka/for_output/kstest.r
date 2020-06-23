@@ -11,13 +11,13 @@ df2$sp[df2$sp.=="Be"]<-2
 df2$sp[df2$sp.=="Po"]<-3
 
 sp="La"
-sp2<-2
+sp2<-1
 df3<-subset(df2,df2$D.A......2004.=="A")
 df3<-subset(df2,df2$D.A..2000.=="A")
 
-jitudata<-subset(df3,df3$sp.=="Be")
+jitudata<-subset(df3,df3$sp.=="La")
 
-filename <-"output/output0303.csv"
+filename <-"output/output0405.csv"
 
 buf<-read.csv(filename, header=F)
 dat<-subset(buf,buf$V1==1)

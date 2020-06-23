@@ -1,12 +1,12 @@
 library(ggplot2)
 motodata<-read.csv("nenrin/nenrin1.csv")
 plot(x=motodata$dbh,y=motodata$age)
-sp<-"lc"
+sp<-"pt"
 data1<-subset(motodata,motodata$spp==sp)
 model<-lm(age~dbh,data=data1)
 summary(model)
 #g<-ggplot(data=data1,mapping=aes(x=dbh,y=age))+
-  geom_point()
+#  geom_point()
 #print(g)
 
 ctrl<-read.csv("ctrl0315.csv")
@@ -17,7 +17,7 @@ ctrl1$age<-predict(model,ctrl1)
 #summary(ctrl1)
 
 #g1<-ggplot(data=ctrl1,mapping=aes(x=age))+
-  geom_histogram()
+#  geom_histogram()
 #print(g1)
 
 
@@ -27,9 +27,11 @@ int1$dbh<-int1$dbh01*10
 int1$age<-predict(model,int1)
 #summary(int1)
 
-#g2<-ggplot(data=int1,mapping=aes(x=age))+
+
+
+g2<-ggplot(data=int1,mapping=aes(x=age))+
   geom_histogram()
-#print(g2)
+print(g2)
 
 int5_35<-sum(int1$age>5&int1$age<35)
 ctr165_195<-sum(ctrl1$age>165&ctrl1$age<195)
@@ -79,3 +81,30 @@ for (i in 1:100000){
 
 write.csv(int5,"mortality/chousei_lc_0610.csv")
 summary(int5)
+
+
+
+fire<-read.csv("5m_poplus_datateisei.csv",fileEncoding = "UTF-8-BOM")
+fire00_05<-sum(fire$Po_sucker2004)
+int35_40<-sum(int1$age>35&int1$age<40)
+
+seizonritu1<-seizonritu^(1/160)
+
+seizonrituout<-list()
+seizonrituout[[1]]<-c(sp,"")
+seizonrituout[[2]]<-c("kikan_fire","0-5")
+seizonrituout[[3]]<-c("kikan_int","35-40")
+seizonrituout[[4]]<-c("fire",fire00_05)
+seizonrituout[[5]]<-c("int",int35_40)
+seizonrituout[[6]]<-c("seizonritu",seizonritu)
+seizonrituout[[7]]<-c("seizonritu_1year",seizonritu1)
+seizonrituout
+outcsv<-paste("mortality/heiwa_mortality_chousei",sp,"0610.csv",sep="_")
+write.csv(seizonrituout,outcsv,col.names = FALSE,row.names = FALSE)
+
+library(drc)
+int2<-subset(int1,int1$age<35)
+summary(int2)
+int2$age1<-as.integer(int2$age)
+int3.hist<-hist(int2$age,breaks=30)
+drm()

@@ -16,7 +16,7 @@ tablecsv<-function(datalm,data,ou){
               ,row.names=F,col.names=F)
   write.table(result,ou,append=T,quote=F,sep=",",row.names=T,col.names=F)
 }
-
+library(ggplot2)
 
 parent<-read.csv("fire2.csv", fileEncoding = "UTF-8-BOM")
 
@@ -55,40 +55,55 @@ parent<-fire4
 
 taiou<-merge(parent,children)
 sum41<-taiou[,c(3,4,5,6,8,18)]
+colnames(sum41)<-c("crd5","crd10","crd15","crd20","火災強度","稚樹数")
 name1<-colnames(sum41)
 plotList <- list()
 k=1
 for (i in 1:5){
-  for (j in 6:8){
+#  for (j in 6:8){
+  j=6
+  xmin<-min(sum41[i])
+  ymin<-min(sum41[j])
+  
     xmax<-max(sum41[i])
     ymax<-max(sum41[j])
     plotList[[k]]<-ggplot(data=sum41,aes_string(x=name1[i],y=name1[j]))+
       geom_point()+
-      geom_text(x=xmax/2,
-                y=ymax/2,
+      geom_text(x=(xmin+xmax)/2,
+                y=(ymin+ymax)/2,
                 label=as.character(round(cor(sum41[i],sum41[j],method ="spearman"),digits=4)),alpha=0.5,color="blue")
     #ggally_text(as.character(cor(sum41[i],sum41[j],method ="spearman")))
     k<-k+1
-  }
+ # }
 }
 
 
+#pm<-ggmatrix(plotList,
+#             nrow=3,ncol=5,
+#             xAxisLabels = name1[1:5],
+ #            yAxisLabels=name1[6:8],
+#             byrow = FALSE)
 pm<-ggmatrix(plotList,
-             nrow=3,ncol=5,
+             nrow=1,ncol=5,
              xAxisLabels = name1[1:5],
-             yAxisLabels=name1[6:8],
+             yAxisLabels=name1[6],
              byrow = FALSE)
+
 print(pm)
 
 library(GGally)
 p<-ggpairs(data=sum41)
 print(p)
 po_lm<-lm(formula=Po_sucker2000~Crd5*Crd10*Crd15*crd20-1,data=sum41)
-po_lm<-lm(formula=Po_sucker2000~Crd5+Crd10+Crd15+crd20-1,data=sum41)
+po_lm1<-lm(formula=Po_sucker2000~Crd5+Crd10+Crd15+crd20+fire-1,data=sum41)
+po_lm2<-lm(formula=Po_sucker2000~Crd5+Crd10+Crd15+crd20+fire,data=sum41)
 
 library(MuMIn)
 options(na.action = "na.fail")
-model_5<-dredge(po_lm,rank="BIC")
+model_5_1<-dredge(po_lm1,rank="BIC")
+model_5_2<-dredge(po_lm2,rank="BIC")
+model_5<-merge(model_5_1,model_5_2)
+
 best.model <- get.models(model_5, subset = 1)[1]
 best.model_<-best.model$`16`
 model_6<-lm(best.model_$call,data=sum41)
@@ -115,6 +130,19 @@ plot(po_lm1)
 par(mfrow=c(1,1))
 
 plot(model_6$fitted.values,sum41$Po_sucker2000)
+model6fit<-cbind(sum41,model_6$fitted.values)
+colnames(model6fit)<-c("crd5","crd10","crd15","crd20","fire","child","yosoku_child")
+p1<-ggplot(data=model6fit,mapping=aes(x=yosoku_child,y=child))+
+  geom_point()+
+  geom_text(x=75,
+            y=75,
+            label=as.character(round(cor(model6fit$child,model6fit$yosoku_child,method ="spearman"),digits=4)),alpha=0.5,color="blue")+
+  xlab("予測された稚樹数")+
+  ylab("実際の稚樹数")
+print(p1)
+
+
+
 sum(model_6$fitted.values)
 
 summary(po_lm1$fitted.values)

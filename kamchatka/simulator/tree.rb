@@ -74,7 +74,8 @@ class Tree
 				seizonritu=(1.0/(1.0+Math::exp(-@settings.spdata(@sp,fire_or,"death1")-
 				@settings.spdata(@sp,fire_or,"death2")*@mysize-
 				@settings.spdata(@sp,fire_or,"death3")*@kabu-
-				@settings.spdata(@sp,fire_or,"death4")*@crd)))**(1.0/3.0)
+				@settings.spdata(@sp,fire_or,"death4")*@crd)))**
+				(@settings.spdata(@sp,fire_or,"death6")/3.0)
 				
 			end	
 		end
