@@ -47,7 +47,6 @@ intensity2<-intensity1$v
 len<-nrow(fire4)
 for(i in 1:len){
   fire_intensity<-intensity2[fire4$y[i]+3,fire4$x[i]+3]
-  print(i)
   fire4$fire[i]<-as.numeric(fire_intensity)
 }
 
@@ -55,7 +54,7 @@ parent<-fire4
 
 taiou<-merge(parent,children)
 sum41<-taiou[,c(3,4,5,6,8,18)]
-colnames(sum41)<-c("crd5","crd10","crd15","crd20","火災強度","稚樹数")
+colnames(sum41)<-c("crd5","crd10","crd15","crd20","fire","juv_num")
 name1<-colnames(sum41)
 plotList <- list()
 k=1
@@ -94,9 +93,9 @@ print(pm)
 library(GGally)
 p<-ggpairs(data=sum41)
 print(p)
-po_lm<-lm(formula=Po_sucker2000~Crd5*Crd10*Crd15*crd20-1,data=sum41)
-po_lm1<-lm(formula=Po_sucker2000~Crd5+Crd10+Crd15+crd20+fire-1,data=sum41)
-po_lm2<-lm(formula=Po_sucker2000~Crd5+Crd10+Crd15+crd20+fire,data=sum41)
+#po_lm<-lm(formula=Po_sucker2000~Crd5*Crd10*Crd15*crd20-1,data=sum41)
+po_lm1<-lm(formula=juv_num~crd5+crd10+crd15+crd20+fire-1,data=sum41)
+po_lm2<-lm(formula=juv_num~crd5+crd10+crd15+crd20+fire,data=sum41)
 
 library(MuMIn)
 options(na.action = "na.fail")
