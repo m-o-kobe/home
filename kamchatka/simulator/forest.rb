@@ -32,7 +32,7 @@ class Forest
 		@b_regene=BetulaSprout.new(0,0,@settings.plot_x,@settings.plot_y,5)
 		@fire_layer=Fire_layer.new()
 		@fire_layer.load_file(fire_gyouretu)
-		
+		@stand_year = @settings.s_year
 	end
 	def popluscount
 		@pcount.reset
@@ -61,9 +61,11 @@ class Forest
 		crdcal
 #		@pcount.count(@trees)
 		if @year%@settings.firefreq==1 then
+			@stand_year=0
 			fire
 			crdcal
 		else
+			@stand_year=@stand_year+1
 			tree_death
 			trees_newborn
 			crdcal

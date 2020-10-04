@@ -69,6 +69,7 @@ class Settings
 	@@num_sp = 0
 	@@plot_x = 0
 	@@plot_y = 0
+	@@s_year=0
 	@@spdata = Hash.new#hash:配列に追加
 
 
@@ -97,6 +98,11 @@ class Settings
 		if _setdata[ "plot_y" ] != nil
 			@@plot_y = _setdata[ "plot_y" ]
 		end
+		if _setdata[ "s_year" ] != nil
+			@@s_year = _setdata[ "s_year" ]
+		end
+
+
 		# if _setdata[ "fire_r_min" ] != nil
 		# 	@@fire_r_min = _setdata[ "fire_r_min" ]
 		# end
@@ -133,6 +139,9 @@ class Settings
 
 	def plot_y
 		return @@plot_y
+	end
+	def s_year
+		return @@s_year
 	end
 	# def fire_r_min
 	# 	return @@fire_r_min

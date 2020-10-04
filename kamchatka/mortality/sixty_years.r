@@ -38,7 +38,7 @@ model2<-glm(cbind(sv_num,d_num)~BA.m.2.ha.+mae_dbh_cm+mae_year+0,data=data1,fami
 model_hikaku1<-dredge(model1,rank="BIC")
 model_hikaku2<-dredge(model2,rank="BIC")
 model_hikaku<-merge(model_hikaku1,model_hikaku2)
-#outcsv<-"mortality/mortality_pt_5years.csv"
+#outcsv<-"mortality/mortality_pt_5years_cm.csv"
 #write.csv(model_hikaku,outcsv)
 #tablecsv(model1,data1,outcsv)
 summary(model1)
@@ -54,8 +54,12 @@ data_sv11<-subset(data_sv,data_sv$kikan<15)
 data_sv7<-subset(data_sv,data_sv$kikan<10)
 data_sv5<-subset(data_sv,data_sv$kikan<6)
 
+model1<-glm(cbind(sv_num5,d_num5)~BA.m.2.ha.+mae_dbh_cm+mae_year,data=data_sv11,family=binomial)
+model2<-glm(cbind(sv_num5,d_num5)~BA.m.2.ha.+mae_dbh_cm+mae_year+0,data=data_sv11,family=binomial)
+
 model1<-glm(cbind(sv_num5,d_num5)~BA.m.2.ha.+mae_dbh_inch.suitei.+mae_year,data=data_sv11,family=binomial)
 model2<-glm(cbind(sv_num5,d_num5)~BA.m.2.ha.+mae_dbh_inch.suitei.+mae_year+0,data=data_sv11,family=binomial)
+
 
 summary(model1)
 
@@ -70,7 +74,7 @@ summary(model1)
 model_hikaku1<-dredge(model1,rank="BIC")
 model_hikaku2<-dredge(model2,rank="BIC")
 model_hikaku<-merge(model_hikaku1,model_hikaku2)
-#outcsv<-"mortality/mortality_pt_5years_dummy.csv"
+#outcsv<-"mortality/mortality_pt_5years_dummy_cm.csv"
 #write.csv(model_hikaku,outcsv)
 #tablecsv(model1,data_sv11,outcsv)
 
