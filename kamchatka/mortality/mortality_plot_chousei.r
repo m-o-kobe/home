@@ -1,7 +1,7 @@
 library(ggplot2)
 motodata<-read.csv("nenrin/nenrin1.csv")
 plot(x=motodata$dbh,y=motodata$age)
-sp<-"pt"
+sp<-"lc"
 data1<-subset(motodata,motodata$spp==sp)
 model<-lm(age~dbh,data=data1)
 summary(model)
@@ -69,7 +69,7 @@ int5$seizon160<-int5$seizon^(160/3)
 int6<-int5
 
 for (i in 1:100000){
-  x<-i*0.00001
+  x<-i*0.000001
   int6$seizon160<-int6$seizon^(x*160/3)
   sa<-mean(int6$seizon160)-ctr165_195/int5_35
   if(sa<=0){
@@ -79,7 +79,7 @@ for (i in 1:100000){
 
 
 
-write.csv(int5,"mortality/chousei_lc_0610.csv")
+#write.csv(int5,"mortality/chousei_lc_0610.csv")
 summary(int5)
 
 

@@ -2,6 +2,8 @@ require "./settings.rb"
 require "./tree.rb"
 require "./poplus_regene.rb"
 require "./betula_regene.rb"
+require "./larix_regene.rb"
+
 require "./fire.rb"
 
 class Forest
@@ -29,10 +31,12 @@ class Forest
 #		@plotmap=Array.new(@settings.plot_x/5).map{Array.new(@settings.plot_y/5)}
 		end
 		@pcount=PoplusCount.new(0,0,@settings.plot_x,@settings.plot_y,5)
+		@lcount=LarixRegene.new(0,0,@settings.plot_x,@settings.plot_y,5)
 		@b_regene=BetulaSprout.new(0,0,@settings.plot_x,@settings.plot_y,5)
 		@fire_layer=Fire_layer.new()
 		@fire_layer.load_file(fire_gyouretu)
 		@stand_year = @settings.s_year
+		@ba = 0
 	end
 	def popluscount
 		@pcount.reset
@@ -60,15 +64,18 @@ class Forest
 
 		crdcal
 #		@pcount.count(@trees)
-		if @year%@settings.firefreq==1 then
+#		if @year%@settings.firefreq==0 then
+		if @settings.fire_year.include?(@year) then
 			@stand_year=0
 			fire
 			crdcal
+			p "fire"
 		else
 			@stand_year=@stand_year+1
 			tree_death
 			trees_newborn
 			crdcal
+			p "heiwa"
 		end
 		trees_grow
 		zombie_year
@@ -113,7 +120,7 @@ class Forest
 	end
 	def firedeath
 		@trees.each do |tree|
-			if tree.is_dead(true,@fire_layer.fire_intensity(tree.x,tree.y)) then
+			if tree.is_dead(true,@fire_layer.fire_intensity(tree.x,tree.y),@ba,@stand_year) then
 				if tree.zombie>99 then
 					tree.zombie=1
 					@@zombie_count[tree.sp] += 1
@@ -146,13 +153,13 @@ class Forest
 	end
 	def larix_regeneration(tf)
 		sprout=Array.new
-		sprout=@pcount.make_sprout(@trees,tf)
+		sprout=@lcount.make_sprout(@trees,tf)
 		sprout.each do |spzahyou|
-			@@sinki_count[POPLUS]=@@sinki_count[POPLUS]+1
+			@@sinki_count[LARIX]=@@sinki_count[LARIX]+1
 			@trees.push(Tree.new(
 				spzahyou[0],
 				spzahyou[1],
-				POPLUS,#sp
+				LARIX,#sp
 				0,#age
 				0.0,#size
 				0,#@tag
@@ -225,7 +232,7 @@ class Forest
 	def tree_death
 		@trees.each do |tree|
 			if tree.zombie>99 then
-				if tree.is_dead(false,0) then
+				if tree.is_dead(false,0,@ba,@stand_year) then
 					tree.zombie=0
 				end
 			end
@@ -233,7 +240,9 @@ class Forest
 
 	end
 	def crdcal
+		@ba=0
 		@trees.each do |tar|
+			@ba = @ba + tar.mysize**2 #←は直径なので後で1/4して円周率もかける
 			tar.crd=0.0
 			tar.kabu=0.0
 			@trees.each do | obj |#treesのデータがobjに格納された上で以下の処理を繰り返す
@@ -257,6 +266,7 @@ class Forest
 				end
 			end
 		end
+		@ba = @ba * Math::PI / (4 * @settings.plot_x * @settings.plot_y )
 	end
 	
 	# def dist( tree_a, tree_b )

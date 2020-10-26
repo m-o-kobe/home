@@ -18,8 +18,8 @@ options(na.action = "na.fail")
 file1 <-read.csv("crd/crd_int_191209.csv")
 file2 <-read.csv("crd/crd_ctr_200604.csv")
 file3<-read.csv("fire_maiboku0302.csv")
-sp<-"lc"
-sp2<-"La"
+sp<-"bp"
+sp2<-"Be"
 buf1<-subset(file1,file1$spp==sp)
 buf2<-subset(file2,file2$spp==sp)
 buf3<-subset(file3,file3$sp.==sp2)
@@ -37,24 +37,40 @@ data<-rbind(buf1,buf2)
 #data2.step<-step(data1.glm)
 #data1.glm<-glm(formula = death ~ dbh01 + crd+ sc,family=binomial, data = data)
 #data2.glm<-glm(formula = death ~ dbh01 + crd+ sc+0,family=binomial, data = data)
-#data1.glm<-glm(formula = death ~ dbh01 +dbh01^2+ crd,family=binomial, data = data)
-#data2.glm<-glm(formula = death ~ dbh01 + crd+0,family=binomial, data = data)
+#data1.glm<-glm(formula = death ~ dbh01 +I(dbh01^2)+ crd,family=binomial, data = data)
+#data2.glm<-glm(formula = death ~ dbh01+I(dbh01^2) + crd+0,family=binomial, data = data)
+
+#data1.glm<-glm(formula = death ~ dbh01 +I(dbh01^2)+ crd+sc,family=binomial, data = data)
+#data2.glm<-glm(formula = death ~ dbh01+I(dbh01^2) + crd+sc+0,family=binomial, data = data)
+
+
+
+summary(data1.glm)
+summary(data2.glm)
 
 
 
 
 
-model_hikaku1<-dredge(data1.glm,rank="BIC")
-model_hikaku2<-dredge(data2.glm,rank="BIC")
+model_hikaku1<-dredge(data1.glm,rank="AIC")
+model_hikaku2<-dredge(data2.glm,rank="AIC")
 model_hikaku<-merge(model_hikaku1,model_hikaku2)
 #data3.glm<-glm(formula=death~crd+0,data=data,family=binomial)
 #data3.glm<-step(data1.glm)
 #data3.glm<-glm(formula=death~dbh01+0,data=data,family=binomial)
+#data3.glm<-glm(formula=death~crd+0,family=binomial, data=data)
+
 
 summary(data3.glm)
 
-#outcsv<-paste("mortality/heiwa_mortality",sp,"0605.csv",sep="_")
+
+#outcsv<-paste("mortality/heiwa_mortality",sp,"1006.csv",sep="_")
 #write.csv(model_hikaku,outcsv)
+
+#lcのとき
+#tablecsv(data1.glm,data,outcsv)
 #tablecsv(data3.glm,data,outcsv)
+
+
 
 

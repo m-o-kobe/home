@@ -28,8 +28,6 @@ tablecsv<-function(datalm,data,ou){
 
 motodata<-read.csv("ronbun/aspen_handbook10.csv",fileEncoding = "UTF-8-BOM")
 qaspen<-subset(motodata,motodata$spp=="quaking")
-plot(qaspen$Age,qaspen$dbh_mm)
-plot(qaspen$si,qaspen$dbh_mm)
 
 q_model<-lm(formula=dbh_mm~Age+si,data=qaspen)
 summary(q_model)
@@ -67,3 +65,11 @@ summary(best_model)
 #x_forplot<-qaspen
 #x_forplot$fit <- getPred(nls.yosokuchi$par,x_forplot)
 #plot(x_forplot$dbh_mm,x_forplot$fit)
+
+library(ggplot)
+pal <- c("#3B9AB2", "#56A6BA", "#71B3C2", "#9EBE91", "#D1C74C",
+         "#E8C520", "#E4B80E", "#E29E00", "#EA5C00", "#F21A00")
+g<-ggplot(data=qaspen,mapping=aes(x=Age, y=dbh_cm, col=si))+
+  geom_point()+
+  scale_color_gradientn(colors = pal)
+print(g)

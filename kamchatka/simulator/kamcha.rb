@@ -2,6 +2,7 @@ require "./simulator.rb"
 require 'timeout'
 #↓実行例 日付変える
 # ruby kamcha.rb ../../../kamchatka/setting/setting.csv ../../../kamchatka/setting/init_fire0302.csv ../../../kamchatka/output/output0405.csv ../../../kamchatka/output/stat0405.csv data/fire.csv
+#ruby kamcha.rb ../../../kamchatka/setting/setting201006.csv ../../../kamchatka/setting/init_fire0302.csv ../../../kamchatka/output/output1014.csv ../../../kamchatka/output/stat1014.csv data/fire.csv
 
 ######################
 # Fix random numbers: for development purpose
@@ -18,7 +19,7 @@ simulator = Simulator.new( ARGV[0], ARGV[1], ARGV[2],ARGV[3],ARGV[4])
 
 #.newで作成したobjectに対してinitializeメソッドを呼び出し
 begin
-  Timeout.timeout(600){
+  Timeout.timeout(999999999){
     #puts"start"
   simulator.run
   }

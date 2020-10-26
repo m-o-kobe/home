@@ -71,13 +71,11 @@ class Settings
 	@@plot_y = 0
 	@@s_year=0
 	@@spdata = Hash.new#hash:配列に追加
-
-
-
+	@@fire_year = Array.new
 	def load_file( setting_array )
 		_setdata = Hash.new#ハッシュ(連想配列)_setdataを作成
 		setting_array.each do | _buf |#setting_arrayを_bufという変数に入れて1行ずつ実行
-			_setdata[ _buf[0] ] = _buf[1].to_f#_setdata[引数]=1行目の内容になる。例_setdata[plot_x]=10000
+			_setdata[ _buf[0] ] = _buf[1].to_s #_setdata[引数]=1行目の内容になる。例_setdata[plot_x]=10000
 			#ここで作られた配列は種ごとのgrowth", "death", "rep", "disp", "juvdeathとplotの広さ、
 		end
 		if _setdata[ "duration" ] != nil
@@ -92,14 +90,18 @@ class Settings
 		end
 
 		if _setdata[ "plot_x" ] != nil
-			@@plot_x = _setdata[ "plot_x" ]
+			@@plot_x = _setdata[ "plot_x" ].to_f
 		end
 
 		if _setdata[ "plot_y" ] != nil
-			@@plot_y = _setdata[ "plot_y" ]
+			@@plot_y = _setdata[ "plot_y" ].to_f
 		end
 		if _setdata[ "s_year" ] != nil
-			@@s_year = _setdata[ "s_year" ]
+			@@s_year = _setdata[ "s_year" ].to_i
+		end
+		if _setdata[ "fire_year" ] != nil
+			@@fire_year = _setdata[ "fire_year" ].split(",")
+			@@fire_year.map!{|x| x.to_i}
 		end
 
 
@@ -115,7 +117,7 @@ class Settings
 				fire_or_heiwa.each do |fh|
 					keyword = "sp_" + i.to_s + "_" + fh +"_" + _target
 					if _setdata[ keyword ] != nil
-						@@spdata[i][fh][_target] = _setdata[ keyword ]
+						@@spdata[i][fh][_target] = _setdata[ keyword ].to_f
 					end	
 				end
 			end
@@ -143,6 +145,10 @@ class Settings
 	def s_year
 		return @@s_year
 	end
+	def fire_year
+		return @@fire_year
+	end
+
 	# def fire_r_min
 	# 	return @@fire_r_min
 	# end

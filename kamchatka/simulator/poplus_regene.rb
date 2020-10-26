@@ -29,8 +29,10 @@ class PoplusCount
         for i in 0..@x_size-1
             for j in 0..@y_size-1
                 trees.each do |obj|
+                    _dist=dist(obj,i,j)
                     if obj.sp==POPLUS then
-                        _dist=dist(obj,i,j)
+                        
+                        
                         if _dist<5.0
                             @ssp_05[i][j]+=obj.mysize
                         elsif _dist<10.0
@@ -41,6 +43,7 @@ class PoplusCount
                             @ssp_20[i][j]+=obj.mysize
                         end
                     else
+                        
                         if _dist<5.0
                             @dsp_05[i][j]+=obj.mysize
                         elsif _dist<10.0
@@ -107,7 +110,7 @@ class PoplusCount
                 sprout_sei=sprout_kazu.to_i
                 sprout_shou=sprout_kazu-sprout_sei.to_f
                 sprout_sei = rand(0.0..1.0) > sprout_shou ? sprout_sei : sprout_sei+1
-                for k in 1..sprout_kazu
+                for k in 1..sprout_sei
                     sprout_zahyou.push [
                         @step*i+rand(0.0..@step),
                         @step*j+rand(0.0..@step)

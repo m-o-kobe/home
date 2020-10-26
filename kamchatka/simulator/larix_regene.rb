@@ -81,19 +81,20 @@ class LarixRegene
 
     def make_sprout(trees,fire_or_not)
         fire_or= fire_or_not ? "fire" : "heiwa"
-        pcount(trees)
+        lcount(trees)
         sprout_zahyou=Array.new
         for i in 0..@x_size-1 do
             for j in 0..@y_size-1 do
                 sprout_kazu=@counter_05[i][j]*@settings.spdata(LARIX,fire_or,"kanyu1")+
                 @counter_10[i][j]*@settings.spdata(LARIX,fire_or,"kanyu2")+
                 @counter_15[i][j]*@settings.spdata(LARIX,fire_or,"kanyu3")+
-                @counter_20[i][j]*@settings.spdata(LARIX,fire_or,"kanyu4")
+                @counter_20[i][j]*@settings.spdata(LARIX,fire_or,"kanyu4")+
+                @settings.spdata(LARIX,fire_or,"kanyu5")
                 #@settings.spdata(LARIX,fire_or,"fire1")
                 sprout_sei=sprout_kazu.to_i
                 sprout_shou=sprout_kazu-sprout_sei.to_f
                 sprout_sei = rand(0.0..1.0) > sprout_shou ? sprout_sei : sprout_sei+1
-                for k in 1..sprout_kazu
+                for k in 1..sprout_sei
                     sprout_zahyou.push [
                         @step*i+rand(0.0..@step),
                         @step*j+rand(0.0..@step)
