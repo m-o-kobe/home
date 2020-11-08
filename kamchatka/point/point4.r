@@ -10,7 +10,8 @@ fire1$GBH00cmn[is.na(fire1$GBH00cmn)]<-0
 
 fire1$dbh0<-as.numeric(fire1$DBH00cm)+as.numeric(fire1$GBH00cmn)/acos(-1)
 
-
+sum(fire1$D.A..2000.=="A")
+sum(fire1$D.A..2000.=="D")
 
 sp<-"La"
 fire3<-subset(fire1,fire1$sp.==sp)
@@ -27,7 +28,7 @@ pppdata<-ppp(x=fire3$xx,y=fire3$yy,window=owin(c(0,90),c(0,100)),marks=fire3$D.A
 ms<-envelope(pppdata,fun=markcorr,f=function(m1,m2){m1==m2},nsim=80,nrank=2,normalise=FALSE,kernel="epanechnikov")
 ms<-envelope(pppdata,fun=markcrosscorr,f=function(m1,m2){m1==m2},i=="A",j!="A",nsim=80,nrank=2,normalise=FALSE,kernel="epanechnikov")
 
-ms<-envelope(pppdata,fun=markcorr,f=function(m1,m2){m1==m2},nsim=240,nrank=6,normalise=FALSE,kernel="epanechnikov")
+ms<-envelope(pppdata,fun=markcorr,f=function(m1,m2){m1==m2},nsim=1000,nrank=25,normalise=FALSE,kernel="epanechnikov")
 
 
 
