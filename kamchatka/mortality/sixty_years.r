@@ -22,7 +22,7 @@ tablecsv<-function(datalm,data,ou){
   write.table(result,ou,append=T,quote=F,sep=",",row.names=T,col.names=F)
 }
 
-motodata<-read.csv("ronbun/sixty_years_table.csv",fileEncoding = "UTF-8-BOM")
+motodata<-read.csv("ronbun/sixty_years1124.csv",fileEncoding = "UTF-8-BOM")
 duration<-5
 
 
@@ -33,15 +33,18 @@ data$sv_num<-round(data$num)
 data$d_num<-round(data$dead)
 data1<-data
 
-model1<-glm(cbind(sv_num,d_num)~BA.m.2.ha.+mae_dbh_cm+mae_year,data=data1,family=binomial)
-model2<-glm(cbind(sv_num,d_num)~BA.m.2.ha.+mae_dbh_cm+mae_year+0,data=data1,family=binomial)
+model1<-glm(cbind(sv_num,d_num)~BA.m.2.ha.+mae_dbh_cm+mae_year+SI50,data=data1,family=binomial)
+model2<-glm(cbind(sv_num,d_num)~BA.m.2.ha.+mae_dbh_cm+mae_year+SI50+0,data=data1,family=binomial)
 model_hikaku1<-dredge(model1,rank="BIC")
 model_hikaku2<-dredge(model2,rank="BIC")
 model_hikaku<-merge(model_hikaku1,model_hikaku2)
-#outcsv<-"mortality/mortality_pt_5years_cm.csv"
+
+best_model<-glm(cbind(sv_num,d_num)~BA.m.2.ha.+mae_dbh_cm+mae_year,data=data1,family=binomial)
+summary(best_model)
+
+#outcsv<-"mortality/mortality_pt_5years_cm1125.csv"
 #write.csv(model_hikaku,outcsv)
-#tablecsv(model1,data1,outcsv)
-summary(model1)
+#tablecsv(best_model,data1,outcsv)
 
 data_sv<-subset(motodata,motodata$mae_num>0)
 data_sv$sv_dur<-data_sv$sv/data_sv$mae_sv
@@ -57,17 +60,17 @@ data_sv5<-subset(data_sv,data_sv$kikan<6)
 model1<-glm(cbind(sv_num5,d_num5)~BA.m.2.ha.+mae_dbh_cm+mae_year,data=data_sv11,family=binomial)
 model2<-glm(cbind(sv_num5,d_num5)~BA.m.2.ha.+mae_dbh_cm+mae_year+0,data=data_sv11,family=binomial)
 
-model1<-glm(cbind(sv_num5,d_num5)~BA.m.2.ha.+mae_dbh_inch.suitei.+mae_year,data=data_sv11,family=binomial)
-model2<-glm(cbind(sv_num5,d_num5)~BA.m.2.ha.+mae_dbh_inch.suitei.+mae_year+0,data=data_sv11,family=binomial)
+#model1<-glm(cbind(sv_num5,d_num5)~BA.m.2.ha.+mae_dbh_inch.suitei.+mae_year,data=data_sv11,family=binomial)
+#model2<-glm(cbind(sv_num5,d_num5)~BA.m.2.ha.+mae_dbh_inch.suitei.+mae_year+0,data=data_sv11,family=binomial)
 
 
 summary(model1)
 
-model1<-glm(cbind(sv_num5,d_num5)~BA.m.2.ha.+mae_dbh_inch.suitei.+mae_year,data=data_sv7,family=binomial)
-summary(model1)
+#model1<-glm(cbind(sv_num5,d_num5)~BA.m.2.ha.+mae_dbh_inch.suitei.+mae_year,data=data_sv7,family=binomial)
+#summary(model1)
 
-model1<-glm(cbind(sv_num5,d_num5)~BA.m.2.ha.+mae_dbh_inch.suitei.+mae_year,data=data_sv5,family=binomial)
-model2<-glm(cbind(sv_num5,d_num5)~BA.m.2.ha.+mae_dbh_inch.suitei.+mae_year+0,data=data_sv5,family=binomial)
+#model1<-glm(cbind(sv_num5,d_num5)~BA.m.2.ha.+mae_dbh_inch.suitei.+mae_year,data=data_sv5,family=binomial)
+#model2<-glm(cbind(sv_num5,d_num5)~BA.m.2.ha.+mae_dbh_inch.suitei.+mae_year+0,data=data_sv5,family=binomial)
 
 summary(model1)
 
