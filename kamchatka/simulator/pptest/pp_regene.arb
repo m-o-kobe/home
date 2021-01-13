@@ -1,0 +1,95 @@
+require 'csv'
+plot_x=100
+plot_y=100
+#kousinsu=8
+nensu=40
+kurikaesi=160
+$seizon=2
+$seizon3=-1
+$seizon6_10=1
+re_int=0.3075638
+re_age=-0.0049525
+num=1
+class Tree
+    attr_accessor:x,:y,
+    :d3,
+    :d6_10,
+    :num
+    def initialize(x,y,num)
+        @x=x
+        @y=y
+        @d3=0
+        @d6_10=0
+        @num=num
+    end
+end
+def dist(x1,x2,y1,y2)
+    return ((x1-x2)**2+(y1-y2)**2)**0.5
+end
+
+
+def forest_death(forest)
+    sinu=Array.new
+    forest.each do |tree|
+        if death(tree) then
+            sinu.push(tree)
+        end
+    end
+    return sinu
+end
+
+
+def death(tree)
+    sibou=Random.rand
+    seizonritu=1.0/(1.0+Math::exp(-$seizon-tree.d3*$seizon3-tree.d6_10*$seizon6_10))
+    return sibou>seizonritu
+end
+csv=CSV.open("../../../kamchatka/testfile0106_1.csv", "wb") do |csv|
+    csv<< ["x","y","num"]
+
+    
+    for k in 1..kurikaesi do
+            puts k
+        forest=Array.new
+        for j in 5..nensu do
+            kousinsu=(j.to_f*re_age+re_int)*plot_x*plot_y*0.01
+            if kousinsu<0.0 then
+                kousinsu=0.01
+            end
+            seisu=kousinsu.to_i
+            shousu=kousinsu-seisu.to_f
+            shousu=Random.rand<shousu ? 1 : 0
+            kousinsu=seisu+shousu  
+            for i in 1..kousinsu do
+                forest.push(
+                    Tree.new(
+                        Random.rand*plot_x,
+                        Random.rand*plot_y,
+                        num
+                    )
+                )
+                num+=1
+            end
+            forest.each do|target|
+                target.d3=0
+                target.d6_10=0
+                forest.each do |object|
+                    if target.num!=object.num then
+                        dis=dist(target.x, object.x, target.y, object.y)
+                        if dis<3.0 then
+                            target.d3+=1
+                        elsif dis>6.0 && dis<10.0 then
+                            target.d6_10+=1
+                        end
+                    end
+                end
+            end
+            sinu=forest_death(forest)
+            forest=forest-sinu
+        end
+        p forest.length
+        forest.each do |tree|
+            csv<<[tree.x, tree.y, k]
+        end
+    end
+end

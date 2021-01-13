@@ -28,7 +28,7 @@ p forest
 	# forest.tree_death
 	# forest.trees_newborn
 	forest.yearly_activities
-	forest.kakunin
+	#forest.kakunin
 	# forest.yearly_activities
 	# forest.kakunin
 	# forest.yearly_activities

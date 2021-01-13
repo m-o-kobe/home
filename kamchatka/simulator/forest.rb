@@ -241,9 +241,11 @@ class Forest
 	end
 	def crdcal
 		@ba=0
+		
 		@trees.each do |tar|
 			@ba = @ba + tar.mysize**2 #←は直径なので後で1/4して円周率もかける
 			tar.crd=0.0
+			tar.ba=0.0
 			tar.kabu=0.0
 			@trees.each do | obj |#treesのデータがobjに格納された上で以下の処理を繰り返す
 				if obj.tag != tar.tag then#obj.num≠target.numberならば･･･
@@ -262,11 +264,13 @@ class Forest
 								tar.crd+=obj.mysize/_dist
 							end
 						end
+						tar.ba+=obj.mysize**2
 					end
 				end
 			end
+			tar.ba=tar.ba/(4.0*81.0)
 		end
-		@ba = @ba * Math::PI / (4 * @settings.plot_x * @settings.plot_y )
+		@ba = @ba * Math::PI / (4.0 * @settings.plot_x * @settings.plot_y )
 	end
 	
 	# def dist( tree_a, tree_b )

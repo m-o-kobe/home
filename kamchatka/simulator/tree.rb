@@ -10,6 +10,7 @@ class Tree
 				:tag, 
 				:mother,
 				:crd,
+				:ba,
 				:kabu,
 				:sprout,
 				:zombie
@@ -26,6 +27,7 @@ class Tree
 		@mysize = _mysize
 		@mother = _mother
 		@crd=0.0
+		@ba=0.0
 		@kabu=0.0
 		@zombie=100
 		if _tag != 0 then

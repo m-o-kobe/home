@@ -1,0 +1,87 @@
+require 'csv'
+
+plot_y=100
+kurikaesi=160
+kousinsu=8
+nensu=200
+$seizon=3
+$seizon3=-1.5
+$seizon6_10=1.0
+num=1
+str="../../../kamchatka/simu/test"+nensu.to_s+"_"+kousinsu.to_s+"_"+$seizon.to_s+"_"+$seizon3.to_s+"_"+$seizon6_10.to_s+".csv"
+class Tree
+    attr_accessor:x,:y,
+    :d3,
+    :d6_10,
+    :num
+    def initialize(x,y,num)
+        @x=x
+        @y=y
+        @d3=0
+        @d6_10=0
+        @num=num
+    end
+end
+def dist(x1,x2,y1,y2)
+    return ((x1-x2)**2+(y1-y2)**2)**0.5
+end
+
+
+def forest_death(forest)
+    sinu=Array.new
+    forest.each do |tree|
+        if death(tree) then
+            sinu.push(tree)
+        end
+    end
+    return sinu
+end
+
+
+def death(tree)
+    sibou=Random.rand
+    seizonritu=1.0/(1.0+Math::exp(-$seizon-tree.d3*$seizon3-tree.d6_10*$seizon6_10))
+    return sibou>seizonritu
+end
+csv=CSV.open(str, "wb") do |csv|
+    csv<< ["x","y","num"]
+
+plot_x=100
+for k in 1..kurikaesi do
+    puts k
+forest=Array.new
+for j in 1..nensu do
+    #puts j
+for i in 1..kousinsu do
+    forest.push(
+        Tree.new(
+            Random.rand*plot_x,
+            Random.rand*plot_y,
+            num
+        )
+    )
+    num+=1
+end
+forest.each do|target|
+    target.d3=0
+    target.d6_10=0
+    forest.each do |object|
+        if target.num!=object.num then
+            dis=dist(target.x, object.x, target.y, object.y)
+            if dis<3.0 then
+                target.d3+=1
+            elsif dis>6.0 && dis<10.0 then
+                target.d6_10+=1
+            end
+        end
+    end
+end
+sinu=forest_death(forest)
+forest=forest-sinu
+end
+p forest.length
+forest.each do |tree|
+    csv<<[tree.x, tree.y, k]
+end
+end
+end

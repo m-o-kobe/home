@@ -42,14 +42,14 @@ plot(pppdata)
  
 #単樹種のL関数
 #k100<-envelope(pppdata,fun=Lest,correction="Ripley",nsim=80,nrank=2)
-sp<-"bp"
+sp<-"lc"
 
 
 f1 <- function(X) { marks(X) == sp }
 f2<-function(X ){marks(X)!="nodata"}
 f2<-function(X ){marks(X)!=sp}
 
-k100<-envelope(pppdata,fun=Kmulti,I=f1,J=f2,correction="Ripley",nsim=80,nrank=2)
+k100<-envelope(pppdata,fun=Kmulti,I=f1,J=f2,correction="Ripley",nsim=160,nrank=4)
 
 #作図
 plot(k100,sqrt(./pi)-r~r,main = sp)
