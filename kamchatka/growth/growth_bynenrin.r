@@ -46,13 +46,24 @@ library(MuMIn)
 
 lm1<-lm(growth~.,data=data4)
 lm2<-step(lm1)
-lm3<-lm(growth~past_dbh*crd,data=data5)
-lm4<-lm(growth~past_dbh*crd+0,data=data5)
+
+data5$growth=data5$growth/10
+
+lm3<-lm(growth~past_dbh+crd,data=data5)
+lm4<-lm(growth~past_dbh+crd+0,data=data5)
+
+
+#bpの場合
+lm3<-lm(growth~past_dbh+crd+sc,data=data5)
+lm4<-lm(growth~past_dbh+crd+sc+0,data=data5)
+
 
 options(na.action = "na.fail")
 model_hikaku1<-dredge(lm3,rank="BIC")
 model_hikaku2<-dredge(lm4,rank="BIC")
 model_hikaku<-merge(model_hikaku1,model_hikaku2)
+
+
 
 best.model<-lm(growth~past_dbh,data=data5)
 summary(best.model)
@@ -63,6 +74,11 @@ outcsv<-paste("nenrin/growth_bynenrin",sp,"1225.csv",sep="_")
 write.csv(model_hikaku,outcsv)
 
 tablecsv(best.model,data5,outcsv)
+
+
+
+
+
 
 
 par(mfrow=c(2,2))

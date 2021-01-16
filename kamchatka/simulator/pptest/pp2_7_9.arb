@@ -4,28 +4,28 @@ $ploty=100
 kurikaesi=80
 pkousin=0.235
 nensu=200
-$seizon3=-1
-$seizon6_10=1.5
-$seizon=1.8
+$seizon2=-2.5
+$seizon7_9=3
+$seizon=3.5
+num=1
 d3max=100
 d5max=15
-num=1
 
-kousinsu=($plotx.to_f*$ploty.to_f/125.0)*pkousin
+kousinsu=($plotx*$ploty/125).to_f*pkousin
 kousin_sei=kousinsu.to_i
 kousin_shou=kousinsu - kousin_sei
-str="../../../kamchatka/simu/test"+nensu.to_s+"_"+$seizon.to_s+"_"+$seizon3.to_s+"_"+$seizon6_10.to_s+".csv"
+str="../../../kamchatka/simu/test2710_"+nensu.to_s+"_"+$seizon.to_s+"_"+$seizon2.to_s+"_"+$seizon7_9.to_s+".csv"
 class Tree
     attr_accessor:x,:y,
-    :d3,
-    :d6_10,
+    :d2,
+    :d7_9,
     :num,
     :age
     def initialize(x,y,num)
         @x=x
         @y=y
-        @d3=0
-        @d6_10=0
+        @d2=0
+        @d7_9=0
         @num=num
         @age=1
     end
@@ -56,7 +56,7 @@ end
 
 def death(tree)
     sibou=Random.rand
-    seizonritu=1.0/(1.0+Math::exp(-$seizon-tree.d3*$seizon3-tree.d6_10*$seizon6_10))
+    seizonritu=1.0/(1.0+Math::exp(-$seizon-tree.d2*$seizon2-tree.d7_9*$seizon7_9))
     return sibou>seizonritu
 end
 csv=CSV.open(str, "wb") do |csv|
@@ -79,23 +79,22 @@ for i in 1..kousinsu do
     num+=1
 end
 forest.each do|target|
-    target.d3=0
-    target.d6_10=0
+    target.d2=0
+    target.d7_9=0
     forest.each do |object|
         if object.age>=5 then
             if target.num!=object.num then
                 dis=dist(target.x, object.x, target.y, object.y)
-                if dis<3.0 then
-                    target.d3+=1
+                if dis<2.5 then
+                    target.d2+=1
                 elsif dis>6.0 && dis<10.0 then
-                    target.d6_10+=1
+                    target.d7_9+=1
                 end
             end
         end    
     end
-    target.d3=[target.d3,d3max].min
-    target.d6_10=[target.d6_10,d5max].min
-
+    target.d2=[target.d2,d3max].min
+    target.d7_9=[target.d7_9,d5max].min
     target.age+=1
 end
 sinu=forest_death(forest)
