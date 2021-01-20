@@ -16,7 +16,9 @@ class Fire_layer
             @@fire_layer=fire_array
         else
             p "error: fire_layer to plot no size ga attenaiyo"
+            p [xmax,@x_max,ymax,@y_max]
         end
+
     end
     def fire_intensity(x,y)
         return @@fire_layer[x.to_i][y.to_i].to_f

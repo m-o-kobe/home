@@ -76,6 +76,8 @@ bunkatu3<-subset(bunkatu3,bunkatu3$age>4)
 getHazard<-function(parS,xx) (getPred(parS,xx)-getPred(parS,xx+1))/getPred(parS,xx)
 residFun <- function(p, observed, xx) observed - getPred(p,xx)
 
+
+15.354863/10000
 kansu<-"weibull"
 kansu<-"log-normal"
 kansu<-"logistic"
@@ -151,4 +153,28 @@ print(getPred)
 print(nls.out)
 summary(nls.out)
 sink()
+
+para<-nls.out$par
+
+getPred <- function(parS, xx) parS$a * exp(- para$lambda*xx^para$k)
+parStart <- list(a=15)
+
+
+ketugou<-rbind(ctr_bp,int_bp)
+hist(ketugou$age)
+
+
+ketugou<-int_bp
+#1年毎
+bunkatu1<-cut(ketugou$age,breaks=seq(0,120,by=1))
+bunkatu2<-table(bunkatu1)
+bunkatu3<-as.data.frame(bunkatu2)
+bunkatu3$age<-c(0:119)
+bunkatu3<-subset(bunkatu3,bunkatu3$age>4)
+
+nls.out <- nls.lm(par=parStart, fn = residFun, observed = bunkatu3$Freq,
+                  xx = bunkatu3$age, control=nls.lm.control(maxiter=1024,nprint=1))
+
+
+
 

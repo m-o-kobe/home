@@ -1,8 +1,8 @@
 require "./settings.rb"
 require "./tree.rb"
 require "./poplus_regene.rb"
-require "./betula_regene.rb"
-require "./larix_regene.rb"
+require "./betula_regene2.rb"
+require "./larix_regene2.rb"
 
 require "./fire.rb"
 
@@ -79,6 +79,7 @@ class Forest
 		end
 		trees_grow
 		zombie_year
+		kakunin
 	end
 	def reset_counter
 		for spp in 1..@settings.num_sp do
@@ -186,6 +187,25 @@ class Forest
 				))
 		end
 	end
+	def betula_regeneration(tf)
+		sprout=Array.new
+		
+		sprout=@b_regene.make_sprout(@trees,tf)
+		sprout.each do |spzahyou|
+			@@sinki_count[BETULA]=@@sinki_count[BETULA]+1
+			@trees.push(Tree.new(
+				spzahyou[0] % @settings.plot_x,
+				spzahyou[1] % @settings.plot_y,
+				BETULA,#sp
+				0,#age
+				0.0,#size
+				0,#@tag
+				spzahyou[2],#motherのタグ
+				spzahyou[3]#sprout_tag
+				))
+		end
+	end
+
 
 	def firesinki
 		#親の元配置を加味した分布も入れる
@@ -247,6 +267,8 @@ class Forest
 			tar.crd=0.0
 			tar.ba=0.0
 			tar.kabu=0.0
+			tar.ds6_10=0
+			tar.ds3=0
 			@trees.each do | obj |#treesのデータがobjに格納された上で以下の処理を繰り返す
 				if obj.tag != tar.tag then#obj.num≠target.numberならば･･･
 					_dist =dist(tar, obj)#targetとobjの距離を_distで返す
@@ -266,9 +288,16 @@ class Forest
 						end
 						tar.ba+=obj.mysize**2
 					end
+					if _dist<3.0 then
+						tar.ds3+=1
+					elsif _dist>6.0 && _dist<10.0 then
+						tar.ds6_10+=1
+					end
 				end
 			end
 			tar.ba=tar.ba/(4.0*81.0)
+			tar.ds3=[tar.ds3,100].min
+			tar.ds6_10=[tar.ds6_10,5].min
 		end
 		@ba = @ba * Math::PI / (4.0 * @settings.plot_x * @settings.plot_y )
 	end

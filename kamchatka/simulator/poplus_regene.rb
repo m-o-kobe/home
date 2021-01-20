@@ -107,6 +107,7 @@ class PoplusCount
                 @ssp_10[i][j]*@settings.spdata(POPLUS,fire_or,"kanyu3")+
                 @ssp_15[i][j]*@settings.spdata(POPLUS,fire_or,"kanyu4")+
                 @ssp_20[i][j]*@settings.spdata(POPLUS,fire_or,"kanyu5")
+                sprout_kazu=sprout_kazu/5
                 sprout_sei=sprout_kazu.to_i
                 sprout_shou=sprout_kazu-sprout_sei.to_f
                 sprout_sei = rand(0.0..1.0) > sprout_shou ? sprout_sei : sprout_sei+1

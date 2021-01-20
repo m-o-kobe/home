@@ -7,7 +7,8 @@ require 'timeout'
 #火災時実行
 #ruby kamcha.rb ../../../kamchatka/setting/set_ctr_fire1218.csv ../../../kamchatka/setting/init_ctr1216.csv ../../../kamchatka/output/output1218.csv ../../../kamchatka/output/stat1218.csv ../../../kamchatka/setting/fire_layer1to50.csv
 #ruby kamcha.rb ../../../kamchatka/setting/set_ctr_fire1218.csv ../../../kamchatka/setting/init_ctr1216.csv ../../../kamchatka/output/output1218_41to90.csv ../../../kamchatka/output/stat1218_41to90.csv ../../../kamchatka/setting/fire_layer41to90.csv
-
+#ruby kamcha.rb ../../../kamchatka/setting/set_ctr_fire0118.csv ../../../kamchatka/setting/init_fire_bp0118.csv ../../../kamchatka/output/output0118.csv ../../../kamchatka/output/stat0118.csv data/fire.csv
+#ruby kamcha.rb ../../../kamchatka/setting/set_int_fire0118.csv ../../../kamchatka/setting/init_int_bp0118.csv ../../../kamchatka/output/output0118_intbp.csv ../../../kamchatka/output/stat0118_intbp.csv data/fire.csv
 
 ######################
 # Fix random numbers: for development purpose

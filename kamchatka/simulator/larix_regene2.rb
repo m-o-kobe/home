@@ -12,11 +12,6 @@ class LarixRegene
         @step=step
         @x_size=@x_max-@x_min
         @y_size=@y_max-@y_min
-#        @counter=Array.new(@x_size).map{Array.new(@y_size,0)}
-        @counter_05=Array.new(@x_size).map{Array.new(@y_size,0)}
-        @counter_10=Array.new(@x_size).map{Array.new(@y_size,0)}
-        @counter_15=Array.new(@x_size).map{Array.new(@y_size,0)}
-        @counter_20=Array.new(@x_size).map{Array.new(@y_size,0)}
         @fire_layer=Fire_layer.new        
     end
  
@@ -86,7 +81,7 @@ class LarixRegene
         sprout_zahyou=Array.new
         sprout_kazu=@settings.spdata(LARIX,fire_or,"kanyu1")*
         @settings.spdata(LARIX,fire_or,"kanyu2")*
-        @x_size.to_f*@y_size.to_f
+        @x_size.to_f*@y_size.to_f/125.0
         sprout_kazu=shousu(sprout_kazu)
         for k in 1..sprout_kazu
             sprout_zahyou.push [

@@ -2,6 +2,7 @@ library(dplyr)
 library(ggplot2)
 library(GGally)
 library(MuMIn)
+library(doBy)
 options(na.action = "na.fail")
 tablecsv<-function(datalm,data,ou){
   sum<-summary(datalm)

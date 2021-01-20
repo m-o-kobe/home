@@ -156,6 +156,7 @@ class Settings
 	# 	return @@fire_r_max
 	# end
 	def spdata(i,fh,key)
+		#p [i,fh,key]
 		return @@spdata[i][fh][key]
 	end
 end

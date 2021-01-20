@@ -17,11 +17,25 @@ matome<-c(1:80)
 matome<-append("pattern",matome)
 
 
-a=-1
-b=1.5
-c=2.5
+a=-2.5
+b="3"
+c=3.5
+
+
 filename=paste("simu/test200_",c,"_",a,"_",b,".csv",sep="")
 namae=paste("a=",a,", b=",b,", c=",c,sep="")
+
+#別バージョン
+filename=paste("simu/test279_200_",c,"_",a,"_",b,".csv",sep="")
+namae=paste("p279 a=",a,", b=",b,", c=",c,sep="")
+
+
+#別バージョン
+filename=paste("simu/test2710_200_",c,"_",a,"_",b,".csv",sep="")
+namae=paste("p2710 a=",a,", b=",b,", c=",c,sep="")
+
+
+
 data<-read.csv(filename)
 
 number<-1
@@ -78,4 +92,5 @@ g1<-ggplot(data=hi_low,
   geom_line()
 
 print(g1)
+
 

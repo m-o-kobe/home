@@ -13,12 +13,13 @@ class Tree
 				:ba,
 				:kabu,
 				:sprout,
-				:zombie
+				:zombie,
+				:ds3,
+				:ds6_10
 # Newborn tags: Change if the initial data has >10000 trees
 	@@tag = 10001
 	@@sprout=10001
-
-	def initialize( _x, _y, _sp, _age, _mysize, _tag, _mother,_sprout )
+	def initialize( _x, _y, _sp, _age, _mysize, _tag, _mother,_sprout)
 		@settings = Settings.new
 		@x = _x
 		@y = _y
@@ -27,6 +28,8 @@ class Tree
 		@mysize = _mysize
 		@mother = _mother
 		@crd=0.0
+		@ds3=0
+		@ds6_10=0
 		@ba=0.0
 		@kabu=0.0
 		@zombie=100
@@ -58,11 +61,17 @@ class Tree
 		end
 		@age += 1
 	end
+	def seizon_bp(xx)
+		para1=0.8192
+		paralam=0.007346
+		parak=1.324243
+		return Math::exp(-paralam*(xx+1)**parak)/Math::exp(-paralam*xx**parak) 
+	end
 
 	def is_dead(fire_or_not,fire_intense,ba,year)
 		seisi=rand(0.0..1.0)
 		fire_or= fire_or_not ? "fire" : "heiwa"
-				
+		
 		if fire_or_not
 			seizonritu=1.0/(1.0+Math::exp(-
 			@settings.spdata(@sp,fire_or,"death1")-
@@ -72,25 +81,32 @@ class Tree
 			))
 		else
 			if @sp==POPLUS then
-				if @age<3 then
+				if @age<5 then
 					seizonritu=@settings.spdata(POPLUS,"heiwa","death5")
 				else
 					seizonritu=(1.0/(1.0+Math::exp(-
 						@settings.spdata(@sp,fire_or,"death1")-
 						@settings.spdata(@sp,fire_or,"death2")*@mysize-
-						@settings.spdata(@sp,fire_or,"death3")*ba-
+						@settings.spdata(@sp,fire_or,"death3")*@ba-
 						@settings.spdata(@sp,fire_or,"death4")*year)))**0.2
+					#p [seizonritu,@mysize,@ba]
 				end
 			elsif @sp==BETULA then
-				seizonritu=@settings.spdata(BETULA,fire_or,"death1")
+				#seizonritu=@settings.spdata(BETULA,fire_or,"death1")
+				seizonritu=seizon_bp(@age)
+		#		p seizonritu
 			else
-				seizonritu=(1.0/(1.0+Math::exp(-
-					@settings.spdata(@sp,fire_or,"death1")-
-					@settings.spdata(@sp,fire_or,"death2")*@mysize-
-					@settings.spdata(@sp,fire_or,"death3")*@kabu-
-					@settings.spdata(@sp,fire_or,"death4")*@crd)))**
-					(@settings.spdata(@sp,fire_or,"death6")/3.0)
-				
+				# seizonritu=(1.0/(1.0+Math::exp(-
+				# 	@settings.spdata(@sp,fire_or,"death1")-
+				# 	@settings.spdata(@sp,fire_or,"death2")*@mysize-
+				# 	@settings.spdata(@sp,fire_or,"death3")*@kabu-
+				# 	@settings.spdata(@sp,fire_or,"death4")*@crd)))**
+				# 	(@settings.spdata(@sp,fire_or,"death6")/3.0)
+				seizon=3.25
+				seizon3=-3.0
+				seizon7_9=2
+				seizonritu=	1.0/(1.0+Math::exp(-seizon-@ds3*seizon3-@ds6_10*seizon7_9))
+				#p [seizonritu,@ds3,@ds6_10]
 			end	
 		end
 		return seisi>seizonritu
@@ -106,4 +122,3 @@ class Tree
 		print @tag, ": ", @sp, "@ (", @x, ",", @y, ")-", @mysize, "\n"
 	end
 end
-
