@@ -207,6 +207,7 @@ class BetulaSprout
     end
     def kabudati_kousin(oya_info,juv_sum,sprout_kazu)
         sprout_zahyou=Array.new
+        seigen=Hash.new
         oya_info.each do |oya|
             kousinhonsuu=sprout_kazu*oya.juv/juv_sum
             kousin_sei=kousinhonsuu.to_i
@@ -216,12 +217,20 @@ class BetulaSprout
                 oyagi=oya.trees.sample
                 kyori=rand(0.0..0.05)
                 kaku=rand(0.0..2.0)*Math::PI
-                sprout_zahyou.push [
-                    oyagi.x+kyori*Math.sin(kaku),
-                    oyagi.y+kyori*Math.cos(kaku),
-                    oyagi.tag,
-                    oyagi.sprout
-                ]
+                if seigen[oyagi.sprout].nil? then
+                    seigen[oyagi.sprout]=1
+                else
+                    seigen[oyagi.sprout]+=1
+                end
+                if seigen[oyagi.sprout]<20 then
+                    sprout_zahyou.push [
+                        oyagi.x+kyori*Math.sin(kaku),
+                        oyagi.y+kyori*Math.cos(kaku),
+                        oyagi.tag,
+                        oyagi.sprout
+                    ]
+    
+                end
             end
         end
         return sprout_zahyou

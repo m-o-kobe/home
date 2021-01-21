@@ -19,10 +19,12 @@ df3<-subset(df3,df3$sp==spp)
 
 df3$age<-100
 df3$spnum<-as.integer(df3$sprout..old.)
-df4<-df3[c("xx","yy","sp","age","dbh0","X.1","spnum")]
 names(df4)[5]<-"dbh"
 df4$age<-predict(model2,df4)
 df4$age<-as.integer(df4$age)
+
+df4<-df3[c("x","y","sp","age","dbh","X.1","spnum")]
+names(df4)[5]<-"dbh"
 names()
 #write.csv(df4,"setting/init_fire0302.csv",row.names = FALSE)
 #write.csv(df4,"setting/init_fire_bp0118.csv",row.names = FALSE)
@@ -33,7 +35,7 @@ sp<-"bp"
 
 
 df1<-motoint<-read.csv("int0313.csv")
-df1<-subset(df1,df1$spp==sp)
+#df1<-subset(df1,df1$spp==sp)
 df1$sp<-0
 df1$sp[df1$spp=="lc"]<-1
 df1$sp[df1$spp=="bp"]<-2
@@ -51,4 +53,25 @@ df4<-subset(df4,df4$y>=0.0)
 df4<-subset(df4,df4$y<=100.0)
 df4$age<-predict(model2,df4)
 df4$age<-as.integer(df4$age)
-write.csv(df4,"setting/init_int_bp0118.csv",row.names = FALSE)
+#write.csv(df4,"setting/init_int0120.csv",row.names = FALSE)
+
+
+df1<-read.csv("ctrl0315.csv")
+df1$sp<-0
+df1$sp[df1$spp=="lc"]<-1
+df1$sp[df1$spp=="bp"]<-2
+df1$sp[df1$spp=="pt"]<-3
+df3<-subset(df1,df1$sp!=0)
+df3$age<-100
+df4<-df3
+#df3<-subset(df3,df3$sp==spp)
+df4<-df3[c("x","y","sp","age","dbh01","X.num","sprout")]
+names(df4)[5]<-"dbh"
+df4$age<-predict(model2,df4)
+df4$age<-as.integer(df4$age)
+
+df4<-subset(df4,df4$x>=0.0)
+df4<-subset(df4,df4$x<=100.0)
+df4<-subset(df4,df4$y>=0.0)
+df4<-subset(df4,df4$y<=50.0)
+#write.csv(df4,"setting/init_ctr0120.csv",row.names = FALSE)

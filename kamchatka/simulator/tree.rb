@@ -81,15 +81,16 @@ class Tree
 			))
 		else
 			if @sp==POPLUS then
-				if @age<5 then
+				if @age<3 then
 					seizonritu=@settings.spdata(POPLUS,"heiwa","death5")
+					
 				else
 					seizonritu=(1.0/(1.0+Math::exp(-
 						@settings.spdata(@sp,fire_or,"death1")-
 						@settings.spdata(@sp,fire_or,"death2")*@mysize-
 						@settings.spdata(@sp,fire_or,"death3")*@ba-
 						@settings.spdata(@sp,fire_or,"death4")*year)))**0.2
-					#p [seizonritu,@mysize,@ba]
+					
 				end
 			elsif @sp==BETULA then
 				#seizonritu=@settings.spdata(BETULA,fire_or,"death1")
@@ -109,6 +110,7 @@ class Tree
 				#p [seizonritu,@ds3,@ds6_10]
 			end	
 		end
+		
 		return seisi>seizonritu
 	end
 
