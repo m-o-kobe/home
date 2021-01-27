@@ -70,6 +70,7 @@ class Settings
 	@@plot_x = 0
 	@@plot_y = 0
 	@@s_year=0
+	@@si50 = 0
 	@@spdata = Hash.new#hash:配列に追加
 	@@fire_year = Array.new
 	def load_file( setting_array )
@@ -102,6 +103,9 @@ class Settings
 		if _setdata[ "fire_year" ] != nil
 			@@fire_year = _setdata[ "fire_year" ].split(",")
 			@@fire_year.map!{|x| x.to_i}
+		end
+		if _setdata[ "si50" ] != nil
+			@@si50 = _setdata[ "si50" ].to_i
 		end
 
 
@@ -148,6 +152,9 @@ class Settings
 	def fire_year
 		return @@fire_year
 	end
+	def si50
+		return @@si50
+	end
 
 	# def fire_r_min
 	# 	return @@fire_r_min
@@ -156,6 +163,7 @@ class Settings
 	# 	return @@fire_r_max
 	# end
 	def spdata(i,fh,key)
+		
 		#p [i,fh,key]
 		return @@spdata[i][fh][key]
 	end

@@ -1,9 +1,8 @@
 require "./settings.rb"
-require "./tree.rb"
+require "./tree2.rb"
 require "./poplus_regene.rb"
 require "./betula_regene2.rb"
 require "./larix_regene2.rb"
-
 require "./fire.rb"
 
 class Forest
@@ -36,6 +35,7 @@ class Forest
 		@fire_layer=Fire_layer.new()
 		@fire_layer.load_file(fire_gyouretu)
 		@stand_year = @settings.s_year
+		@si50=@settings.si50
 		@ba = 0
 	end
 	def popluscount
@@ -68,17 +68,19 @@ class Forest
 		if @settings.fire_year.include?(@year) then
 			@stand_year=0
 			fire
+			zombie_year
 			crdcal
 			p "fire"
 		else
 			@stand_year=@stand_year+1
 			tree_death
 			trees_newborn
+			zombie_year
 			crdcal
 			p "heiwa"
 		end
+		
 		trees_grow
-		zombie_year
 		kakunin
 	end
 	def reset_counter
@@ -231,7 +233,7 @@ class Forest
 
 	def trees_grow
 		@trees.each do | tree |
-			tree.grow
+			tree.grow(@si50)
 			@@num_count[tree.sp]+=1
 		end
 	end
@@ -288,9 +290,9 @@ class Forest
 						end
 						tar.ba+=obj.mysize**2
 					end
-					if _dist<3.0 then
+					if _dist<3.0 && obj.mysize>10 then
 						tar.ds3+=1
-					elsif _dist>6.0 && _dist<10.0 then
+					elsif _dist>6.0 && _dist<10.0 && obj.mysize>10 then
 						tar.ds6_10+=1
 					end
 				end

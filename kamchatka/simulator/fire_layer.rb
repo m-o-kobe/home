@@ -1,5 +1,5 @@
 require "./settings.rb"
-require "./tree.rb"
+require "./tree2.rb"
 class Fire_layer
 #森林火災の強度を返すクラス
     def initialize
@@ -21,7 +21,7 @@ class Fire_layer
 
     end
     def fire_intensity(x,y)
-#        p [x,y]
+       # p [x,y]
         return @@fire_layer[x.to_i][y.to_i].to_f
     end    
 end

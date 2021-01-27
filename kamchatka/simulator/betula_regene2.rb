@@ -1,5 +1,5 @@
 require "./settings.rb"
-require "./tree.rb"
+require "./tree2.rb"
 require "./fire_layer"
 class OyakabuBetula
     attr_accessor :trees, 
@@ -29,9 +29,12 @@ class BetulaSprout
         @x_size=(@x_max-@x_min)/@step
         @y_size=(@y_max-@y_min)/@step
         @fire_layer=Fire_layer.new
-        @menseki=(@x_max-@x_min)*(@y_max-@y_min)   
-        @heiwakazu=0.001535486
-        @hougaritu=334.0/(171.0+334.0)
+        @menseki=(@x_max-@x_min)*(@y_max-@y_min)
+        @heiwakazu=@settings.spdata(BETULA,"heiwa","kanyu1")   
+        #@heiwakazu=0.101
+        @hougaritu=@settings.spdata(BETULA,"heiwa","kanyu2")
+#        @hougaritu=334.0/(171.0+334.0)
+
         #https://www.jstage.jst.go.jp/article/esj/ESJ51/0/ESJ51_0_339/_article/-char/ja/
     end
     def b_count(trees,i,j)

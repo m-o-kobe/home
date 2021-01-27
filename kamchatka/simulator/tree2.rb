@@ -50,25 +50,30 @@ class Tree
 
 	end
 
-	def grow
-		gro=@settings.spdata( @sp ,"heiwa", "growth1" ) +
+	def grow(si50)
+		if @sp==POPLUS then
+			gro=@settings.spdata( @sp ,"heiwa", "growth1" )+
+			@settings.spdata( @sp ,"heiwa", "growth2" )*si50
+			#p gro
+		else
+			gro=@settings.spdata( @sp ,"heiwa", "growth1" ) +
 			@settings.spdata( @sp ,"heiwa", "growth2" )*@mysize+
 			@settings.spdata(@sp,"heiwa","growth3")*@kabu+
 			@settings.spdata(@sp,"heiwa","growth4")*@crd
 
+		end
 		if gro>=0&&@age>=2 then
 			@mysize+=gro
 		end
 		@age += 1
 	end
 	def seizon_bp(xx)
-		if xx>2 then
+		if xx>1 then
 			para1=0.8192
 			paralam=0.007346
 			parak=1.324243
 			return Math::exp(-paralam*(xx+1)**parak)/Math::exp(-paralam*xx**parak) 	
-		else
-			seizonritu=0.015
+		
 		end
 	end
 
@@ -84,38 +89,43 @@ class Tree
 			@settings.spdata(@sp,fire_or,"death4")*fire_intense*@mysize
 			))
 		else
-			if @sp==POPLUS then
-				if @age<2 then
-					seizonritu=0.020437
-					#seizonritu=@settings.spdata(POPLUS,"heiwa","death5")
-					
-				else
+			if age<2 then
+				seizonritu=@settings.spdata(@sp,"heiwa","death5")
+				#p [@sp,seizonritu]
+				
+			else
+				if @sp==POPLUS then
 					seizonritu=(1.0/(1.0+Math::exp(-
 						@settings.spdata(@sp,fire_or,"death1")-
 						@settings.spdata(@sp,fire_or,"death2")*@mysize-
 						@settings.spdata(@sp,fire_or,"death3")*@ba-
 						@settings.spdata(@sp,fire_or,"death4")*year)))**0.2
-					
+					if @age>100 then
+						seizonritu=0.5
+						#https://academic.oup.com/forestry/article/84/1/61/599262?login=true
+					end
+				elsif @sp==BETULA then
+					seizonritu=seizon_bp(@age)
+					#p [@age,seizonritu]
+				elsif @sp==LARIX then
+
+					# seizonritu=(1.0/(1.0+Math::exp(-
+					# @settings.spdata(@sp,fire_or,"death1")-
+					# @settings.spdata(@sp,fire_or,"death2")*@mysize-
+					# @settings.spdata(@sp,fire_or,"death3")*@kabu-
+					# @settings.spdata(@sp,fire_or,"death4")*@crd)))**
+					# (@settings.spdata(@sp,fire_or,"death6")/3.0)
+					seizon=3.0
+					seizon3=-2.0
+					seizon7_9=1.0
+					seizonritu=	1.0/(1.0+Math::exp(-seizon-@ds3*seizon3-@ds6_10*seizon7_9))
+					if @age>500 then
+						seizonritu=0.5
+					end
+					#p [seizonritu,@crd,@sp]
 				end
-			elsif @sp==BETULA then
-				#seizonritu=@settings.spdata(BETULA,fire_or,"death1")
-				seizonritu=seizon_bp(@age)
-		#		p seizonritu
-			else
-				# seizonritu=(1.0/(1.0+Math::exp(-
-				# 	@settings.spdata(@sp,fire_or,"death1")-
-				# 	@settings.spdata(@sp,fire_or,"death2")*@mysize-
-				# 	@settings.spdata(@sp,fire_or,"death3")*@kabu-
-				# 	@settings.spdata(@sp,fire_or,"death4")*@crd)))**
-				# 	(@settings.spdata(@sp,fire_or,"death6")/3.0)
-				seizon=3.25
-				seizon3=-3.0
-				seizon7_9=2
-				seizonritu=	1.0/(1.0+Math::exp(-seizon-@ds3*seizon3-@ds6_10*seizon7_9))
-				#p [seizonritu,@ds3,@ds6_10]
 			end	
 		end
-		
 		return seisi>seizonritu
 	end
 

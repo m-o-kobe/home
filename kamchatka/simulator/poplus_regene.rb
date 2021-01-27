@@ -1,5 +1,5 @@
 require "./settings.rb"
-require "./tree.rb"
+require "./tree2.rb"
 require "./fire_layer"
 
 class PoplusCount
@@ -31,8 +31,6 @@ class PoplusCount
                 trees.each do |obj|
                     _dist=dist(obj,i,j)
                     if obj.sp==POPLUS then
-                        
-                        
                         if _dist<5.0
                             @ssp_05[i][j]+=obj.mysize
                         elsif _dist<10.0
@@ -102,12 +100,23 @@ class PoplusCount
         sprout_zahyou=Array.new
         for i in 0..@x_size-1 do
             for j in 0..@y_size-1 do
+                @ssp_05[i][j]=[@ssp_05[i][j],60].min
+                @ssp_10[i][j]=[@ssp_10[i][j],70].min
+                @ssp_15[i][j]=[@ssp_15[i][j],100].min
+                @ssp_20[i][j]=[@ssp_20[i][j],180].min
                 sprout_kazu=@settings.spdata(POPLUS,fire_or,"kanyu1")+
                 @ssp_05[i][j]*@settings.spdata(POPLUS,fire_or,"kanyu2")+
                 @ssp_10[i][j]*@settings.spdata(POPLUS,fire_or,"kanyu3")+
                 @ssp_15[i][j]*@settings.spdata(POPLUS,fire_or,"kanyu4")+
-                @ssp_20[i][j]*@settings.spdata(POPLUS,fire_or,"kanyu5")
-                sprout_kazu=sprout_kazu/5
+                @ssp_20[i][j]*@settings.spdata(POPLUS,fire_or,"kanyu5")#+
+                # @dsp_05[i][j]*@settings.spdata(POPLUS,fire_or,"kanyu6")+
+                # @dsp_10[i][j]*@settings.spdata(POPLUS,fire_or,"kanyu7")+
+                # @dsp_15[i][j]*@settings.spdata(POPLUS,fire_or,"kanyu8")+
+                # @dsp_20[i][j]*@settings.spdata(POPLUS,fire_or,"kanyu9")
+
+                # if !fire_or_not then
+                #     sprout_kazu=sprout_kazu/5.0
+                # end
                 sprout_sei=sprout_kazu.to_i
                 sprout_shou=sprout_kazu-sprout_sei.to_f
                 sprout_sei = rand(0.0..1.0) > sprout_shou ? sprout_sei : sprout_sei+1

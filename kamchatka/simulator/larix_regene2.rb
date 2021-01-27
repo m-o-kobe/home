@@ -1,5 +1,5 @@
 require "./settings.rb"
-require "./tree.rb"
+require "./tree2.rb"
 require "./fire_layer"
 
 class LarixRegene
@@ -12,6 +12,7 @@ class LarixRegene
         @step=step
         @x_size=@x_max-@x_min
         @y_size=@y_max-@y_min
+        @menseki=(@x_max-@x_min)*(@y_max-@y_min)
         @fire_layer=Fire_layer.new        
     end
  
@@ -79,9 +80,7 @@ class LarixRegene
         fire_or= fire_or_not ? "fire" : "heiwa"
  #       lcount(trees)
         sprout_zahyou=Array.new
-        sprout_kazu=@settings.spdata(LARIX,fire_or,"kanyu1")*
-        @settings.spdata(LARIX,fire_or,"kanyu2")*
-        @x_size.to_f*@y_size.to_f/125.0
+        sprout_kazu=@settings.spdata(LARIX,fire_or,"kanyu1")*@menseki
         sprout_kazu=shousu(sprout_kazu)
         for k in 1..sprout_kazu
             sprout_zahyou.push [

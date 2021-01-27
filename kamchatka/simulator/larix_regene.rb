@@ -1,5 +1,5 @@
 require "./settings.rb"
-require "./tree.rb"
+require "./tree2.rb"
 require "./fire_layer"
 
 class LarixRegene

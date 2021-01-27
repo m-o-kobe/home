@@ -5,7 +5,7 @@ duration,2
 num_sp,3
 firefreq,5
 s_year,50
-fire_year,"1"
+fire_year,"100"
 #fire_r_min,5
 #fire_r_max,10
 #growth,

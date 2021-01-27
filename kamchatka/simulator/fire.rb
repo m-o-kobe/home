@@ -1,5 +1,5 @@
 require "./settings.rb"
-require "./tree.rb"
+require "./tree2.rb"
 
 class Fire
     def initialize(xmin,ymin,xmax,ymax)
