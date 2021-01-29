@@ -69,19 +69,21 @@ class Forest
 			@stand_year=0
 			fire
 			zombie_year
-			crdcal
-			p "fire"
+			#crdcal
+			#p "fire"
 		else
 			@stand_year=@stand_year+1
 			tree_death
 			trees_newborn
 			zombie_year
-			crdcal
-			p "heiwa"
+			#crdcal
+			#p "heiwa"
 		end
 		
 		trees_grow
-		kakunin
+		if @year % 40 ==0 then
+			kakunin
+	 	end
 	end
 	def reset_counter
 		for spp in 1..@settings.num_sp do
@@ -132,6 +134,7 @@ class Forest
 		end
 	end
 	def kakunin
+#		puts @stand_year
 		puts @@num_count
 		puts @@death_count
 		puts @@sinki_count
@@ -290,16 +293,17 @@ class Forest
 						end
 						tar.ba+=obj.mysize**2
 					end
-					if _dist<3.0 && obj.mysize>10 then
+
+					if _dist<2.5 && obj.age>4 then
 						tar.ds3+=1
-					elsif _dist>6.0 && _dist<10.0 && obj.mysize>10 then
+					elsif _dist>4.5 && _dist<9.0 && obj.mysize>4 then
 						tar.ds6_10+=1
 					end
 				end
 			end
 			tar.ba=tar.ba/(4.0*81.0)
-			tar.ds3=[tar.ds3,100].min
-			tar.ds6_10=[tar.ds6_10,5].min
+			# tar.ds3=[tar.ds3,100].min
+			 tar.ds6_10=[tar.ds6_10,20].min
 		end
 		@ba = @ba * Math::PI / (4.0 * @settings.plot_x * @settings.plot_y )
 	end

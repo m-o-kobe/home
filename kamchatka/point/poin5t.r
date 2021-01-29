@@ -49,7 +49,7 @@ f1 <- function(X) { marks(X) == sp }
 f2<-function(X ){marks(X)!="nodata"}
 f2<-function(X ){marks(X)!=sp}
 
-k100<-envelope(pppdata,fun=Kmulti,I=f1,J=f2,correction="Ripley",nsim=160,nrank=4)
+k100<-envelope(pppdata,fun=Kmulti,I=f1,J=f2,correction="Ripley",nsim=1000,nrank=25)
 
 #作図
 plot(k100,sqrt(./pi)-r~r,main = sp)

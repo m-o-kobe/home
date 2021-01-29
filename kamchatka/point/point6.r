@@ -17,9 +17,13 @@ matome<-c(1:80)
 matome<-append("pattern",matome)
 
 
-a=-2.5
-b="3"
-c=3.5
+a="-1.0"
+b="0.65"
+c=4.5
+
+filename=paste("simu/test0128_200_",c,"_",a,"_",b,".csv",sep="")
+namae=paste("a=",a,", b=",b,", c=",c,sep="")
+#0128
 
 
 filename=paste("simu/test200_",c,"_",a,"_",b,".csv",sep="")

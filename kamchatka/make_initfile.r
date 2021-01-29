@@ -70,7 +70,7 @@ df43<-subset(df4,df4$sp==3)
 df43$age<-predict(model3,df43)
 df5<-rbind(df41,df42,df43)
 df6<-subset(df5,df5$dbh>0)
-df6$age<-as.integer(df6$age)
+df6$age<-as.integer(df6$age)+1
 names(df6)[1]<-"#x"
 #write.csv(df6,"setting/init_int0120.csv",row.names = FALSE)
 

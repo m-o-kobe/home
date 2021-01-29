@@ -54,6 +54,13 @@ class Fileio
 			@outfile.print _dat.join(", "),"\n"
 		end
 	end
+	def record_forest2( buf_array,num )
+		buf_array.each do | _dat |
+			_dat.push(num)
+			@outfile.print _dat.join(", "),"\n"
+		end
+	end
+
 	def record_stat(buf_array)
 		buf_array.each do | _dat |
 			@statfile.print _dat.join(", "),"\n"

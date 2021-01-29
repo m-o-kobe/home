@@ -115,9 +115,9 @@ class Tree
 					# @settings.spdata(@sp,fire_or,"death3")*@kabu-
 					# @settings.spdata(@sp,fire_or,"death4")*@crd)))**
 					# (@settings.spdata(@sp,fire_or,"death6")/3.0)
-					seizon=3.0
-					seizon3=-2.0
-					seizon7_9=1.0
+					seizon=1.6
+					seizon3=-1.0
+					seizon7_9=0.5
 					seizonritu=	1.0/(1.0+Math::exp(-seizon-@ds3*seizon3-@ds6_10*seizon7_9))
 					if @age>500 then
 						seizonritu=0.5
