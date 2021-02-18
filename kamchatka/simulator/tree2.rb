@@ -101,7 +101,7 @@ class Tree
 						@settings.spdata(@sp,fire_or,"death3")*@ba-
 						@settings.spdata(@sp,fire_or,"death4")*year)))**0.2
 					if @age>100 then
-						seizonritu=0.5
+						seizonritu=0.0
 						#https://academic.oup.com/forestry/article/84/1/61/599262?login=true
 					end
 				elsif @sp==BETULA then
@@ -115,12 +115,16 @@ class Tree
 					# @settings.spdata(@sp,fire_or,"death3")*@kabu-
 					# @settings.spdata(@sp,fire_or,"death4")*@crd)))**
 					# (@settings.spdata(@sp,fire_or,"death6")/3.0)
-					seizon=1.6
-					seizon3=-1.0
-					seizon7_9=0.5
+					# seizon=1.6
+					# seizon3=-1.0
+					# seizon7_9=0.5
+					seizon=@settings.spdata(@sp,fire_or,"death1")
+					seizon3=@settings.spdata(@sp,fire_or,"death2")
+					seizon7_9=@settings.spdata(@sp,fire_or,"death3")
+					
 					seizonritu=	1.0/(1.0+Math::exp(-seizon-@ds3*seizon3-@ds6_10*seizon7_9))
 					if @age>500 then
-						seizonritu=0.5
+						seizonritu=0.0
 					end
 					#p [seizonritu,@crd,@sp]
 				end

@@ -25,9 +25,9 @@ x_forplot <- data.frame(age=seq(20, 90, by=1))
 #x_forplot$fit <- nls_a*exp((-x+nls_mu)/nls_sigma)/(1+exp((-x+nls_mu)/nls_sigma))
 x_forplot$height <- getPred(nls.out$par,x_forplot$age)
 
-plot(nenrin_pt$age,nenrin_pt$hgt)
+plot(nenrin_pt$age,nenrin_pt$hgt,xlab = "樹齢",ylab="樹高")
 
-lines(x_forplot$x,x_forplot$fit)
+lines(x_forplot$age,x_forplot$height,col="red")
 
 
 ronbunpar<-list(b1=2.07151,b2=-0.007719,b3=0.93972)
@@ -69,3 +69,11 @@ tablecsv<-function(datalm,data,ou){
 }
 
 #tablecsv(nls.out,nenrin_pt,"growth/height_age.csv")
+library(ggplot2)
+g1<-ggplot(data=ronbun_hyou,
+           aes(x=si80,y=si50))+
+  labs(x="SI80", y="SI50",title="site_index")+theme_bw()+
+  geom_line()
+
+print(g1)
+

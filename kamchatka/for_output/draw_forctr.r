@@ -7,7 +7,7 @@
 
 #filename <-"output/output1218_41to90.csv"
 #outfile  <-"output/draw1218_41to90yr.pdf"
-
+filename<-"output/0125int_heiwa.csv"
 
 title1<-"ctr_41to90"
 library(ggplot2)
@@ -19,7 +19,7 @@ all_years<-sort(unique(buf$V1))
 sp<-c("La", "Be", "pt")
 #year<-10
 
-for (year in all_years){
+#for (year in all_years){
   dat<-subset(buf, V1==year)
   dat<-subset(dat,V6>0.0)
   output <-ggplot(dat, aes(V2, V3, size=V6, colour=sp[V4]))+
@@ -40,6 +40,6 @@ for (year in all_years){
   
   print( output )
   #ggsave("output.pdf", plot=output, width=210, height=297, units= "mm")
-}
+#}
 
 dev.off()

@@ -7,6 +7,7 @@ datap<-subset(ctr,ctr$spp=="bp")
 databp<-subset(datap,datap$X.num==datap$sprout)
 datanotbp<-subset(ctr,ctr$spp!="bp")
 data_kabunasi<-rbind(databp,datanotbp)
+data_kabunasi<-subset(data_kabunasi,data_kabunasi$dbh01>0.0001)
 ppp_ctr<-ppp(x=data_kabunasi$x,y=data_kabunasi$y,window=owin(c(0,100),c(0,50)),marks=data_kabunasi$spp)
 f1 <- function(X) { marks(X) == spp }
 f2<-function(X ){marks(X)!="nodata"}
@@ -28,12 +29,16 @@ dat$sp[dat$sp==1]<-"lc"
 dat$sp[dat$sp==2]<-"bp"
 dat$sp[dat$sp==3]<-"pt"
 
-#pppdata<-ppp(x=dat$V2,y=dat$V3,
-#             window=owin(c(0,100),c(0,50)),
-#             marks = dat$sp)
-
-
-
+if ( type=="int" ){
+  pppdata<-ppp(x=dat$V2,y=dat$V3,
+               window=owin(c(0,50),c(0,100)),
+               marks = dat$sp)
+  
+}else{
+  pppdata<-ppp(x=dat$V2,y=dat$V3,
+               window=owin(c(0,100),c(0,50)),
+               marks = dat$sp)
+}
 #data_k<-Kest(pppdata,correction="Ripley")
 data_k<-Kmulti(pppdata,fun=Kmulti,I=f1,J=f2,correction="Ripley")
 
@@ -47,7 +52,7 @@ kotaisu<-c()
 
 
 
-for (i in 1:40) {
+for (i in 1:50) {
   #filename=paste("output/pp/output0127ctr_pp",i,".csv",sep="")
   filename=paste("output/pp3/output0127ctr_pp",i,".csv",sep="")
   
@@ -76,7 +81,7 @@ for (i in 1:40) {
   kotaisu<-append(kotaisu,nrow(subset(dat,dat$sp==spp)))
 }
 
-
+fitted_r_p<-fitted_r_p[,2:41]
 kotaisu<-kotaisu[order(kotaisu)]
 
 #kotaisu<-append(namae,kotaisu)
@@ -93,8 +98,8 @@ for(i in 2:513) {
 #write.csv(matome,"test0112.csv")
 
 
-hi_low<-cbind(data_k$r,sortlist[,2],"low")
-hi_low<-rbind(hi_low,cbind(data_k$r,sortlist[,39],"hi"))
+hi_low<-cbind(data_k$r,sortlist[,1],"low")
+hi_low<-rbind(hi_low,cbind(data_k$r,sortlist[,40],"hi"))
 hi_low<-rbind(hi_low,cbind(ctr_k$r,ctr_k$iso,"observed"))
 hi_low<-as.data.frame(hi_low)
 names(hi_low)<-c("r","k","label")
@@ -111,6 +116,6 @@ g1<-ggplot(data=hi_low,
   geom_line()
 
 print(g1)
-
+plot(pppdata)
 
 

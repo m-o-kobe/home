@@ -2,19 +2,26 @@
 #filename <-args[1]
 #outfile  <-args[2]
 #title1<-args[3]
-filename <-"output/output.csv"
-outfile  <-"output/line0303.pdf"
-title1<-"fire"
+#filename <-"output/output.csv"
+filename="output/output0129ctr_heiwa.csv"
+title1<-"heiwa"
+filename="output/output0129ctr_fire100.csv"
+title1<-"fire100"
+filename="output/output0129ctr_fire50.csv"
+title1<-"fire50"
+
+#outfile  <-"output/line0303.pdf"
 
 library(ggplot2)
 library(ggsci)
 
 buf<-read.csv(filename,header=F)
+#buf<-data
 all_years<-sort(unique(buf$V1))
 
 n<- 3
 df <- data.frame(matrix(rep(NA, n), nrow=1))[numeric(0), ]
-pdf(outfile, paper ="a4", pointsize=18)
+#pdf(outfile, paper ="a4", pointsize=18)
 
 for (year in all_years){
     dat<-subset(buf,V1==year)
@@ -35,7 +42,7 @@ charttype<-geom_line()
 
 label<-labs(title=paste(title1))
 axis<-scale_y_log10()
-g<-chartmap+charttype+label+axis
-print(df)
+g<-chartmap+charttype+label#+axis
+#print(df)
 print(g)
-dev.off()
+#dev.off()

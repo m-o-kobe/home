@@ -110,6 +110,8 @@ class BetulaSprout
                         oyasize*oyakazu*@settings.spdata(BETULA,fire_or,"kanyu5")+
                         oyasize*fire*@settings.spdata(BETULA,fire_or,"kanyu6")+
                         oyakazu*fire*@settings.spdata(BETULA,fire_or,"kanyu7")
+                    sprout_kazu=[sprout_kazu,94].min
+
                     if sprout_kazu>0 then
                         if oyakazu>0 then
                             oya_info,juv_sum=count_sprout(sp_num,oya,fire_or)

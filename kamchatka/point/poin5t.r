@@ -53,6 +53,27 @@ k100<-envelope(pppdata,fun=Kmulti,I=f1,J=f2,correction="Ripley",nsim=1000,nrank=
 
 #作図
 plot(k100,sqrt(./pi)-r~r,main = sp)
+summary(k100$r)
+
+
+hi_low<-cbind(k100$r,k100$lo,"low")
+hi_low<-rbind(hi_low,cbind(k100$r,k100$hi,"hi"))
+hi_low<-rbind(hi_low,cbind(k100$r,k100$obs,"observed"))
+hi_low<-as.data.frame(hi_low)
+names(hi_low)<-c("r","k","label")
+hi_low$r<-as.double(as.character(hi_low$r))
+hi_low$k<-as.double(as.character(hi_low$k))
+hi_low$L<-sqrt(hi_low$k/pi)-hi_low$r
+
+g1<-ggplot(data=hi_low,
+           aes(x=r,y=L,colour=label))+
+  #labs(title=namae)+
+  xlim(0,12.5)+
+  geom_line()
+
+print(g1)
+
+
 
 #plot(k100,.-r~r)
 

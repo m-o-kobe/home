@@ -25,8 +25,8 @@ class Simulator
 	end
 end
 
-for i in 97..100 do
-	print i.to_s,"kaime" , "\n"
+for i in 1..80 do
+	print i.to_s," kaime" , "\n"
 	simulator = Simulator.new( "../../../kamchatka/setting/set_0122_fire_2.csv",
 		"../../../kamchatka/setting/init_int0120.csv",
 		"../../../kamchatka/output/pp3/output0127ctr_pp"+i.to_s+".csv",

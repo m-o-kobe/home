@@ -70,7 +70,7 @@ class Forest
 			fire
 			zombie_year
 			#crdcal
-			#p "fire"
+			p " fire "
 		else
 			@stand_year=@stand_year+1
 			tree_death
@@ -81,7 +81,7 @@ class Forest
 		end
 		
 		trees_grow
-		if @year % 40 ==0 then
+		if @year % 10 ==0 then
 			kakunin
 	 	end
 	end

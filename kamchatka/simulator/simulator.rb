@@ -15,7 +15,7 @@ class Simulator
 	end
 	def run
 		for year in 1..@settings.duration
-			print "Year: ", year, "\n"
+			print "Year: ", year," " #"\n"
 			@forest.yearly_activities#年変動を計算
 			@fileio.record_forest( @forest.records )#output_fileに1年分ずつ出力
 			@fileio.record_stat(@forest.stat_records)

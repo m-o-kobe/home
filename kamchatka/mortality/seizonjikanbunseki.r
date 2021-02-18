@@ -2,16 +2,39 @@ library(MASS)
 library(survival)
 library(minpack.lm)
 
+tablecsv<-function(datalm,data,ou){
+  sum<-summary(datalm)
+  coe <- sum$coefficient
+  N <- nrow(data)
+  AIC <- AIC(datalm)
+  R_squared<-sum$r.squared
+  adjusted_R_squared<-sum$adj.r.squared
+  
+  result <- cbind(coe,AIC,N,R_squared,adjusted_R_squared)
+  ro<-nrow(result)
+  if(ro>1){
+    result[2:nrow(result),5:6] <- ""
+  }
+  
+  write.table(matrix(c("\n",colnames(result)),nrow=1),ou,append=T,quote=F,sep=","
+              ,row.names=F,col.names=F)
+  write.table(result,ou,append=T,quote=F,sep=",",row.names=T,col.names=F)
+}
+
+
 motodata<-read.csv("nenrin/nenrin1.csv")
 sp<-"pt"
 data1<-subset(motodata,motodata$spp==sp)
-model<-lm(age~dbh,data=data1)
+model<-lm(age~dbh+0,data=data1)
+filename<-paste("nenrin/nenrin_age",sp,"0115.csv",sep = "_")
+summary(model)
+#tablecsv(model,data1,filename)
 
 int<-read.csv("int0313.csv")
 int1<-subset(int,int$spp==sp)
 int1$dbh<-int1$dbh01*10
 int1$age<-predict(model,int1)
-
+hist(int1$age)
 int2<-subset(int1,int1$age<=30)
 
 

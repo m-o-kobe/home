@@ -120,6 +120,11 @@ class PoplusCount
                 sprout_sei=sprout_kazu.to_i
                 sprout_shou=sprout_kazu-sprout_sei.to_f
                 sprout_sei = rand(0.0..1.0) > sprout_shou ? sprout_sei : sprout_sei+1
+                if fire_or then
+                    sprout_sei=[sprout_sei,153].min
+                else
+                    sprout_sei=[sprout_sei,18].min
+                end
                 for k in 1..sprout_sei
                     sprout_zahyou.push [
                         @step*i+rand(0.0..@step),
